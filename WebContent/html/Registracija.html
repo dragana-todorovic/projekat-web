@@ -1,0 +1,76 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+ 	<link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+    <script src="../jquery-3.3.1.min.js"></script>
+	<script src="../js/Registracija.js"></script>
+	<title>Insert title here</title>
+</head>
+<body style="padding:200px 500px 200px 500px;">
+    <table class="table table-bordered">
+        <thead>
+             <tr class = "border border-white">
+                <th colspan="2" class = "text-info" style= "text-align:center;"  >
+                    REGISTRACIJA
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        	 <tr id="upozorenje" class="hidden">
+                <td colspan="2"><strong>Greska!</strong>Vec postoji korisnik sa zadatim korisnickim imenom</td>
+            </tr>
+            <tr>
+                <td>Korisnicko ime:</td>
+                <td>
+                    <input type="text" name="txtUsername" id="txtUsername" placeholder="Korisnicko ime..." />
+                </td>
+            </tr>
+            <tr>
+                <td>Lozinka:</td>
+                <td>
+                    <input type="password" id="txtPassword"
+                           placeholder="Lozinka..." />
+                </td>
+            </tr>
+               <tr>
+                <td>Potvrda lozinke:</td>
+                <td>
+                    <input type="password" id="txtPasswordConfirmation"
+                           placeholder="Lozinka..." />
+                </td>
+            </tr>
+             <tr id="greskaLozinka" class="hidden">
+                <td colspan="2"><strong>Greska!</strong>Lozinke se moraju poklapati</td>
+            </tr>
+            <tr>
+                <td>Ime:</td>
+                <td>
+                    <input type="text" id="txtIme" pattern="^[A-Za-z]*$"
+                           placeholder="Ime..." />
+                </td>
+            </tr>
+            <tr>
+                <td>Prezime:</td>
+                <td>
+                    <input type="text" id="txtPrezime"
+                           placeholder="Prezime..." />
+                </td>
+            </tr>
+            <tr>
+                <td>Pol:</td>
+                <td>
+                    <input type="radio" name="pol" value="0"> Muski
+                    <input type="radio" name="pol" value="1" checked="checked"> Zenski
+                </td>
+            </tr>
+            <tr class="success">
+                <td colspan="2" style = "text-align:center;">
+                    <input id="btnRegister" class="btn btn-primary pull-center" type="button"
+                           value="Registruj se" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <p id="upozorenje" > </p>
+</body>
+</html>
