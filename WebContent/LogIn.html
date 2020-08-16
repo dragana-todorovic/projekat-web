@@ -1,17 +1,16 @@
-
 <html>
 <head>
 <meta charset="UTF-8">
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-	<script src="jquery-3.3.1.min.js"></script>
-	<script src="LogIn.js"></script>
+<script src="jquery-3.3.1.min.js"></script>
+<script src="js/LogIn.js"></script>
 <style>
 </style>
 
 <title>Insert title here</title>
 </head>
 <body style="padding:200px 600px 200px 600px;">
-    
+   
     <table class="table table-bordered ">
         <thead >
             <tr class = "border border-white">
@@ -21,7 +20,10 @@
             </tr>
         </thead>
         <tbody>
-          
+        <tr id="upozorenje" class="hidden">
+                <td colspan="2"><strong>Greska!</strong>Vec postoji korisnik sa zadatim korisnickim imenom</td>
+            </tr>
+         
             <tr >
                 <td style = "text-align:center;" >
                     <input type="text" id="txtUsername" placeholder="Korisnicko ime..." />
@@ -38,13 +40,14 @@
                     <input id="btnLogin" class="btn btn-primary pull-center" type="button" value="PRIJAVA">
                 </td>
             </tr>
-            <tr class = "success"> 
-            	 <td style = "text-align:center;">  <a href="html/Registracija.html">
+            <tr class = "success">
+            <td style = "text-align:center;">  <a href="html/Registracija.html">
                         Registrujte se
                     </a> </td>
             </tr>
         </tbody>
     </table>
-    	<p hidden="true" id="upozorenje"></p>
+    <p id="er"></p>
+   
 </body>
 </html >
