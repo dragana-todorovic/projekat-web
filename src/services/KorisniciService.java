@@ -72,7 +72,18 @@ public class KorisniciService {
 	@Consumes(MediaType.APPLICATION_JSON)
     public Korisnik trenutniKorisnik(@Context HttpServletRequest request) {
     	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    	System.out.println(k.getKorisnickoIme());
     	return k;
     }
+    
+    @POST
+	@Path("/logout")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+    public Response logout(@Context HttpServletRequest request) {
+    		request.getSession().invalidate();
+    		System.out.println("uspjesno");
+    		return Response.status(200).build();
+	   }
 }
 

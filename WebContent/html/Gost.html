@@ -1,10 +1,95 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
+<meta charset="UTF-8">
+
+ <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+<script src="../jquery-3.3.1.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="../js/Gost.js"></script>
+<script src="../skripta/skripta.js"></script>
 <title>Insert title here</title>
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+.navbar-custom {
+	color: red;
+}
+</style>
 </head>
 <body>
-
+	<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a id="pocetna" class="navbar-brand" href="#">Pocetna</a>
+    </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+                    <!--li><a class="navbar-brand" href="#">Link</a></!--li-->
+                    <li class="dropdown">
+                        <a href="#" id="korisnik" class="navbar-brand dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a id="prikaziPodatke" href="#">Moji podaci</a></li>
+                            <li><a id="izmijeniPodatke" href="#">Izmijeni podatke</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a id="promijeniSifru" href="#">Promijeni sifru</a></li>
+                        </ul>
+                    </li>
+                    <li><ul class="nav navbar-nav navbar-right">
+        					<li><a id="logoutLink" href="#">Izloguj se</a></li>
+      				</ul></li>
+      </ul>
+     </div><!-- /.navbar-collapse -->
+   
+  </div><!-- /.container-fluid -->
+</nav>
+<div id="prikazPodataka" style="padding:50px 300px 100px 300px;"></div>
+<p id = "er"> </p>
+  
 </body>
 </html>
