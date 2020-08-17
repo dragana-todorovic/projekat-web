@@ -9,54 +9,14 @@
 <script src="../js/Gost.js"></script>
 <script src="../skripta/skripta.js"></script>
 <title>Insert title here</title>
-<style>
-body {font-family: Arial, Helvetica, sans-serif;}
-
-/* The Modal (background) */
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content */
-.modal-content {
-    background-color: #fefefe;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 50%;
-}
-
-/* The Close Button */
-.close {
-    color: #aaaaaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-.navbar-custom {
-	color: red;
+<style type="text/css">
+.navbar-dark .navbar-brand {
+	color: #fff;
 }
 </style>
 </head>
 <body>
-	<nav class="navbar navbar-inverse">
+	<nav class="navbar navbar-dark bg-primary">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -81,7 +41,7 @@ body {font-family: Arial, Helvetica, sans-serif;}
                         </ul>
                     </li>
                     <li><ul class="nav navbar-nav navbar-right">
-        					<li><a id="logoutLink" href="#">Izloguj se</a></li>
+        					<li><a class="navbar-brand"  id="logoutLink" href="#">Izloguj se</a></li>
       				</ul></li>
       </ul>
      </div><!-- /.navbar-collapse -->

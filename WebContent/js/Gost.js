@@ -25,5 +25,9 @@ $(document).ready(function(){
 	 $("#prikaziPodatke").click(function () {
          ispisiPodatke(korisnik);
 	 });
+	 
+	 $("#izmijeniPodatke").click(function () {
+		 izmijeniPodatke(korisnik);
+	 });
 	
 });

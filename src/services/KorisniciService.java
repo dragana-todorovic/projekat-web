@@ -40,11 +40,9 @@ public class KorisniciService {
 		  List<Korisnik> korisnici = BazaKorisnika.korisnici;
 		   for(Korisnik k:korisnici){
 			   if(k.getKorisnickoIme().equals(kor.getKorisnickoIme())){
-				   System.out.println("blablavdajfukhk");
 				   return Response.status(400).build();
 			   } 
 		   }
-		   System.out.println("blabla");
 		   kor.setUloga(Uloga.gost);
 		   korisnici.add(kor);
 		   return Response.status(200).build();
@@ -72,7 +70,6 @@ public class KorisniciService {
 	@Consumes(MediaType.APPLICATION_JSON)
     public Korisnik trenutniKorisnik(@Context HttpServletRequest request) {
     	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
-    	System.out.println(k.getKorisnickoIme());
     	return k;
     }
     
@@ -82,8 +79,24 @@ public class KorisniciService {
 	@Consumes(MediaType.APPLICATION_JSON)
     public Response logout(@Context HttpServletRequest request) {
     		request.getSession().invalidate();
-    		System.out.println("uspjesno");
     		return Response.status(200).build();
+	   }
+    
+    @POST
+	@Path("/izmjenaPodataka")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+    public Response izmijeniPodatke(Korisnik kor,@Context HttpServletRequest request) {
+    	  List<Korisnik> korisnici = BazaKorisnika.korisnici;
+		   for(Korisnik k:korisnici){
+			   if(k.getKorisnickoIme().equals(kor.getKorisnickoIme())){
+				   kor.setUloga(Uloga.gost);
+				   k = kor;
+				   request.getSession().setAttribute("korisnik", k);
+				   return Response.status(200).build();
+			   } 
+		   }
+		   return Response.status(400).build();
 	   }
 }
 
