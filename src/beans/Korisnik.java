@@ -11,6 +11,16 @@ public class Korisnik {
 	private Pol pol;
 	private Uloga uloga;
 	private List<Apartman> apartmanZaIzdavanje;
+	public Korisnik() {}
+	public Korisnik(String korisnickoIme, String lozinka, String ime, String prezime, Pol pol,Uloga uloga) {
+		super();
+		this.korisnickoIme = korisnickoIme;
+		this.lozinka = lozinka;
+		this.ime = ime;
+		this.prezime = prezime;
+		this.pol = pol;
+		this.uloga = uloga;
+	}
 	public String getKorisnickoIme() {
 		return korisnickoIme;
 	}

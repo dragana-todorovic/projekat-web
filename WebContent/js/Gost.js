@@ -29,5 +29,9 @@ $(document).ready(function(){
 	 $("#izmijeniPodatke").click(function () {
 		 izmijeniPodatke(korisnik);
 	 });
+	 
+	 $("#promijeniSifru").click(function () {
+		 izmijeniSifru(korisnik);
+	 });
 	
 });
