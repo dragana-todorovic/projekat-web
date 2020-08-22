@@ -21,26 +21,35 @@ $(document).ready(function(){
 		}
 	});
 	
+	$("#pocetna").click(function () {
+		window.location.href="Admin.html";
+	 });
+	
 	
 	$("#registrujDomacina").click(function () {
+		$("#pretraga").addClass('hidden');
 		registrujDomacina();
 	 });
 	
 	 $("#prikaziPodatke").click(function () {
+		 $("#pretraga").addClass('hidden');
          ispisiPodatke(korisnik);
 	 });
 	 
 	 $("#izmijeniPodatke").click(function () {
+		 $("#pretraga").addClass('hidden');
 		 izmijeniPodatke1(korisnik);
 	 });
 	 
 	 $("#promijeniSifru").click(function () {
+		 $("#pretraga").addClass('hidden');
 		 izmijeniSifru1(korisnik);
 	 });
 	 
 	 $("#korisniciTab").click(function () {
 		 $('#prikazPodataka').html(`
 					<div style="width: 80%;height: 500px;overflow: auto; margin: 0 auto;">
+					
 		      <table class="table table-bordered">
 		        <thead>
 		          <tr>
@@ -69,4 +78,19 @@ $(document).ready(function(){
 				}
 			});
 });
+	 $("#btnPretrazi").click(function () {
+		 var korisnickoIme = $("#pretraziKorisnike").val();
+		 $.post({
+				url: '../rest/pretraga',
+				data: JSON.stringify({korisnickoIme: korisnickoIme}),
+				contentType: 'application/json',
+				success: function(data) {
+					iscrtajKorisnike(data);
+				}
+				
+			});
+	 });
+	 
+	 
+	
 });

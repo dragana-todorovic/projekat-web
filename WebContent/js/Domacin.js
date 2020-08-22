@@ -20,6 +20,9 @@ $(document).ready(function(){
 			$("#korisnik").html(data.korisnickoIme + `<span class="caret"></span>`);
 		}
 	});
+	$("#pocetna").click(function () {
+		window.location.href="Domacin.html";
+	 });
 	
 	 $("#prikaziPodatke").click(function () {
          ispisiPodatke(korisnik);

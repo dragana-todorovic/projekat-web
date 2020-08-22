@@ -11,10 +11,12 @@ function iscrtajKorisnike(data){
 	for (i in data){
 		temp+=`<tr><td>`+data[i].korisnickoIme+`</td><td>`+data[i].ime+`</td><td>`+data[i].prezime+`</td><td>`+data[i].pol+`</td><td>`+data[i].uloga+`</td></tr>`;
 	}
+	$("#pretraga").removeClass('hidden');
 	$('#korisniciTabela').html(temp);
 }
 
 let registrujDomacina = function() {
+	
 	 $("#prikazPodataka").html(`<table class="table table-bordered">
         <thead>
              <tr class = "border border-white">
