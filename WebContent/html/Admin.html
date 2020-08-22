@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+ <link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+<script src="../jquery-3.3.1.min.js"></script>
+<script src="../bootstrap/js/bootstrap.min.js"></script>
+<script src="../js/Admin.js"></script>
+<script src="../skripta/skripta.js"></script>
+<title>Insert title here</title>
+<style type="text/css">
+.navbar-dark .navbar-brand {
+	color: #fff;
+}
+</style>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-primary">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      	<a id="pocetna" class="navbar-brand" href="#">Pocetna</a>
+    </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-left">
+                    <!--li><a class="navbar-brand" href="#">Link</a></!--li-->
+        <li><a href="#" class="navbar-brand"  id="korisniciTab">Korisnici</a></li>
+       </ul>
+           <ul class="nav navbar-nav navbar-right">
+    
+                    <li class="dropdown">
+                        <a href="#" id="korisnik" class="navbar-brand dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a id="prikaziPodatke" href="#">Moji podaci</a></li>
+                            <li><a id="izmijeniPodatke" href="#">Izmijeni podatke</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a id="promijeniSifru" href="#">Promijeni sifru</a></li>
+                             <li role="separator" class="divider"></li>
+                            <li><a id="registrujDomacina" href="#">Registruj domacina</a></li>
+                        </ul>
+                    </li>
+                    <li><ul class="nav navbar-nav navbar-right">
+        					<li><a class="navbar-brand"  id="logoutLink" href="#">Izloguj se</a></li>
+      				</ul></li>
+      </ul>
+     </div><!-- /.navbar-collapse -->
+   
+  </div><!-- /.container-fluid -->
+</nav>
+<div id="prikazPodataka" style="padding:50px 300px 100px 300px;"></div>
+<p id = "er"> </p>
+  
+</body>
+</html>

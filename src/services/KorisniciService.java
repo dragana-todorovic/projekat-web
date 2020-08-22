@@ -1,6 +1,7 @@
 package services;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -39,31 +40,34 @@ public class KorisniciService {
     		c.setAttribute("korisnikDAO", new KorisnikDAO(contextPath));
     		
     	}
-    	KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO"); 
-    	for(Korisnik k:korisnikDAO.getKorisnici().values()){
-    		if(korisnikDAO.pronadjiPoKorisnickom(k.getKorisnickoIme())) {
-    			break;
-    		}
-    	}
-    	korisnikDAO.dodaj(new Korisnik("anja","anja","Anja","Ilic",Pol.zenski,Uloga.administartor), contextPath);
     }
+    
+    @GET
+	@Path("/preuzmiKorisnike")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	   public Collection<Korisnik> preuzmiKorisnike(@Context HttpServletRequest request){
+		   
+		   KorisnikDAO kd=(KorisnikDAO) c.getAttribute("korisnikDAO");
+		   System.out.println(kd.getKorisnici().values());
+		   return kd.pronadjiSve();
+    } 
 
     @POST
 	@Path("/registracija")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
     public Response register(Korisnik kor,@Context HttpServletRequest request) {
-		 // List<Korisnik> korisnici = BazaKorisnika.korisnici;
 		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO"); 
     	for(Korisnik k:korisnikDAO.getKorisnici().values()){
 			   if(k.getKorisnickoIme().equals(kor.getKorisnickoIme())){
 				   return Response.status(400).build();
 			   } 
 		   }
+    	   korisnikDAO.getKorisnici().put(kor.getKorisnickoIme(), kor);
 		   kor.setUloga(Uloga.gost);
 		   String contextPath = c.getRealPath("");
-		   korisnikDAO.dodaj(kor, contextPath);
-		   //korisnici.add(kor);
+		   korisnikDAO.sacuvajKorisnike(contextPath);
 		   return Response.status(200).build();
 	     
 	   }
@@ -72,17 +76,16 @@ public class KorisniciService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
     public Response register1(Korisnik kor,@Context HttpServletRequest request) {
-		 // List<Korisnik> korisnici = BazaKorisnika.korisnici;
 		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO"); 
     	for(Korisnik k:korisnikDAO.getKorisnici().values()){
 			   if(k.getKorisnickoIme().equals(kor.getKorisnickoIme())){
 				   return Response.status(400).build();
 			   } 
 		   }
+    	   korisnikDAO.getKorisnici().put(kor.getKorisnickoIme(), kor);
 		   kor.setUloga(Uloga.domacin);
 		   String contextPath = c.getRealPath("");
-		   korisnikDAO.dodaj(kor, contextPath);
-		   //korisnici.add(kor);
+		   korisnikDAO.sacuvajKorisnike(contextPath);
 		   return Response.status(200).build();
 	     
 	   }
