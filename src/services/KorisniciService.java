@@ -1,5 +1,6 @@
 package services;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -34,7 +35,7 @@ public class KorisniciService {
 
     @PostConstruct
 	public void init(){ 
-    	String contextPath = c.getRealPath("");
+    	String contextPath = c.getRealPath(File.separator);
     	if(c.getAttribute("korisnikDAO")==null) {
     		
     		c.setAttribute("korisnikDAO", new KorisnikDAO(contextPath));

@@ -9,15 +9,15 @@ public class Apartman {
 	private Tip tip;
 	private int brojSoba;
 	private int brojGostiju;
-	private Lokacija lokacija;
-	private Date datumZaIzdavanje;
+//	private Lokacija lokacija;
+	private String datumZaIzdavanje;
 	//dostupnost
-	private Domacin domacin;
-	private Komentar komentar;
-	private Image slika;
+//	private Domacin domacin = new Domacin();
+//	private Komentar komentar = new Komentar();
+//	private Image slika ;
 	private double cijenaPoNoci;
-	private Time vrijemeZaPrijavu; //inicijalno na 2pm
-	private Time vrijemeZaOdjavu; //inicijalno na 10AM
+	private String vrijemeZaPrijavu; //inicijalno na 2pm
+	private String vrijemeZaOdjavu; //inicijalno na 10AM
 	public Tip getTip() {
 		return tip;
 	}
@@ -36,19 +36,19 @@ public class Apartman {
 	public void setBrojGostiju(int brojGostiju) {
 		this.brojGostiju = brojGostiju;
 	}
-	public Lokacija getLokacija() {
+/*	public Lokacija getLokacija() {
 		return lokacija;
 	}
 	public void setLokacija(Lokacija lokacija) {
 		this.lokacija = lokacija;
-	}
-	public Date getDatumZaIzdavanje() {
+	}*/
+	public String getDatumZaIzdavanje() {
 		return datumZaIzdavanje;
 	}
-	public void setDatumZaIzdavanje(Date datumZaIzdavanje) {
+	public void setDatumZaIzdavanje(String datumZaIzdavanje) {
 		this.datumZaIzdavanje = datumZaIzdavanje;
 	}
-	public Domacin getDomacin() {
+	/*public Domacin getDomacin() {
 		return domacin;
 	}
 	public void setDomacin(Domacin domacin) {
@@ -65,23 +65,23 @@ public class Apartman {
 	}
 	public void setSlika(Image slika) {
 		this.slika = slika;
-	}
+	}*/
 	public double getCijenaPoNoci() {
 		return cijenaPoNoci;
 	}
 	public void setCijenaPoNoci(double cijenaPoNoci) {
 		this.cijenaPoNoci = cijenaPoNoci;
 	}
-	public Time getVrijemeZaPrijavu() {
+	public String getVrijemeZaPrijavu() {
 		return vrijemeZaPrijavu;
 	}
-	public void setVrijemeZaPrijavu(Time vrijemeZaPrijavu) {
+	public void setVrijemeZaPrijavu(String vrijemeZaPrijavu) {
 		this.vrijemeZaPrijavu = vrijemeZaPrijavu;
 	}
-	public Time getVrijemeZaOdjavu() {
+	public String getVrijemeZaOdjavu() {
 		return vrijemeZaOdjavu;
 	}
-	public void setVrijemeZaOdjavu(Time vrijemeZaOdjavu) {
+	public void setVrijemeZaOdjavu(String vrijemeZaOdjavu) {
 		this.vrijemeZaOdjavu = vrijemeZaOdjavu;
 	}
 	public Status getStatus() {

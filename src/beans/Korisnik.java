@@ -1,5 +1,6 @@
 package beans;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Korisnik {
@@ -11,7 +12,9 @@ public class Korisnik {
 	private Pol pol;
 	private Uloga uloga;
 	private List<Apartman> apartmanZaIzdavanje;
-	public Korisnik() {}
+	public Korisnik() {
+		apartmanZaIzdavanje = new ArrayList<Apartman>();
+	}
 	public Korisnik(String korisnickoIme, String lozinka, String ime, String prezime, Pol pol,Uloga uloga) {
 		super();
 		this.korisnickoIme = korisnickoIme;
@@ -78,7 +81,13 @@ public class Korisnik {
 	private List<Apartman> iznajmljeniApartman;
 	private List<Rezervacija> rezervacije; //za posljednja tri uslovi
 	
-	
+	public void dodajApartman(Apartman a) {		
+		System.out.println(apartmanZaIzdavanje);
+		System.out.println(a);
+		if(a!=null ) {
+				this.apartmanZaIzdavanje.add(a);}
+	}
 
 }
+
 
