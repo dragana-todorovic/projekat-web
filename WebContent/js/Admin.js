@@ -91,6 +91,16 @@ $(document).ready(function(){
 			});
 	 });
 	 
+	 $("#upravljajSadrzajem").click(function () {
+		 $.get({
+				url:'../rest/preuzmiSadrzaj',
+				contentType: 'application/json',
+				success: function(data){
+					preuzmiSadrzaj(data);
+				}
+			});
+		});
+	 
 	 
 	
 });

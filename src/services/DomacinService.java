@@ -67,5 +67,7 @@ public class DomacinService {
 			   return Response.status(400).build();
     	} 
 		
-    } 
+    }
+    
+   
 }
