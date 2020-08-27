@@ -12,4 +12,29 @@ public class Lokacija {
 		geografskaDuzina = "";
 	}
 
+	public String getGeografskaSirina() {
+		return geografskaSirina;
+	}
+
+	public void setGeografskaSirina(String geografskaSirina) {
+		this.geografskaSirina = geografskaSirina;
+	}
+
+	public String getGeografskaDuzina() {
+		return geografskaDuzina;
+	}
+
+	public void setGeografskaDuzina(String geografskaDuzina) {
+		this.geografskaDuzina = geografskaDuzina;
+	}
+
+	public Adresa getAdresa() {
+		return adresa;
+	}
+
+	public void setAdresa(Adresa adresa) {
+		this.adresa = adresa;
+	}
+	
+
 }

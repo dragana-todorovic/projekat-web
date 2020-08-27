@@ -104,11 +104,23 @@ public class AdministratorService {
        	String pom = id.substring(16,id.length()-2);
        	int ID = Integer.parseInt(pom);
        	SadrzajDAO sadrzajDAO = (SadrzajDAO) c.getAttribute("sadrzajDAO"); 
+        KorisnikDAO kd=(KorisnikDAO) c.getAttribute("korisnikDAO");
     	for(SadrzajApartmana sad:sadrzajDAO.getSadrzaj().values()){
        		if(sad.getId() == ID) {
-       			sad.obrisan = true;
+       			sad.obrisan = true;       			
        			String contextPath = c.getRealPath("");
        			sadrzajDAO.sacuvajSadrzaj(contextPath);
+       			
+       			for(Korisnik k:kd.getKorisnici().values()) {
+       				for(Apartman a:k.getApartmanZaIzdavanje()) {
+       					for(SadrzajApartmana s:a.getSadrzajApartmana()) {
+       						if(s.getId()==ID) {
+       							s.obrisan=true;
+       							kd.sacuvajKorisnike(contextPath);
+       						}
+       					}
+       				}
+       			}
        			return Response.status(200).build();
        		}
        	}

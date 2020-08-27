@@ -2,6 +2,7 @@ package beans;
 
 import java.awt.Image;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,18 +10,26 @@ public class Apartman {
 	private Tip tip;
 	private int brojSoba;
 	private int brojGostiju;
-//	private Lokacija lokacija;
-	private String datumZaIzdavanje;
+	private Lokacija lokacija;
+	private List<String> datumiZaIzdavanje;
 	//dostupnost
-//	private Domacin domacin = new Domacin();
-//	private Komentar komentar = new Komentar();
-//	private Image slika ;
+	private String domacin;
+	//private Komentar komentar;
+	//private Image slika ;
 	private double cijenaPoNoci;
 	private String vrijemeZaPrijavu; //inicijalno na 2pm
 	private String vrijemeZaOdjavu; //inicijalno na 10AM
+	public Apartman() {
+		lokacija = new Lokacija();
+		sadrzajApartmana = new ArrayList<SadrzajApartmana>();
+		datumiZaIzdavanje = new ArrayList<String>();
+		domacin = "";
+		
+	}
 	public Tip getTip() {
 		return tip;
 	}
+	
 	public void setTip(Tip tip) {
 		this.tip = tip;
 	}
@@ -36,25 +45,25 @@ public class Apartman {
 	public void setBrojGostiju(int brojGostiju) {
 		this.brojGostiju = brojGostiju;
 	}
-/*	public Lokacija getLokacija() {
+	public Lokacija getLokacija() {
 		return lokacija;
 	}
 	public void setLokacija(Lokacija lokacija) {
 		this.lokacija = lokacija;
-	}*/
-	public String getDatumZaIzdavanje() {
-		return datumZaIzdavanje;
 	}
-	public void setDatumZaIzdavanje(String datumZaIzdavanje) {
-		this.datumZaIzdavanje = datumZaIzdavanje;
+	public List<String> getDatumZaIzdavanje() {
+		return datumiZaIzdavanje;
 	}
-	/*public Domacin getDomacin() {
+	public void setDatumZaIzdavanje(List<String> datumZaIzdavanje) {
+		this.datumiZaIzdavanje = datumZaIzdavanje;
+	}
+	public String getDomacin() {
 		return domacin;
 	}
-	public void setDomacin(Domacin domacin) {
+	public void setDomacin(String domacin) {
 		this.domacin = domacin;
 	}
-	public Komentar getKomentar() {
+	/*public Komentar getKomentar() {
 		return komentar;
 	}
 	public void setKomentar(Komentar komentar) {

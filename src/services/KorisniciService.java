@@ -62,6 +62,7 @@ public class KorisniciService {
 		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO"); 
     	for(Korisnik k:korisnikDAO.getKorisnici().values()){
 			   if(k.getKorisnickoIme().equals(kor.getKorisnickoIme())){
+				   
 				   return Response.status(400).build();
 			   } 
 		   }

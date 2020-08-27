@@ -82,8 +82,6 @@ public class Korisnik {
 	private List<Rezervacija> rezervacije; //za posljednja tri uslovi
 	
 	public void dodajApartman(Apartman a) {		
-		System.out.println(apartmanZaIzdavanje);
-		System.out.println(a);
 		if(a!=null ) {
 				this.apartmanZaIzdavanje.add(a);}
 	}
