@@ -1,5 +1,5 @@
 package services;
-import org.json.JSONObject;
+
 
 import com.fasterxml.jackson.core.json.JsonReadContext;
 
@@ -33,7 +33,6 @@ import beans.Rezervacija;
 import beans.SadrzajApartmana;
 import beans.Status;
 import beans.Uloga;
-import beans.ZaMapu;
 import dao.KorisnikDAO;
 import dao.SadrzajDAO;
 
@@ -123,6 +122,44 @@ public class DomacinService {
 	
     } 
     }
+    @GET
+   	@Path("/vratiNeaktivne")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public List<Apartman> preuzmiApartmane(@Context HttpServletRequest request){
+    		Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    		System.out.println(k.getKorisnickoIme());
+    		List<Apartman> pomocnaLista = new ArrayList<Apartman>();
+    		if(k != null && k.getApartmanZaIzdavanje() != null) {
+    			for(Apartman a:k.getApartmanZaIzdavanje()) {
+    				if(a.getStatus().equals(Status.neaktivno) && !a.obrisan) {
+    					pomocnaLista.add(a);
+    				}
+    			}
+    		}
+    		return pomocnaLista;
+    		
+    }
+    
+    @POST
+   	@Path("/obrisiApartman")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+       public Response preuzmiApartman(String id,@Context HttpServletRequest request) {
+       	String pom = id.substring(16,id.length()-2);
+       	int ID = Integer.parseInt(pom); 
+        KorisnikDAO kd=(KorisnikDAO) c.getAttribute("korisnikDAO");
+        Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    	for(Apartman a: k.getApartmanZaIzdavanje()){
+       		if(a.getId() == ID) {
+       			a.obrisan = true;       			
+       			String contextPath = c.getRealPath("");
+       			kd.sacuvajKorisnike(contextPath);
+       			return Response.status(200).build();
+       		}
+       	}
+       	return Response.status(400).build();
+       }
    
    
 }

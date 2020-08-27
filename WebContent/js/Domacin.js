@@ -11,6 +11,17 @@ $(document).ready(function(){
 			}
 		});
 	});
+	var pom = ``;
+	$.get({
+		url:'../rest/preuzmiSadrzaj',
+		contentType: 'application/json',
+		success: function(data1) {
+			pom = data1;
+		}
+	});
+	$.get("api/Domacin/VratiSadrzaj", function (data1) {
+		pom = data1;
+	});
 	let korisnik = '';
 	$.get({
 		url:'../rest/trenutniKorisnik',
@@ -46,5 +57,19 @@ $('#dodajApartman').click(function() {
 			}
 		});
 });
+
+$('#pregledNeaktivnihApartmana').click(function() {
+	$.get({
+			url:'../rest/vratiNeaktivne',
+			contentType: 'application/json',
+			success: function(data) {
+				ispisiNeaktivne(data,pom);
+			},
+			error: function() {
+			}
+		});
+});
+
+
  
 });

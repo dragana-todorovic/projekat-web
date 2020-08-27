@@ -144,7 +144,7 @@ $('.date').datepicker({
 		if(sadrzaj!=null && ulica.trim()!='' && broj.trim()!='' && grad.trim()!='' && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && brojSoba.trim() != '' && brojGostiju.trim() != '' && cijenaPoNoci.trim() != '' && datumZaIzdavanje.trim()!=''){
 		$.post({
 		url:'../rest/dodajApartman',
-		data : JSON.stringify({ulica:ulica,broj:broj,nasljenoMjesto:grad,pozivniBrojMjesta:postanskiBroj,geografskaSirina:sirina,geografskaDuzina:duzina,tip:tip,brojSoba:brojSoba,brojGostiju:brojGostiju,domacin:korisnickoIme,cijenaPoNoci:cijenaPoNoci,vrijemeZaPrijavu:vrijemeZaPrijavu,vrijemeZaOdjavu:vrijemeZaOdjavu,sadrzajApartmana:sadrzaj,datumiZaIzdavanje:datumZaIzdavanje}),
+		data : JSON.stringify({id:data.id,ulica:ulica,broj:broj,nasljenoMjesto:grad,pozivniBrojMjesta:postanskiBroj,geografskaSirina:sirina,geografskaDuzina:duzina,tip:tip,brojSoba:brojSoba,brojGostiju:brojGostiju,domacin:korisnickoIme,cijenaPoNoci:cijenaPoNoci,vrijemeZaPrijavu:vrijemeZaPrijavu,vrijemeZaOdjavu:vrijemeZaOdjavu,sadrzajApartmana:sadrzaj,datumiZaIzdavanje:datumZaIzdavanje}),
 		contentType: 'application/json',
 		success: function(){
 			alert("Uspjesno ste dodali apartman");
@@ -225,3 +225,86 @@ let pomocna = function () {
     });
 
 };
+
+let ispisiNeaktivne = function(data,pom1) {
+	let temp='';
+   /* var t = ``;
+    for (ap2 in pom1) {
+        t += (`<input type="checkbox" id="${pom1[ap2].id}" name="sadrzaj" value="${pom1[ap2].naziv}">${pom1[ap2].naziv}</input></br>`);
+    }
+*/
+	for (i in data){
+		var pom = [];
+        for (p in data[i].sadrzajApartmana) {
+            pom[p] = "Naziv:" + data[i].sadrzajApartmana[p].naziv + "\n";
+        }
+		temp+=`<tr><td>`+data[i].tip+`</td><td>`+data[i].brojSoba+`</td><td>`+data[i].brojGostiju+`</td><td>`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
+		temp += (`<td>${pom}</td>`);
+		 var lok = ``;
+	        if (data[i].lokacija.adresa.ulica != null) {
+	            lok += data[i].lokacija.adresa.ulica;
+	            lok += ` `;
+	        }
+	        if (data[i].lokacija.adresa.ulica != null && data[i].lokacija.adresa.broj != null) {
+	            lok += data[i].lokacija.adresa.broj;
+	            lok += `<br> `;
+	        }
+	        if (data[i].lokacija.adresa.nasljenoMjesto != null) {
+	            lok += data[i].lokacija.adresa.nasljenoMjesto;
+	            lok += ` `;
+	        }
+	        if (data[i].lokacija.adresa.pozivniBrojMjesta != null) {
+	            lok += data[i].lokacija.adresa.pozivniBrojMjesta;
+	        }
+	        temp += (`<td>${(lok.trim() != ``) ? lok : `-`}</td>`);
+	        lok = ``;
+
+		temp+=`<td colspan="2" style = "text-align:center;">
+         <input name="izmijeni" id="btnIzmijeni` + data[i].id + `" name = "izmijeni" class="btn btn-primary" type="button" value="Izmijeni apartman"></br>
+	                    <input id="btnObrisi` + data[i].id + `" name = "obrisi" class="btn btn-primary pull-center" type="button"
+	                           value="Obrisi apartman" />
+	                </td></tr>`;
+	}
+	$("#prikazPodataka").html(`
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th colspan="8" class = " success text-info" style="text-align: center;">NEAKTIVNI APARTMANI</th>
+          </tr>
+          <tr class="text-info success">
+            <th>Tip</th>
+            <th>Broj soba</th>
+            <th>Broj gostiju</th>
+            <th>Cijena po noci</th>
+            <th>Vrijeme za prijavu</th>
+            <th>Vrijeme za odjavu</th>
+            <th>Lista sadrzaja</th>
+            <th>Lokacija</th>
+          
+          </tr>
+        </thead>
+        <tbody id="apartmaniTabela">
+        </tbody>
+      </table>
+    
+			`);
+    
+	$('#apartmaniTabela').html(temp);
+	$("input:button[name=obrisi]").click(function () {
+		 $.post({
+				url:'../rest/obrisiApartman',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(){
+					alert("Uspjesno ste obrisali apartman");
+					location.href = "Domacin.html";
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+	 });
+
+};
+

@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Apartman {
+	private int id;
 	private Tip tip;
 	private int brojSoba;
 	private int brojGostiju;
@@ -19,11 +20,16 @@ public class Apartman {
 	private double cijenaPoNoci;
 	private String vrijemeZaPrijavu; //inicijalno na 2pm
 	private String vrijemeZaOdjavu; //inicijalno na 10AM
+	public static int brojac = 0;
+	public Boolean obrisan;
 	public Apartman() {
 		lokacija = new Lokacija();
 		sadrzajApartmana = new ArrayList<SadrzajApartmana>();
 		datumiZaIzdavanje = new ArrayList<String>();
 		domacin = "";
+		obrisan = false;
+		id = brojac;
+		brojac++;
 		
 	}
 	public Tip getTip() {
@@ -114,6 +120,12 @@ public class Apartman {
 	private Status status;
 	private List<SadrzajApartmana> sadrzajApartmana;
 	private List<Rezervacija> rezervacije;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	
 
