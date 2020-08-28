@@ -305,6 +305,232 @@ let ispisiNeaktivne = function(data,pom1) {
 			
 			});
 	 });
+ $("input:button[name=izmijeni]").click(function () {
+		 $.post({
+				url:'../rest/preuzmiApartmanPoId',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(a){
+					 $.post({
+						url:'../rest/postojeciSadrzaj',
+						data : JSON.stringify({id:a.id}),
+						contentType: 'application/json',
+						success: function(data){
+								$.post({
+									url:'../rest/nepostojeciSadrzaj',
+									data : JSON.stringify({id:a.id}),
+									contentType: 'application/json',
+							success: function(dataa){
+										izmijeniApartman(a,data,dataa);
+										}
+										});
+										}
+										});
+										
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+			});
 
 };
+
+let izmijeniApartman = function(data,data1,data2) {
+	var postojeci = data1;
+    var nepostojeci = data2;
+    var temp = ``;
+    for (ap in postojeci) {
+        temp += (`<input type="checkbox" id="${postojeci[ap].id}" name="sadrzaj" value="${postojeci[ap].id}" checked>${postojeci[ap].naziv}</br>`);
+    }
+    for (ap in nepostojeci) {
+        temp += (`<input type="checkbox" id="${nepostojeci[ap].id}"  name="sadrzaj" value="${nepostojeci[ap].id}">${nepostojeci[ap].naziv}</input></br>`);
+    }
+
+	var tip = ``;
+    if (data.tip == "soba") {
+        tip = `<input type="radio"  name="tip" value="0"> Cijeli apartman
+               <input type="radio"  name="tip" value="1" checked="checked"> Soba`;
+    } else {
+        tip = `<input type="radio"  name="tip" value="0" checked="checked"> Cijeli apartman
+               <input type="radio"  name="tip" value="1"> Soba`;
+    }
+	var status = ``;
+    if (data.status == "neaktivno") {
+        status = `<input type="radio"  name="status" value="0"> Aktivno
+               <input type="radio"  name="status" value="1" checked="checked"> Neaktivno`;
+    } else {
+        status = `<input type="radio"  name="status" value="0" checked="checked"> Aktivno 
+               <input type="radio"  name="status" value="1"> Neaktivno`;
+    }
+$("#prikazPodataka").html(`
+<table class="table table-bordered" style="width:30%;height:500px;float:left;">
+        <thead>
+             <tr class = "border border-white">
+                <th colspan="2" class = "text-info" style= "text-align:center;"  >
+                    IZMIJENA APARTMANA
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        	 <tr id="upozorenje" class="hidden">
+                <td colspan="2"><strong>Greska!</strong></td>
+            </tr>
+  				<tr>
+                <td>Tip:</td>
+                <td>`
+                  + tip +
+                `</td>
+            </tr>
+            <tr>
+                <td>Broj soba:</td>
+                <td>
+                    <input type="number" name="txtBrojSoba" id="txtBrojSoba" value="`+ ((data.brojSoba != null) ? data.brojSoba:`-`) + `"/>
+                </td>
+            </tr>
+              <tr>
+                <td>Broj gostiju:</td>
+                <td>
+                    <input type="number" name="txtBrojGostiju" id="txtBrojGostiju" value="`+ ((data.brojGostiju != null) ? data.brojGostiju:`-`) + `" />
+                </td>
+            </tr>
+  <tr><td>Izaberite dostupne datume:</td>
+<td class="container">
+	<input type="text" class="form-control date"  id="date" value="`+ ((data.datumZaIzdavanje != null) ? data.datumZaIzdavanje:`-`) + `">
+            </td>
+            </tr>
+   <tr>
+                <td>Cijena po noci:</td>
+                <td>
+                    <input type="number" name="txtCijena" id="txtCijena" value="`+ ((data.cijenaPoNoci != null) ? data.cijenaPoNoci:`-`) + `" />
+                </td>
+            </tr>
+   <tr>
+                <td>Ulica:</td>
+                <td>
+                    <input type="text" name="txtUlica" id="txtUlica" value="`+ ((data.lokacija.adresa.ulica != null) ? data.lokacija.adresa.ulica:`-`) + `" />
+                </td>
+            </tr>
+   <tr>
+                <td>Broj:</td>
+                <td>
+                    <input type="text" name="txtBroj" id="txtBroj" value="`+ ((data.lokacija.adresa.broj != null) ? data.lokacija.adresa.broj:`-`) + `" />
+                </td>
+            </tr>
+   <tr>
+                <td>Grad:</td>
+                <td>
+                    <input type="text" name="txtGrad" id="txtGrad" value="`+ ((data.lokacija.adresa.nasljenoMjesto != null) ? data.lokacija.adresa.nasljenoMjesto:`-`) + `" />
+                </td>
+            </tr>
+   <tr>
+                <td>Postanski broj:</td>
+                <td>
+                    <input type="text" name="txtPostanskiBroj" id="txtPostanskiBroj" value="`+ ((data.lokacija.adresa.pozivniBrojMjesta != null) ? data.lokacija.adresa.pozivniBrojMjesta:`-`) + `" />
+                </td>
+            </tr>
+   <tr>
+                <td>Geografska sirina:</td>
+                <td>
+                    <input type="text" name="txtSirina" id="txtSirina" value="`+ ((data.lokacija.geografskaSirina != null) ? data.lokacija.geografskaSirina:`-`) + `" />
+                </td>
+            </tr>
+   <tr>
+                <td>Geografska duzina:</td>
+                <td>
+                    <input type="text" name="txtDuzina" id="txtDuzina" value="`+ ((data.lokacija.geografskaDuzina != null) ? data.lokacija.geografskaDuzina:`-`) + `" />
+                </td>
+            </tr>
+     <tr>
+                <td>Vrijeme za prijavu:</td>
+                <td>
+                    <input type="time" name="vrijemeZaPrijavu" id="vrijemeZaPrijavu"  value="`+((data.vrijemeZaPrijavu != null) ? data.vrijemeZaPrijavu:`-`) + `"/>
+                </td>
+            </tr>
+     <tr>
+                <td>Vrijeme za odjavu:</td>
+                <td>
+                    <input type="time" name="vrijemeZaOdjavu" id="vrijemeZaOdjavu" value="`+((data.vrijemeZaOdjavu != null) ? data.vrijemeZaOdjavu:`-`) + `"  />
+                </td>
+            </tr>
+<tr>
+<td>Izaberite sadrzaj</td>
+<td>${temp}</td>
+</tr>
+		<tr>
+                <td>Status:</td>
+                <td>`
+                  + status +
+                `</td>
+            </tr>
+            <tr class="success">
+                <td colspan="2" style = "text-align:center;">
+                    <input id="btnIzmijeni" class="btn btn-primary pull-center" type="button"
+                           value="Izmijeni apartman" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+<button id="kreiranje" style="float:left;" class="btn btn-primary">Uzmi lokaciju sa mape</button>
+        <div id="map" class="map" style="width:70%;padding:-400px 0px 0px 0px;float:right;"></div>`);
+pomocna();
+$('.date').datepicker({
+        multidate: true,
+        format: 'dd-mm-yyyy'
+    });
+    $("#date").datepicker({
+        multidate: true,
+        format: 'dd-mm-yyyy'
+    });
+$('#btnIzmijeni').click(function() {
+
+		var sadrzaj = ``;
+        $('input[name="sadrzaj"]:checked').each(function () {
+            sadrzaj += ($(this).val()) + ",";
+        });		
+		var brojSoba = $("#txtBrojSoba").val();
+		var brojGostiju = $("#txtBrojGostiju").val();
+		var datumZaIzdavanje = $("#date").val();
+		var cijenaPoNoci = $("#txtCijena").val();
+		var tip= $("input:radio[name=tip]:checked").val();
+		var status= $("input:radio[name=status]:checked").val();
+		var vrijemeZaOdjavu = $("#vrijemeZaOdjavu").val();
+		var vrijemeZaPrijavu = $("#vrijemeZaPrijavu").val();
+		var ulica = $("#txtUlica").val();
+		var postanskiBroj = $("#txtPostanskiBroj").val();
+		var broj = $("#txtBroj").val();
+		var grad = $("#txtGrad").val();
+		var duzina = $("#txtDuzina").val();
+		var sirina= $("#txtSirina").val();
+		$('.date').datepicker({
+            multidate: true,
+            format: 'dd/mm/yyyy'
+        });
+		if( ulica.trim()!='' && broj.trim()!='' && grad.trim()!='' && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && brojSoba.trim() != '' && brojGostiju.trim() != '' && cijenaPoNoci.trim() != '' && datumZaIzdavanje.trim()!=''){
+			$.post({
+			url:'../rest/izmijeniApartman',
+			data : JSON.stringify({id:data.id,ulica:ulica,broj:broj,nasljenoMjesto:grad,pozivniBrojMjesta:postanskiBroj,geografskaSirina:sirina,geografskaDuzina:duzina,tip:tip,brojSoba:brojSoba,brojGostiju:brojGostiju,domacin:data.domacin,cijenaPoNoci:cijenaPoNoci,vrijemeZaPrijavu:vrijemeZaPrijavu,vrijemeZaOdjavu:vrijemeZaOdjavu,sadrzajApartmana:sadrzaj,datumiZaIzdavanje:datumZaIzdavanje,status:status}),
+			contentType: 'application/json',
+			success: function(){
+			alert("Uspjesno ste izmijenili apartman");
+			location.href = "Domacin.html";
+		},
+			error: function(message){
+			$("#upozorenje").removeClass('hidden');
+			$("#upozorenje").addClass('alert-danger');
+			$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Sva polja moraju biti popunjena.</td>`);
+			}
+		
+		});
+		}else{
+			$("#upozorenje").removeClass('hidden');
+			$("#upozorenje").addClass('alert-danger');
+			$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Sva polja moraju biti popunjena.</td>`);
+		}
+			});
+			
+}
+		
 

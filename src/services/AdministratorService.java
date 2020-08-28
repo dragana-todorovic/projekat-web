@@ -112,14 +112,16 @@ public class AdministratorService {
        			sadrzajDAO.sacuvajSadrzaj(contextPath);
        			
        			for(Korisnik k:kd.getKorisnici().values()) {
+       				if(k!=null && k.getApartmanZaIzdavanje()!=null) {
        				for(Apartman a:k.getApartmanZaIzdavanje()) {
+       					
        					for(SadrzajApartmana s:a.getSadrzajApartmana()) {
        						if(s.getId()==ID) {
        							s.obrisan=true;
        							kd.sacuvajKorisnike(contextPath);
        						}
        					}
-       				}
+       				}}
        			}
        			return Response.status(200).build();
        		}

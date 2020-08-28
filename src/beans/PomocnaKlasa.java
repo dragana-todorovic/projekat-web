@@ -5,6 +5,13 @@ import java.util.List;
 
 public class PomocnaKlasa {
 	
+	private int id;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	private String ulica;
 	private String broj;
 	private String nasljenoMjesto;
@@ -20,6 +27,7 @@ public class PomocnaKlasa {
 	private String vrijemeZaPrijavu; 
 	private String vrijemeZaOdjavu; 
 	private String sadrzajApartmana;
+	private Status status;
 	public String getDatumiZaIzdavanje() {
 		return datumiZaIzdavanje;
 	}
@@ -41,8 +49,16 @@ public class PomocnaKlasa {
 		geografskaDuzina="";
 		brojSoba=0;
 		brojGostiju=0;
+		status = Status.neaktivno;
 		//datumiZaIzdavanje= new ArrayList<String>();
 		//sadrzajApartmana= new ArrayList<SadrzajApartmana>();
+	}
+	
+	public Status getStatus() {
+		return status;
+	}
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 	public String getUlica() {
 		return ulica;
