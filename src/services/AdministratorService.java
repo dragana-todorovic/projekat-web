@@ -3,6 +3,7 @@ package services;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -23,8 +24,11 @@ import javax.ws.rs.core.Response;
 
 import beans.Apartman;
 import beans.Korisnik;
+import beans.PomocnaKlasa;
 import beans.PretraziPoKorisnickom;
+import beans.Rezervacija;
 import beans.SadrzajApartmana;
+import beans.Status;
 import beans.Uloga;
 import dao.KorisnikDAO;
 import dao.SadrzajDAO;
@@ -186,4 +190,202 @@ public class AdministratorService {
    		   }
    		   return Response.status(400).build();
    	   }
+    
+    @GET
+   	@Path("/vratiSveApartmane")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public List<Apartman> vratiApartmane(@Context HttpServletRequest request){	
+    		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+    		List<Apartman> pomocnaLista = new ArrayList<Apartman>();
+    		List<SadrzajApartmana> pomocniSadrzaj = new ArrayList<SadrzajApartmana>();
+    		for(Korisnik k: korisnikDAO.getKorisnici().values()) {
+    		if(k != null) {
+    			for(Apartman a:k.getApartmanZaIzdavanje()) {
+    				if( !a.obrisan) {
+    					for (SadrzajApartmana s: a.getSadrzajApartmana()) {
+    	        			if(!s.obrisan) {
+    	        				pomocniSadrzaj.add(s);
+    	        				
+    	        			}}
+    					a.setSadrzajApartmana(pomocniSadrzaj);
+    					pomocniSadrzaj = new ArrayList<SadrzajApartmana>();
+    					pomocnaLista.add(a);
+    				}
+    			}
+    		}
+    		}
+    		System.out.println("velicina" + pomocnaLista.size());
+    		return pomocnaLista;
+    		
+    }
+    
+    @POST
+   	@Path("/obrisiApartman1")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+       public Response obrisi(String id,@Context HttpServletRequest request) {
+       	String pom = id.substring(16,id.length()-2);
+       	int ID = Integer.parseInt(pom);
+       	KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+        for(Korisnik k: korisnikDAO.getKorisnici().values()) {
+    		if(k != null) {
+	    	for(Apartman a: k.getApartmanZaIzdavanje()){
+	    		System.out.println("usao u for");
+	       		if(a.getId() == ID) {
+	       			a.obrisan = true;       			
+	       			String contextPath = c.getRealPath("");
+	       			korisnikDAO.sacuvajKorisnike(contextPath);
+	       			return Response.status(200).build();
+	       		}
+       	}}}
+       	return Response.status(400).build();
+       }
+    
+    @POST
+	@Path("/preuzmiApartmanPoId1")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+    public Response preuzmiApartmanPoId(String id,@Context HttpServletRequest request) {
+    	String pom = id.substring(18,id.length()-2);
+       	int ID = Integer.parseInt(pom);
+       	KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+        for(Korisnik k: korisnikDAO.getKorisnici().values()) {
+    		if(k != null) {
+       	for(Apartman a: k.getApartmanZaIzdavanje()){
+       		if(a.getId() == ID) {
+    			return Response.ok(a).status(200).build();
+    		}
+    	}
+    		}}
+    	return Response.status(400).build();
+    }
+    @POST
+   	@Path("/postojeciSadrzaj1")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+       public Response postojeciSadrzaj(String id,@Context HttpServletRequest request) {
+        String IDpom = id.substring(6, id.length()-1);
+        int ID = Integer.parseInt(IDpom);
+        List<SadrzajApartmana>pomocna = new ArrayList<SadrzajApartmana>();
+        KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+        for(Korisnik k: korisnikDAO.getKorisnici().values()) {
+    		if(k != null) {
+        
+        for(Apartman a:k.getApartmanZaIzdavanje()) {
+        	if(a.getId() == ID) {
+        		for (SadrzajApartmana s: a.getSadrzajApartmana()) {
+        			if(!s.obrisan) {
+        				pomocna.add(s);
+        			}
+        		}
+        	}
+        }}}
+
+        return Response.ok(pomocna).status(200).build();
+       }
+    @POST
+   	@Path("/nepostojeciSadrzaj1")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+       public Response nepostojeciSadrzaj(String id,@Context HttpServletRequest request) {
+    	 String IDpom = id.substring(6, id.length()-1);
+         int ID = Integer.parseInt(IDpom); 
+
+    	
+        List<SadrzajApartmana>pomocna = new ArrayList<SadrzajApartmana>();
+    	SadrzajDAO sadrzajDAO = (SadrzajDAO) c.getAttribute("sadrzajDAO"); 
+       	for(SadrzajApartmana s:sadrzajDAO.getSadrzaj().values()) {
+       		if(!s.obrisan) {
+       			pomocna.add(s);
+       	}}
+        KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+        for(Korisnik k: korisnikDAO.getKorisnici().values()) {
+    		if(k != null) {
+       	for(Apartman a:k.getApartmanZaIzdavanje()) {
+        	if(a.getId() == ID) {
+        		Iterator<SadrzajApartmana> it = pomocna.iterator();
+               	int i =0;
+               	while(i<a.getSadrzajApartmana().size() && it.hasNext()) {
+               		it.next();
+               		it.remove();
+               		i++;
+               	}
+        		
+        	}
+       	}}}
+       
+        return Response.ok(pomocna).status(200).build();
+       
+    }  
+    @POST
+   	@Path("/izmijeniApartman1")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+       public Response izmijeniPodatke(PomocnaKlasa pomocna,@Context HttpServletRequest request) {
+    	List<Integer> pomocnaLista = new ArrayList<Integer>();
+    	String[] pom = pomocna.getSadrzajApartmana().trim().split(",");
+    	if(pomocna.getSadrzajApartmana()!="") {   		
+		for (int i = 0; i < pom.length; i++)
+		{
+			pomocnaLista.add(Integer.parseInt(pom[i]));
+		}}
+		
+		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+		SadrzajDAO sadrzajDAO = (SadrzajDAO) c.getAttribute("sadrzajDAO"); 
+		List<SadrzajApartmana> pomocniSadrzaj = new ArrayList<SadrzajApartmana>();
+		 
+	        for(Korisnik k: korisnikDAO.getKorisnici().values()) {
+	    		if(k != null) {
+		for(Apartman a: k.getApartmanZaIzdavanje()) {
+			if(a.getId() == pomocna.getId()) {
+				if(pomocnaLista.size() == 0 && a.getSadrzajApartmana().size()!=0) {
+					a.getSadrzajApartmana().clear();
+				}
+
+				for(SadrzajApartmana s:sadrzajDAO.getSadrzaj().values()) {
+					for(int i =0;i < pomocnaLista.size();i++) {
+					if (s.getId() == pomocnaLista.get(i))
+					{
+						pomocniSadrzaj.add(s);
+					}
+				}}
+				for (SadrzajApartmana ps: pomocniSadrzaj) {
+					System.out.println("pomocni sadrzaj" + ps.getNaziv());
+				}
+				a.setSadrzajApartmana(pomocniSadrzaj);
+					a.getLokacija().getAdresa().setBroj(pomocna.getBroj());
+					a.getLokacija().getAdresa().setUlica(pomocna.getUlica());
+					a.getLokacija().getAdresa().setNasljenoMjesto(pomocna.getNasljenoMjesto());
+					a.getLokacija().getAdresa().setPozivniBrojMjesta(pomocna.getPozivniBrojMjesta());
+					a.getLokacija().setGeografskaDuzina(pomocna.getGeografskaDuzina());
+					a.getLokacija().setGeografskaSirina(pomocna.getGeografskaSirina());
+					a.setTip(pomocna.getTip());
+					a.setBrojSoba(pomocna.getBrojSoba());
+					a.setBrojGostiju(pomocna.getBrojGostiju());
+					a.setDomacin(pomocna.getDomacin());
+					a.setCijenaPoNoci(pomocna.getCijenaPoNoci());
+					a.setVrijemeZaOdjavu(pomocna.getVrijemeZaOdjavu());
+					a.setVrijemeZaPrijavu(pomocna.getVrijemeZaPrijavu());
+					a.setStatus(pomocna.getStatus());
+					a.setRezervacije(new ArrayList<Rezervacija>());
+				}
+		
+		
+				String[] datumi = pomocna.getDatumiZaIzdavanje().split(",");
+				List<String> pomocnaa = new ArrayList<String>();
+				for(int i = 0;i < datumi.length;i++)
+				{
+					pomocnaa.add(datumi[i]);
+					
+					
+				}
+				a.setDatumZaIzdavanje(pomocnaa);
+				
+		}}}
+		String contextPath = c.getRealPath("");
+		korisnikDAO.sacuvajKorisnike(contextPath);
+			   return  Response.status(200).build();
+		
+    }
 }

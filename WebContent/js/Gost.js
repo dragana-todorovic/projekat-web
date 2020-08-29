@@ -36,5 +36,28 @@ $(document).ready(function(){
 	 $("#promijeniSifru").click(function () {
 		 izmijeniSifru(korisnik);
 	 });
+	 
+	 var pom = ``;
+		$.get({
+			url:'../rest/preuzmiSadrzaj',
+			contentType: 'application/json',
+			success: function(data1) {
+				pom = data1;
+			}
+		});
+		$.get("api/Domacin/VratiSadrzaj", function (data1) {
+			pom = data1;
+		});
+		$("#pregledAktivnih").click(function () {
+			$.get({
+				url:'../rest/vratiSveAktivne',
+				contentType: 'application/json',
+				success: function(data) {
+					ispisiSveAktivne(data,pom);
+				},
+				error: function() {
+				}
+			});
+		});
 	
 });

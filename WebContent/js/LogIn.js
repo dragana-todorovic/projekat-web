@@ -47,4 +47,7 @@ $("#upozorenje").html('<td colspan="2"><strong>Greska!</strong> Sva polja moraju
 }
 
 });
+$("#btnPregled").click(function () {
+	location.href = "html/Pregled.html";
+});
 });

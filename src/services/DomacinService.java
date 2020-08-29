@@ -151,6 +151,62 @@ public class DomacinService {
     		
     }
     
+    @GET
+   	@Path("/vratiAktivne")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public List<Apartman> preuzmiAktivne(@Context HttpServletRequest request){
+    		Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    		System.out.println(k.getKorisnickoIme());
+    		List<Apartman> pomocnaLista = new ArrayList<Apartman>();
+    		List<SadrzajApartmana> pomocniSadrzaj = new ArrayList<SadrzajApartmana>();
+    		if(k != null && k.getApartmanZaIzdavanje() != null) {
+    			for(Apartman a:k.getApartmanZaIzdavanje()) {
+    				if(a.getStatus().equals(Status.aktivno) && !a.obrisan) {
+    					for (SadrzajApartmana s: a.getSadrzajApartmana()) {
+    	        			if(!s.obrisan) {
+    	        				pomocniSadrzaj.add(s);
+    	        				
+    	        			}}
+    					a.setSadrzajApartmana(pomocniSadrzaj);
+    					pomocniSadrzaj = new ArrayList<SadrzajApartmana>();
+    					pomocnaLista.add(a);
+    				}
+    			}
+    		}
+    		return pomocnaLista;
+    		
+    }
+    
+    @GET
+   	@Path("/vratiSveAktivne")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public List<Apartman> vratiAktivne(@Context HttpServletRequest request){	
+    		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+    		List<Apartman> pomocnaLista = new ArrayList<Apartman>();
+    		List<SadrzajApartmana> pomocniSadrzaj = new ArrayList<SadrzajApartmana>();
+    		for(Korisnik k: korisnikDAO.getKorisnici().values()) {
+    		if(k != null) {
+    			for(Apartman a:k.getApartmanZaIzdavanje()) {
+    				if(a.getStatus().equals(Status.aktivno) && !a.obrisan) {
+    					for (SadrzajApartmana s: a.getSadrzajApartmana()) {
+    	        			if(!s.obrisan) {
+    	        				pomocniSadrzaj.add(s);
+    	        				
+    	        			}}
+    					a.setSadrzajApartmana(pomocniSadrzaj);
+    					pomocniSadrzaj = new ArrayList<SadrzajApartmana>();
+    					pomocnaLista.add(a);
+    				}
+    			}
+    		}
+    		}
+    		System.out.println("velicina" + pomocnaLista.size());
+    		return pomocnaLista;
+    		
+    }
+    
     @POST
    	@Path("/obrisiApartman")
    	@Produces(MediaType.APPLICATION_JSON)

@@ -63,7 +63,19 @@ $('#pregledNeaktivnihApartmana').click(function() {
 			url:'../rest/vratiNeaktivne',
 			contentType: 'application/json',
 			success: function(data) {
-				ispisiNeaktivne(data,pom);
+				ispisiApartmane(data,pom);
+			},
+			error: function() {
+			}
+		});
+});
+
+$('#pregledAktivnihApartmana').click(function() {
+	$.get({
+			url:'../rest/vratiAktivne',
+			contentType: 'application/json',
+			success: function(data) {
+				ispisiApartmane(data,pom);
 			},
 			error: function() {
 			}
