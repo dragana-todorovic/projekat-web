@@ -14,6 +14,8 @@ public class Korisnik {
 	private List<Apartman> apartmanZaIzdavanje;
 	public Korisnik() {
 		apartmanZaIzdavanje = new ArrayList<Apartman>();
+		iznajmljeniApartman = new ArrayList<Apartman>();
+		rezervacije = new ArrayList<Rezervacija>();
 	}
 	public Korisnik(String korisnickoIme, String lozinka, String ime, String prezime, Pol pol,Uloga uloga) {
 		super();

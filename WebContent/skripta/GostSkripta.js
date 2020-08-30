@@ -31,7 +31,11 @@ let ispisiSveAktivne = function(data,pom1) {
 		        temp += (`<td>${(lok.trim() != ``) ? lok : `-`}</td>`);
 		        lok = ``;
 
-			temp+=`<td>`+data[i].domacin+`</td></tr>`;
+			temp+=`<td>`+data[i].domacin+`</td>`;
+			temp+=`<td>
+		        <input id="btnRez` + data[i].id + `" name = "rezervisi" class="btn btn-primary" type="button" value="Rezervisi"/>
+			                	
+			                </td></tr>`;
 		}
 		$("#prikazPodataka2").html(`
 	      <table class="table table-bordered">
@@ -59,5 +63,75 @@ let ispisiSveAktivne = function(data,pom1) {
 				`);
 	    
 		$('#apartmaniTabela').html(temp);
+		
+		$("input:button[name=rezervisi]").click(function () {
+			var id = this.id;
+			 $.post({
+					url:'../rest/slobodniDatumi',
+					data : JSON.stringify({id:this.id}),
+					contentType: 'application/json',
+					success: function(data){
+						var temp = '';
+					    temp += '<select id="datumi">';
+					    for (d2 in data) {
+					        temp += '<option value="' + data[d2] +'">' + data[d2] + '</option>';
+					    }
+						$("#prikazPodataka2").html(`
+							    <table class="table table-bordered" style="width: 40%;height: 100px;overflow: auto; margin: 0 auto;">
+							        <thead>
+							            <tr class="success">
+							                <th colspan="2" class = "text-info" style= "text-align:center;">
+							                    Kreiranje rezervacije
+							                </th>
+							            </tr>
+							<div class="hidden" id="upozorenje"></div>
+							        </thead>
+							        <tbody> 
+							            <tr>
+							                <td>Dostupni datumi:</td>
+							                <td>
+							                ${temp}
+							                </td>
+							            </tr>
+							            <tr>
+							                <td>Unesite ukupan broj nocenja:</td>
+							                <td>
+							                    <input type="number" id="nocenje" placeholder="Uneste broj nocenja..." />
+							                </td>
+							            </tr>
+							            <tr>
+							                <td colspan = "2" style= "text-align:center;">
+							                    <input type="button" id="btnKreirajRezervaciju" class = "btn btn-primary" value="Rezervisi" />
+							                </td>
+							            </tr>`);
+						 				$("#btnKreirajRezervaciju").click(function () {
+						 					var datum = $("#datumi").val();
+						 					var broj = $("#nocenje").val();
+						 					if(datum!='' && broj!='') {
+						 						$.post({
+						 							url:'../rest/rezervisiApartman',
+						 							data : JSON.stringify({datum:datum,broj:broj,id:id}),
+						 							contentType: 'application/json',
+						 							success: function(){
+						 								alert("Uspjesno ste kreirali rezervaciju");
+						 								location.href = "Gost.html";
+						 							},
+						 							error: function(message){
+						 							$("#upozorenje").removeClass('hidden');
+						 							$("#upozorenje").addClass('alert-danger');
+						 							$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Nije validan datum.</td>`);
+						 							}
+						 					});
+						 					}
+						 				});
+						 				
+						
+					},
+					error: function(message){
+						alert('Neuspjesno');
+					}
+				
+				});
+	    });
 
 };

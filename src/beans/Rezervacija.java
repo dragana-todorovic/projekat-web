@@ -3,23 +3,23 @@ package beans;
 import java.util.Date;
 
 public class Rezervacija {
-	private Apartman apartman;
-	private Date pocetniDatum;
+	private int apartman;
+	private String pocetniDatum;
 	private int brojNocenja = 1;
 	private double ukupnaCijena;
 	private String poruka;
-	private Gost gost;
+	private String gost;
 	private StatusRezervacije status;
-	public Apartman getApartman() {
+	public int getApartman() {
 		return apartman;
 	}
-	public void setApartman(Apartman apartman) {
+	public void setApartman(int apartman) {
 		this.apartman = apartman;
 	}
-	public Date getPocetniDatum() {
+	public String getPocetniDatum() {
 		return pocetniDatum;
 	}
-	public void setPocetniDatum(Date pocetniDatum) {
+	public void setPocetniDatum(String pocetniDatum) {
 		this.pocetniDatum = pocetniDatum;
 	}
 	public int getBrojNocenja() {
@@ -40,10 +40,10 @@ public class Rezervacija {
 	public void setPoruka(String poruka) {
 		this.poruka = poruka;
 	}
-	public Gost getGost() {
+	public String getGost() {
 		return gost;
 	}
-	public void setGost(Gost gost) {
+	public void setGost(String gost) {
 		this.gost = gost;
 	}
 	public StatusRezervacije getStatus() {
