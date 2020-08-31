@@ -74,7 +74,6 @@ public class GostService {
    	@Produces(MediaType.APPLICATION_JSON)
    	@Consumes(MediaType.APPLICATION_JSON)
    	   public Response preuzmiDatume(String id,@Context HttpServletRequest request){
-    		System.out.println(id);
     		String pom = id.substring(13,id.length()-2);
     		int ID = Integer.parseInt(pom);
     		List<String> pomocnaLista = new ArrayList<String>();
@@ -86,7 +85,7 @@ public class GostService {
     				}
     			}
     		}
-    		System.out.println(pomocnaLista);
+    		
     		return Response.ok(pomocnaLista).status(200).build();
     		
     		
@@ -97,7 +96,6 @@ public class GostService {
    	@Produces(MediaType.APPLICATION_JSON)
    	@Consumes(MediaType.APPLICATION_JSON)
    	   public Response rezervisi(PodaciZaRezervaciju podaci,@Context HttpServletRequest request){
-    		System.out.println(podaci.getId());
     		String pom = podaci.getId().substring(6);
     		int ID = Integer.parseInt(pom);
     		Rezervacija r = new Rezervacija();
@@ -120,10 +118,10 @@ public class GostService {
         					List<String> datumi = ap.getDatumZaIzdavanje();
         					List<LocalDate> dostupniDatumi = new ArrayList<LocalDate>();;
         					for(String d : datumi) {
-        						dostupniDatumi.add(LocalDate.parse(d,DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        						dostupniDatumi.add(LocalDate.parse(d,DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         					}
         					String pocetniDatum = podaci.getDatum();
-        					LocalDate pocetniD = LocalDate.parse(pocetniDatum,DateTimeFormatter.ofPattern("dd-MM-yyyy"));
+        					LocalDate pocetniD = LocalDate.parse(pocetniDatum,DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         					List<LocalDate> pomocna = new ArrayList<LocalDate>();
         					pomocna.add(pocetniD);
         					for (int i=1;i<=podaci.getBroj();i++) {
@@ -159,6 +157,88 @@ public class GostService {
     		return Response.status(200).build();
     		
     				
+    }
+    @GET
+   	@Path("/vratiSveRezervacije")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response vratiRezervacije(@Context HttpServletRequest request){
+    	Korisnik gost = (Korisnik) request.getSession().getAttribute("korisnik");
+    	List<Rezervacija> rpomocna = new ArrayList<Rezervacija>();
+    	if(gost.getRezervacije().size()>0) {
+    	rpomocna = gost.getRezervacije();}
+    	return Response.ok(rpomocna).status(200).build();
+    		
+    		
+    }
+    @POST
+   	@Path("/odustani")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response odustani(String id,@Context HttpServletRequest request){
+    	String pom = id.substring(19,id.length()-2);
+		int ID = Integer.parseInt(pom);		
+		Boolean uspjesno = false;
+		Apartman apart = new Apartman();
+		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+    	Korisnik gost = (Korisnik) request.getSession().getAttribute("korisnik");
+    	for(Rezervacija r:gost.getRezervacije()) {
+    		if(r.getId()==ID) {
+    			if(r.getStatus().equals(StatusRezervacije.prihvacena) || r.getStatus().equals(StatusRezervacije.kreirana)) {
+    				r.setStatus(StatusRezervacije.odustanak);
+    				uspjesno = true;
+    			}
+    		}
+    	}
+    	if(!uspjesno) {
+    		return Response.status(400).build();
+    	}
+    	for(Apartman ap: gost.getIznajmljeniApartman()) {
+    		for(Rezervacija rez : ap.getRezervacije()) {
+    			if(rez.getId() == ID  ) {
+    				if(rez.getStatus().equals(StatusRezervacije.prihvacena)) {   					
+    				String pocetniDatum = rez.getPocetniDatum();
+    				LocalDate pocetniD = LocalDate.parse(pocetniDatum,DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    				for(int i =0;i<rez.getBrojNocenja();i++) {    					
+    				String pomoc =DateTimeFormatter.ofPattern("dd/MM/yyyy").format(pocetniD.plusDays(i));   				
+    				ap.getDatumZaIzdavanje().add(pomoc);    				
+    				}
+    				rez.setStatus(StatusRezervacije.odustanak);   	
+    			}
+    				if(rez.getStatus().equals(StatusRezervacije.kreirana)) {
+    					rez.setStatus(StatusRezervacije.odustanak);
+    				}
+    			
+    		}
+    	}}
+    		for(Korisnik kor: korisnikDAO.getKorisnici().values()) {
+    		for(Apartman ap1: kor.getApartmanZaIzdavanje()) {
+        		for(Rezervacija rez1 : ap1.getRezervacije()) {
+        			if(rez1.getId() == ID  ) {
+        				System.out.println("usao");
+        				if(rez1.getStatus().equals(StatusRezervacije.prihvacena)) {  
+        					
+        				String pocetniDatum = rez1.getPocetniDatum();
+        				LocalDate pocetniD = LocalDate.parse(pocetniDatum,DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        				for(int i =0;i<rez1.getBrojNocenja();i++) {    	
+        				
+        				String pomoc =DateTimeFormatter.ofPattern("dd/MM/yyyy").format(pocetniD.plusDays(i));   				
+        				ap1.getDatumZaIzdavanje().add(pomoc);    				
+        				}
+        				rez1.setStatus(StatusRezervacije.odustanak);   	
+        			}
+        				if(rez1.getStatus().equals(StatusRezervacije.kreirana)) {
+        					rez1.setStatus(StatusRezervacije.odustanak);
+        				}
+        			
+        		}
+        		}}}
+    	
+    	String contextPath = c.getRealPath("");
+		korisnikDAO.sacuvajKorisnike(contextPath);
+		return  Response.status(200).build();
+    		
+    		
     }
   
     }

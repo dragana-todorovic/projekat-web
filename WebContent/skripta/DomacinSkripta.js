@@ -112,11 +112,11 @@ $("#prikazPodataka").html(`
 pomocna();
 $('.date').datepicker({
         multidate: true,
-        format: 'dd-mm-yyyy'
+        format: 'dd/mm/yyyy'
     });
     $("#date").datepicker({
         multidate: true,
-        format: 'dd-mm-yyyy'
+        format: 'dd/mm/yyyy'
     });
 
 	$("#btnDodaj").click(function(){
@@ -203,8 +203,15 @@ let ispisiApartmane = function(data,pom1) {
 		temp+=`<td colspan="2" style = "text-align:center;">
          <input name="izmijeni" id="btnIzmijeni` + data[i].id + `" name = "izmijeni" class="btn btn-primary" type="button" value="Izmijeni apartman"></br>
 	                    <input id="btnObrisi` + data[i].id + `" name = "obrisi" class="btn btn-primary pull-center" type="button"
-	                           value="Obrisi apartman" />
-	                </td></tr>`;
+	                           value="Obrisi apartman"/>`;
+		
+		if(data[i].status=="aktivno"){
+  		temp+=`</br> <input id="btnRez` + data[i].id + `" name = "rezervacija" class="btn btn-primary pull-center" type="button"
+	                           value="Rezervacije" />`;
+}else{
+	temp+=``;
+}
+	              temp+=` </td></tr>`;
 	}
 	$("#prikazPodataka").html(`
       <table class="table table-bordered">
@@ -231,6 +238,20 @@ let ispisiApartmane = function(data,pom1) {
 			`);
     
 	$('#apartmaniTabela').html(temp);
+	$("input:button[name=rezervacija]").click(function () {
+		 $.post({
+				url:'../rest/vratiRezervacije',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(data){
+					ispisiRezervacije(data);
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+	 });
 	$("input:button[name=obrisi]").click(function () {
 		 $.post({
 				url:'../rest/obrisiApartman',
@@ -421,11 +442,11 @@ $("#prikazPodataka").html(`
 pomocna();
 $('.date').datepicker({
         multidate: true,
-        format: 'dd-mm-yyyy'
+        format: 'dd/mm/yyyy'
     });
     $("#date").datepicker({
         multidate: true,
-        format: 'dd-mm-yyyy'
+        format: 'dd/mm/yyyy'
     });
 $('#btnIzmijeni').click(function() {
 
@@ -475,5 +496,72 @@ $('#btnIzmijeni').click(function() {
 			});
 			
 }
+let ispisiRezervacije = function(data) {
+	let temp='';	
+		for (i in data){
+			temp+=`<tr><td>`+data[i].pocetniDatum+`</td><td>`+data[i].brojNocenja+`</td><td>`+data[i].ukupnaCijena+`</td><td>`+data[i].status+`</td>`;
+			temp+=`<td colspan="2" style = "text-align:center;">
+         <input name="prihvati" id="btnPrihvati` + data[i].id + `" name = "prihvati" class="btn btn-primary" type="button" value="Prihvati"></br>
+	                    <input id="btnOdbij` + data[i].id + `" name = "odbij" class="btn btn-primary pull-center" type="button"
+	                           value="Odbij" />
+
+	                </td></tr>`;
+			
+		}
+		$("#prikazPodataka").html(`
+	      <table class="table table-bordered">
+	        <thead>
+	          <tr>
+	            <th colspan="4" class = " success text-info" style="text-align: center;">REZERVACIJE</th>
+	          </tr>
+	          <tr class="text-info success">
+	            <th>Pocetni datum</th>
+	            <th>Broj nocenja</th>
+	            <th>Ukupna cijena</th>
+	            <th>Status</th>	            
+	          
+	          </tr>
+	        </thead>
+	        <tbody id="rezervacijeTabela">
+	        </tbody>
+	      </table>
+	    
+				`);
+	    
+		$('#rezervacijeTabela').html(temp);
+		$("input:button[name=prihvati]").click(function () {
+		 $.post({
+				url:'../rest/promijeniStatus',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(data){
+					alert("Uspjesno promijenjen status.")
+					location.href="Domacin.html";
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+	 });
+		$("input:button[name=odbij]").click(function () {
+		 $.post({
+				url:'../rest/odbij',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(data){
+					alert("Uspjesno promijenjen status.")
+					location.href="Domacin.html";
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+	 });
+	
+
+};
+
 		
 

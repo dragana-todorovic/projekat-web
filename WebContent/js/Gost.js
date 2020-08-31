@@ -59,5 +59,16 @@ $(document).ready(function(){
 				}
 			});
 		});
+		$("#pregledRezervacija").click(function () {
+			$.get({
+				url:'../rest/vratiSveRezervacije',
+				contentType: 'application/json',
+				success: function(data) {
+					ispisiSveRezervacije(data);
+				},
+				error: function() {
+				}
+			});
+		});
 	
 });

@@ -10,6 +10,21 @@ public class Rezervacija {
 	private String poruka;
 	private String gost;
 	private StatusRezervacije status;
+	private static int brojac = 0;
+	private int id;
+	public Rezervacija() {
+		id = brojac;
+		brojac++;	
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public int getApartman() {
 		return apartman;
 	}

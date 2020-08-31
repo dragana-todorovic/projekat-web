@@ -56,6 +56,22 @@ public class AdministratorService {
     		
     	}
     }
+    @GET
+   	@Path("/vratiSveRezervacije1")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response vratiRezervacije(@Context HttpServletRequest request){
+    	KorisnikDAO kd=(KorisnikDAO) c.getAttribute("korisnikDAO");
+    	
+    	List<Rezervacija> rpomocna = new ArrayList<Rezervacija>();
+    	for(Korisnik k:kd.getKorisnici().values()) {
+    			for(Rezervacija r:k.getRezervacije()) {
+    					rpomocna.add(r);
+  				
+    	}
+    	}
+    	return Response.ok(rpomocna).status(200).build();
+    }
     
     @POST
 	@Path("/pretraga")

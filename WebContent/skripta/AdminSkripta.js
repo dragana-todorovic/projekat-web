@@ -1,3 +1,41 @@
+let ispisiSveRezervacije = function(data) {
+	let temp='';
+	   
+	
+		for (i in data){
+			temp+=`<tr><td>`+data[i].pocetniDatum+`</td><td>`+data[i].brojNocenja+`</td><td>`+data[i].ukupnaCijena+`</td><td>`+data[i].status+`</td>`;
+			
+			temp+=`</tr>`;
+		}
+		
+		$("#prikazPodataka").html(`
+	      <table class="table table-bordered">
+	        <thead>
+	          <tr>
+	            <th colspan="4" class = " success text-info" style="text-align: center;">REZERVACIJE</th>
+	          </tr>
+	          <tr class="text-info success">
+	            <th>Pocetni datum</th>
+	            <th>Broj nocenja</th>
+	            <th>Ukupna cijena</th>
+	            <th>Status</th>	            
+	          
+	          </tr>
+	        </thead>
+	        <tbody id="rezervacijeTabela">
+	        </tbody>
+	      </table>
+	    
+				`);
+	    
+		$('#rezervacijeTabela').html(temp);
+		
+	
+		
+	
+
+};
+
 let preuzmiSadrzaj = function(a) {
 	
 	let temp='';

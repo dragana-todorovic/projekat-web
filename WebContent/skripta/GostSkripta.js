@@ -135,3 +135,54 @@ let ispisiSveAktivne = function(data,pom1) {
 	    });
 
 };
+let ispisiSveRezervacije = function(data) {
+	let temp='';
+	   
+	
+		for (i in data){
+			temp+=`<tr><td>`+data[i].pocetniDatum+`</td><td>`+data[i].brojNocenja+`</td><td>`+data[i].ukupnaCijena+`</td><td>`+data[i].status+`</td>`;
+			temp+=`<td> <input id="btnOdustanak` + data[i].id + `" name = "odustani" class="btn btn-primary pull-center" type="button"
+	                           value="Odustanak" />`;
+			temp+=`</td></tr>`;
+		}
+		
+		$("#prikazPodataka2").html(`
+	      <table class="table table-bordered">
+	        <thead>
+	          <tr>
+	            <th colspan="4" class = " success text-info" style="text-align: center;">MOJE REZERVACIJE</th>
+	          </tr>
+	          <tr class="text-info success">
+	            <th>Pocetni datum</th>
+	            <th>Broj nocenja</th>
+	            <th>Ukupna cijena</th>
+	            <th>Status</th>	            
+	          
+	          </tr>
+	        </thead>
+	        <tbody id="rezervacijeTabela">
+	        </tbody>
+	      </table>
+	    
+				`);
+	    
+		$('#rezervacijeTabela').html(temp);
+		$("input:button[name=odustani]").click(function () {
+		 $.post({
+				url:'../rest/odustani',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(data){
+					alert('Uspjesno');
+					location.href = "Gost.html";
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+	 });
+		
+	
+
+};
