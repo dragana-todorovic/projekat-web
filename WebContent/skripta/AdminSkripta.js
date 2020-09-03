@@ -3,21 +3,37 @@ let ispisiSveRezervacije = function(data) {
 	   
 	
 		for (i in data){
-			temp+=`<tr><td>`+data[i].pocetniDatum+`</td><td>`+data[i].brojNocenja+`</td><td>`+data[i].ukupnaCijena+`</td><td>`+data[i].status+`</td>`;
+			temp+=`<tr><td>`+data[i].gost+`</td><td>`+data[i].pocetniDatum+`</td><td>`+data[i].brojNocenja+`</td><td>`+data[i].ukupnaCijena+`</td><td class="col1">`+data[i].status+`</td>`;
 			
 			temp+=`</tr>`;
 		}
 		
 		$("#prikazPodataka").html(`
-	      <table class="table table-bordered">
+		</br>
+		<div> <b>Filtriraj po statusu:&nbsp;&nbsp;</b><select id="filterStatus">
+         <option value="Bez naznake" selected>Bez naznake</option>
+         <option value="kreirana">kreirana</option>
+         <option value="prihvacena">prihvacena</option>
+		 <option value="odustanak">odustanak</option>
+	     <option value="odbijena">odbijena</option>
+    </select>
+    </div><br>
+
+	      <table class="table table-bordered" id="table">
 	        <thead>
 	          <tr>
-	            <th colspan="4" class = " success text-info" style="text-align: center;">REZERVACIJE</th>
+	            <th colspan="5" class = " success text-info" style="text-align: center;">REZERVACIJE</th>
 	          </tr>
+	<tr>
+			<th   colspan="5" class = " success text-info">Pretrazivanje po korisnickom imenu gosta:<input type="text" min="0" id="gost" style="width:10%"/></th>
+			
+			</tr>
+			
 	          <tr class="text-info success">
+				<th>Gost</th>
 	            <th>Pocetni datum</th>
 	            <th>Broj nocenja</th>
-	            <th>Ukupna cijena</th>
+	            <th class="success" style="text-align:center" name="sortiraj">UkupnaCijena<span name="strelica" class="glyphicon glyphicon-arrow-down"/></th>
 	            <th>Status</th>	            
 	          
 	          </tr>
@@ -28,8 +44,63 @@ let ispisiSveRezervacije = function(data) {
 	    
 				`);
 	    
-		$('#rezervacijeTabela').html(temp);
-		
+		$('#rezervacijeTabela').html(temp);	
+		$("#filterStatus").change(function () { //filter po tipu ap
+	
+        if ($(this).val() == "Bez naznake") {
+            $("#table td.col1").parent().show();
+        } else if ($(this).val() == "kreirana") {
+            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+        }else if ($(this).val() == "odbijena") {
+            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+        }
+		else if ($(this).val() == "prihvacena") {
+            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+        }
+        else {
+            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+        }
+});
+		$("th[name=sortiraj]").click(function () {
+        if ($(this.getElementsByTagName("span")).attr(`class`) == "glyphicon glyphicon-arrow-down") {
+            $(this.getElementsByTagName("span")).removeClass("glyphicon glyphicon-arrow-down");
+            $(this.getElementsByTagName("span")).toggleClass("glyphicon glyphicon-arrow-up");
+        } else {
+            $(this.getElementsByTagName("span")).removeClass("glyphicon glyphicon-up-down");
+            $(this.getElementsByTagName("span")).toggleClass("glyphicon glyphicon-arrow-down");
+        }
+        var table = $(this).parents('table').eq(0)
+        var rows = table.find('tr:gt(2)').toArray().sort(comparer($(this).index()))
+        this.asc = !this.asc
+        if (!this.asc) { rows = rows.reverse() }
+        for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+    });	
+		$("#gost").keyup(function () {
+        var ime = ($('#gost').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var korIme = ($('td:eq(0)', this).text()).toLowerCase();
+            if (korIme.includes(ime) || ime == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#gost").keydown(function () {
+        var ime = ($('#gost').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var korIme = ($('td:eq(0)', this).text()).toLowerCase();
+            if (korIme.includes(ime) || ime == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
 	
 		
 	
@@ -55,6 +126,7 @@ let preuzmiSadrzaj = function(a) {
       <table class="table table-bordered">
         <thead>
           <tr>
+			
             <th colspan="2" class = " success text-info" style="text-align: center;">SADRZAJ</th>
           </tr>
           <tr class="text-info success">
@@ -225,7 +297,7 @@ let ispisiSveApartmane = function(data,pom1) {
         for (p in data[i].sadrzajApartmana) {
             pom[p] = "Naziv:" + data[i].sadrzajApartmana[p].naziv + "\n";
         }
-		temp+=`<tr><td>`+data[i].tip+`</td><td>`+data[i].brojSoba+`</td><td>`+data[i].brojGostiju+`</td><td>`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
+		temp+=`<tr><td class="col1">`+data[i].tip+`</td><td>`+data[i].brojSoba+`</td><td>`+data[i].brojGostiju+`</td><td>`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
 		temp += (`<td>${pom}</td>`);
 		 var lok = ``;
 	        if (data[i].lokacija.adresa.ulica != null) {
@@ -245,7 +317,7 @@ let ispisiSveApartmane = function(data,pom1) {
 	        }
 	        temp += (`<td>${(lok.trim() != ``) ? lok : `-`}</td>`);
 	        lok = ``;
-	        temp += (`<td>`+data[i].domacin+`</td><td>`+data[i].status+`</td>`);
+	        temp += (`<td>`+data[i].domacin+`</td><td class="col1">`+data[i].status+`</td>`);
 	    temp+=`<td><input id="btnPrikaz` + data[i].id + `" name = "kom" class="btn btn-primary" type="button" value="Prikazi"/> </td> `;
 		temp+=`<td colspan="2" style = "text-align:center;">
          <input name="izmijeni" id="btnIzmijeni` + data[i].id + `" name = "izmijeni" class="btn btn-primary" type="button" value="Izmijeni apartman"></br>
@@ -253,8 +325,21 @@ let ispisiSveApartmane = function(data,pom1) {
 	                           value="Obrisi apartman" />
 	                </td></tr>`;
 	}
-	$("#prikazPodataka").html(`
-      <table class="table table-bordered">
+	$("#prikazPodataka").html(`</br>
+    <div> <b>Filtriraj po tipu:&nbsp;&nbsp;</b><select id="filterTip">
+         <option value="Bez naznake" selected>Bez naznake</option>
+         <option value="cijeliApartman">cijeliApartman</option>
+         <option value="soba">soba</option>
+    </select>
+    </div><br>
+<div> <b>Filtriraj po statusu:&nbsp;&nbsp;</b><select id="filterStatus">
+         <option value="Bez naznake" selected>Bez naznake</option>
+         <option value="aktivno">aktivno</option>
+         <option value="neaktivno">neaktivno</option>
+    </select>
+    </div><br>
+
+      <table class="table table-bordered" id="table">
         <thead>
           <tr>
             <th colspan="11" class = " success text-info" style="text-align: center;">APARTMANI</th>
@@ -263,7 +348,7 @@ let ispisiSveApartmane = function(data,pom1) {
             <th>Tip</th>
             <th>Broj soba</th>
             <th>Broj gostiju</th>
-            <th>Cijena po noci</th>
+             <th class="success" style="text-align:center" name="sortiraj">Cijena po noci<span name="strelica" class="glyphicon glyphicon-arrow-down"/></th>
             <th>Vrijeme za prijavu</th>
             <th>Vrijeme za odjavu</th>
             <th>Lista sadrzaja</th>
@@ -282,6 +367,46 @@ let ispisiSveApartmane = function(data,pom1) {
 			`);
     
 	$('#apartmaniTabela').html(temp);
+	$("#filterTip").change(function () { //filter po tipu ap
+	
+        if ($(this).val() == "Bez naznake") {
+            $("#table td.col1").parent().show();
+        } else if ($(this).val() == "cijeliApartman") {
+            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+        }
+        else {
+            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+        }
+});
+$("#filterStatus").change(function () { //filter po tipu ap
+	
+        if ($(this).val() == "Bez naznake") {
+            $("#table td.col1").parent().show();
+        } else if ($(this).val() == "aktivno") {
+            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+        }
+        else {
+            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+        }
+});
+	$("th[name=sortiraj]").click(function () {
+        if ($(this.getElementsByTagName("span")).attr(`class`) == "glyphicon glyphicon-arrow-down") {
+            $(this.getElementsByTagName("span")).removeClass("glyphicon glyphicon-arrow-down");
+            $(this.getElementsByTagName("span")).toggleClass("glyphicon glyphicon-arrow-up");
+        } else {
+            $(this.getElementsByTagName("span")).removeClass("glyphicon glyphicon-up-down");
+            $(this.getElementsByTagName("span")).toggleClass("glyphicon glyphicon-arrow-down");
+        }
+        var table = $(this).parents('table').eq(0)
+        var rows = table.find('tr:gt(1)').toArray().sort(comparer($(this).index()))
+        this.asc = !this.asc
+        if (!this.asc) { rows = rows.reverse() }
+        for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+    });
 	
 	$("input:button[name=kom]").click(function () {
 		 $.post({
@@ -581,7 +706,15 @@ let ispisiKomentare = function(data) {
 			`);
 		$('#komentariTabela').html(temp);
 };
-
+function comparer(index) { //ZA SORTIRANJE!
+    return function (a, b) {
+        var valA = getCellValue(a, index), valB = getCellValue(b, index)
+        return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+    }
+};
+function getCellValue(row, index) {
+    return $(row).children('td').eq(index).text()
+};
 
 
 

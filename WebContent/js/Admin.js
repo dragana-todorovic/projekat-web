@@ -50,11 +50,23 @@ $(document).ready(function(){
 		 $('#prikazPodataka').html(`
 					<div style="width: 80%;height: 500px;overflow: auto; margin: 0 auto;">
 					
-		      <table class="table table-bordered">
+		      <table class="table table-bordered" id="table">
 		        <thead>
 		          <tr>
-		            <th colspan="8" style="text-align: center;" class="success">KORISNICI</th>
+		            <th colspan="5" style="text-align: center;" class="success">KORISNICI</th>
 		          </tr>
+<tr>
+			<th   colspan="5" class = " success text-info">Pretrazivanje po ulozi:<input type="text" min="0" id="uloga" style="width:10%"/></th>
+			
+			</tr>
+			<tr>
+			<th   colspan="5" class = " success text-info">Pretrazivanje po polu:<input type="text" min="0" id="pol" style="width:10%"/></th>
+			
+			</tr>
+			<tr>
+			<th   colspan="5" class = " success text-info">Pretrazivanje po korisnickom imenu:<input type="text" min="0" id="korIme" style="width:10%"/></th>
+			
+			</tr>
 		          <tr class="success">
 		            <th>Korisnicko ime</th>
 		            <th>Ime</th>

@@ -11,8 +11,73 @@ function iscrtajKorisnike(data){
 	for (i in data){
 		temp+=`<tr><td>`+data[i].korisnickoIme+`</td><td>`+data[i].ime+`</td><td>`+data[i].prezime+`</td><td>`+data[i].pol+`</td><td>`+data[i].uloga+`</td></tr>`;
 	}
-	$("#pretraga").removeClass('hidden');
 	$('#korisniciTabela').html(temp);
+	$("#korIme").keyup(function () {
+        var nadji = ($('#korIme').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var ime = ($('td:eq(0)', this).text()).toLowerCase();
+            if (ime.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#korIme").keydown(function () {
+        var nadji = ($('#korIme').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var ime = ($('td:eq(0)', this).text()).toLowerCase();
+            if (ime.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+	$("#pol").keyup(function () {
+        var nadji = ($('#pol').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var polovi = ($('td:eq(3)', this).text()).toLowerCase();
+            if (polovi.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#pol").keydown(function () {
+        var nadji = ($('#pol').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var polovi = ($('td:eq(3)', this).text()).toLowerCase();
+            if (polovi.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+	$("#uloga").keyup(function () {
+        var nadji = ($('#uloga').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var uloge = ($('td:eq(4)', this).text()).toLowerCase();
+            if (uloge.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#uloga").keydown(function () {
+        var nadji = ($('#uloga').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var uloge = ($('td:eq(4)', this).text()).toLowerCase();
+            if (uloge.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
 }
 
 let registrujDomacina = function() {
