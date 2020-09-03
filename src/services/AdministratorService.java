@@ -23,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Apartman;
+import beans.Komentar;
 import beans.Korisnik;
 import beans.PomocnaKlasa;
 import beans.PretraziPoKorisnickom;
@@ -403,5 +404,24 @@ public class AdministratorService {
 		korisnikDAO.sacuvajKorisnike(contextPath);
 			   return  Response.status(200).build();
 		
+    }
+    
+    @POST
+   	@Path("/vratiKomentare2")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response preuzmiKomentare(String id,@Context HttpServletRequest request){
+    	String pom = id.substring(16,id.length()-2);
+    	int ID = Integer.parseInt(pom);
+    	KorisnikDAO kd = (KorisnikDAO) c.getAttribute("korisnikDAO");
+    	List<Komentar> pomocnaLista = new ArrayList<Komentar>();
+    	for(Korisnik k : kd.getKorisnici().values()) {
+    		for(Apartman a:k.getApartmanZaIzdavanje()) {
+	    		if(a.getId() == ID) {
+	    			pomocnaLista = a.getKomentar();
+	    		}
+    	}}
+    	return Response.ok(pomocnaLista).status(200).build();
+    		
     }
 }

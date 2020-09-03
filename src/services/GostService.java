@@ -32,6 +32,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Apartman;
+import beans.Komentar;
 import beans.Korisnik;
 import beans.PodaciZaRezervaciju;
 import beans.PomocnaKlasa;
@@ -171,6 +172,55 @@ public class GostService {
     		
     		
     }
+    
+    @POST
+   	@Path("/komentarisanje")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response komentarisi(String id,@Context HttpServletRequest request){
+    	String pom = id.substring(13,id.length()-2);
+		int ID = Integer.parseInt(pom);
+		System.out.println(ID);
+    	Korisnik gost = (Korisnik) request.getSession().getAttribute("korisnik");
+    	for(Rezervacija r:gost.getRezervacije()) {
+    		if(r.getApartman() == ID) {
+    			if(r.getStatus() == StatusRezervacije.odbijena || r.getStatus() == StatusRezervacije.zavrsena){
+    				return Response.status(200).build();
+    			}
+    		}
+    	}
+    	return Response.status(400).build();
+    }
+    
+    @POST
+   	@Path("/ostaviKom")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response ostaviKom(Komentar kom,@Context HttpServletRequest request){
+    	String komentar = kom.getApartman().substring(6);
+    	KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+    	int ID = Integer.parseInt(komentar);
+       	Korisnik gost = (Korisnik) request.getSession().getAttribute("korisnik");
+       	kom.setGost(gost.getKorisnickoIme());
+       	kom.setApartman(komentar);
+       	for(Apartman a:gost.getIznajmljeniApartman()) {
+       		System.out.println("usao u for");
+    		if(a.getId()==ID) {
+           		System.out.println("usao u IF");
+    			a.getKomentar().add(kom);
+    		}
+       	}
+       	for(Korisnik kor:korisnikDAO.getKorisnici().values()) {
+       		for(Apartman a1:kor.getApartmanZaIzdavanje()) {
+       			if(a1.getId() == ID) {
+       				a1.getKomentar().add(kom);
+       			}
+       		}
+       	}
+       	String contextPath = c.getRealPath("");
+		korisnikDAO.sacuvajKorisnike(contextPath);
+		return Response.status(200).build();
+    }
     @POST
    	@Path("/odustani")
    	@Produces(MediaType.APPLICATION_JSON)
@@ -240,5 +290,28 @@ public class GostService {
     		
     		
     }
+    
+    @POST
+   	@Path("/vratiKomentare1")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response preuzmiKomentare(String id,@Context HttpServletRequest request){
+    	String pom = id.substring(17,id.length()-2);
+    	int ID = Integer.parseInt(pom);
+    	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    	List<Komentar> pomocnaLista = new ArrayList<Komentar>();
+    	for(Apartman a:k.getIznajmljeniApartman()) {
+    		if(a.getId() == ID ) {
+    			for(Komentar kom:a.getKomentar()) {
+    				if(kom.getDozoli()) {
+    					pomocnaLista.add(kom);
+    				}
+    			}
+    		}
+    	}
+    	return Response.ok(pomocnaLista).status(200).build();
+    		
+    }
+    
   
     }

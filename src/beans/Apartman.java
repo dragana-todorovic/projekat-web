@@ -15,7 +15,7 @@ public class Apartman {
 	private List<String> datumiZaIzdavanje;
 	//dostupnost
 	private String domacin;
-	//private Komentar komentar;
+	private List<Komentar> komentar;
 	//private Image slika ;
 	private double cijenaPoNoci;
 	private String vrijemeZaPrijavu; //inicijalno na 2pm
@@ -23,6 +23,7 @@ public class Apartman {
 	public static int brojac = 0;
 	public Boolean obrisan;
 	public Apartman() {
+		komentar = new ArrayList<Komentar>();
 		lokacija = new Lokacija();
 		sadrzajApartmana = new ArrayList<SadrzajApartmana>();
 		datumiZaIzdavanje = new ArrayList<String>();
@@ -69,13 +70,13 @@ public class Apartman {
 	public void setDomacin(String domacin) {
 		this.domacin = domacin;
 	}
-	/*public Komentar getKomentar() {
+	public List<Komentar> getKomentar() {
 		return komentar;
 	}
-	public void setKomentar(Komentar komentar) {
+	public void setKomentar(List<Komentar> komentar) {
 		this.komentar = komentar;
 	}
-	public Image getSlika() {
+	/*public Image getSlika() {
 		return slika;
 	}
 	public void setSlika(Image slika) {

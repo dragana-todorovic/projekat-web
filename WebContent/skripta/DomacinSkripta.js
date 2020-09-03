@@ -199,25 +199,27 @@ let ispisiApartmane = function(data,pom1) {
 	        }
 	        temp += (`<td>${(lok.trim() != ``) ? lok : `-`}</td>`);
 	        lok = ``;
-
-		temp+=`<td colspan="2" style = "text-align:center;">
+	    if(data[i].status=="aktivno"){
+	    temp+=`<td><input name="kom" style="text-align:center" id="btnPrikazi` + data[i].id + `" class="btn btn-primary" type="button" value="Prikazi"></td>`;
+	    }
+	    temp+=`<td colspan="2" style = "text-align:center;">
          <input name="izmijeni" id="btnIzmijeni` + data[i].id + `" name = "izmijeni" class="btn btn-primary" type="button" value="Izmijeni apartman"></br>
 	                    <input id="btnObrisi` + data[i].id + `" name = "obrisi" class="btn btn-primary pull-center" type="button"
 	                           value="Obrisi apartman"/>`;
 		
 		if(data[i].status=="aktivno"){
   		temp+=`</br> <input id="btnRez` + data[i].id + `" name = "rezervacija" class="btn btn-primary pull-center" type="button"
-	                           value="Rezervacije" />`;
+	                           value="Rezervacije" /></td>`;
 }else{
-	temp+=``;
+	temp+=`<td></td>`;
 }
-	              temp+=` </td></tr>`;
+	              temp+=`</tr>`;
 	}
 	$("#prikazPodataka").html(`
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th colspan="8" class = " success text-info" style="text-align: center;">NEAKTIVNI APARTMANI</th>
+            <th colspan="9" class = " success text-info" style="text-align: center;">NEAKTIVNI APARTMANI</th>
           </tr>
           <tr class="text-info success">
             <th>Tip</th>
@@ -228,6 +230,7 @@ let ispisiApartmane = function(data,pom1) {
             <th>Vrijeme za odjavu</th>
             <th>Lista sadrzaja</th>
             <th>Lokacija</th>
+            <th>Komentari</th>
           
           </tr>
         </thead>
@@ -238,6 +241,20 @@ let ispisiApartmane = function(data,pom1) {
 			`);
     
 	$('#apartmaniTabela').html(temp);
+	$("input:button[name=kom]").click(function () {
+		 $.post({
+				url:'../rest/vratiKomentare',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(data){
+					ispisiKomentare(data);
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+	 });
 	$("input:button[name=rezervacija]").click(function () {
 		 $.post({
 				url:'../rest/vratiRezervacije',
@@ -500,12 +517,18 @@ let ispisiRezervacije = function(data) {
 	let temp='';	
 		for (i in data){
 			temp+=`<tr><td>`+data[i].pocetniDatum+`</td><td>`+data[i].brojNocenja+`</td><td>`+data[i].ukupnaCijena+`</td><td>`+data[i].status+`</td>`;
-			temp+=`<td colspan="2" style = "text-align:center;">
-         <input name="prihvati" id="btnPrihvati` + data[i].id + `" name = "prihvati" class="btn btn-primary" type="button" value="Prihvati"></br>
-	                    <input id="btnOdbij` + data[i].id + `" name = "odbij" class="btn btn-primary pull-center" type="button"
-	                           value="Odbij" />
+			temp+=`<td colspan="2" style = "text-align:center;">`;
+			if(data[i].status == 'kreirana') {
+         temp+= `<input name="prihvati" id="btnPrihvati` + data[i].id + `" name = "prihvati" class="btn btn-primary" type="button" value="Prihvati">`;
+         temp+=`</br><input id="btnOdbij` + data[i].id + `" name = "odbij" class="btn btn-primary pull-center" type="button"
+         value="Odbij" /></td>`;	
+			}
+          if(data[i].status == 'kreirana' || data[i].status == 'prihvacena') {
+        	 		temp+=`</br><input id="btnOdbij` + data[i].id + `" name = "odbij" class="btn btn-primary pull-center" type="button"
+	                           value="Odbij" /></td>`;
+         }
 
-	                </td></tr>`;
+	         temp+=`</tr>`;
 			
 		}
 		$("#prikazPodataka").html(`
@@ -559,6 +582,82 @@ let ispisiRezervacije = function(data) {
 			
 			});
 	 });
+	
+
+};
+
+let ispisiKomentare = function(data) {
+	let temp='';	
+	
+		for (i in data){
+			let pom ='';
+			if(data[i].ocjena == "0") {
+				pom = "Neocijenjeno";
+			} else if (data[i].ocjena == "1") {
+				pom = "Jedan";
+			} else if( data[i].ocjena == "2") {
+				pom = "Dva";
+			} else if( data[i].ocjena == "3") {
+				pom = "Tri";
+			} else if( data[i].ocjena == "4") {
+				pom = "Cetiri";
+			} else {
+				pom = "Pet";
+			}
+			temp+=`<tr><td>`+data[i].gost+`</td><td>`+pom+`</td><td>`+data[i].tekst+`</td>`;
+			temp+= `<td><input name="prihvati" id="btnPrihvati` + data[i].id + `" name = "prihvati" class="btn btn-primary" type="button" value="Prihvati">`;
+	         temp+=`</br><input id="btnOdbij` + data[i].id + `" name = "odbij" class="btn btn-primary pull-center" type="button"
+	         value="Odbij" /></td>`;
+			temp+=`</tr>`;
+		}
+		$("#prikazPodataka").html(`<table class="table table-bordered center"  style="width: 60%;height: 500px;overflow: auto; margin: 0 auto;">
+        <thead>
+        <tr>
+          <th colspan="3" class = " success text-info" style="text-align: center;">KOMENTARI</th>
+        </tr>
+        <tr class="text-info success">
+          <th>Gost</th>
+          <th>Ocjena</th>
+          <th>Tekst</th>         
+        
+        </tr>
+      </thead>
+      <tbody id="komentariTabela">
+      </tbody>
+    </table>
+  
+			`);
+		$('#komentariTabela').html(temp);
+		$("input:button[name=prihvati]").click(function () {
+			 $.post({
+					url:'../rest/dozvoliKom',
+					data : JSON.stringify({id:this.id}),
+					contentType: 'application/json',
+					success: function(data){
+						alert("Uspjesno dozvoljeno");
+						location.href="Domacin.html";
+					},
+					error: function(message){
+						alert('Neuspjesno');
+					}
+				
+				});
+		 });
+			$("input:button[name=odbij]").click(function () {
+			 $.post({
+					url:'../rest/zabraniKom',
+					data : JSON.stringify({id:this.id}),
+					contentType: 'application/json',
+					success: function(data){
+						alert("Uspjesno zabranjeno");
+						location.href="Domacin.html";
+					},
+					error: function(message){
+						alert('Neuspjesno');
+					}
+				
+				});
+		 });
 	
 
 };

@@ -30,18 +30,20 @@ let ispisiSveAktivne = function(data,pom1) {
 		        }
 		        temp += (`<td>${(lok.trim() != ``) ? lok : `-`}</td>`);
 		        lok = ``;
-
+		       
 			temp+=`<td>`+data[i].domacin+`</td>`;
 			temp+=`<td>
-		        <input id="btnRez` + data[i].id + `" name = "rezervisi" class="btn btn-primary" type="button" value="Rezervisi"/>
-			                	
+		        
+			    <input id="btnKom` + data[i].id + `" name = "komentar" class="btn btn-primary" type="button" value="Komentarisi"/></br>
+			    <input id="btnPrikazi` + data[i].id + `" name = "kom" class="btn btn-primary" type="button" value="Prikazi"/></td>`;
+			    temp+=`<td><input id="btnRez` + data[i].id + `" name = "rezervisi" class="btn btn-primary" type="button" value="Rezervisi"/>
 			                </td></tr>`;
 		}
 		$("#prikazPodataka2").html(`
 	      <table class="table table-bordered">
 	        <thead>
 	          <tr>
-	            <th colspan="9" class = " success text-info" style="text-align: center;">AKTIVNI APARTKAMI</th>
+	            <th colspan="10" class = " success text-info" style="text-align: center;">AKTIVNI APARTKAMI</th>
 	          </tr>
 	          <tr class="text-info success">
 	            <th>Tip</th>
@@ -53,6 +55,8 @@ let ispisiSveAktivne = function(data,pom1) {
 	            <th>Lista sadrzaja</th>
 	            <th>Lokacija</th>
 	            <th>Domacin</th>
+	            <th>Komentar</th>
+	            <th></th>
 	          
 	          </tr>
 	        </thead>
@@ -63,6 +67,20 @@ let ispisiSveAktivne = function(data,pom1) {
 				`);
 	    
 		$('#apartmaniTabela').html(temp);
+		$("input:button[name=kom]").click(function () {
+			 $.post({
+					url:'../rest/vratiKomentare1',
+					data : JSON.stringify({id:this.id}),
+					contentType: 'application/json',
+					success: function(data){
+						ispisiKomentare(data);
+					},
+					error: function(message){
+						alert('Neuspjesno');
+					}
+				
+				});
+		 });
 		
 		$("input:button[name=rezervisi]").click(function () {
 			var id = this.id;
@@ -133,17 +151,94 @@ let ispisiSveAktivne = function(data,pom1) {
 				
 				});
 	    });
+		$("input:button[name=komentar]").click(function () {
+			var id = this.id;
+			 $.post({
+					url:'../rest/komentarisanje',
+					data : JSON.stringify({id:this.id}),
+					contentType: 'application/json',
+					success: function(){
+						ostaviKomentar(id);
+					},
+					error: function(message){
+						alert('Nemate pravo da ostavite komentar.');
+					}
+				
+				});
+	    });
 
 };
+
+let ostaviKomentar = function(id) {
+	$("#prikazPodataka2").html(`<table class="table table-bordered" style="width: 30%;height: 200px;overflow: auto; margin: 0 auto;"> 
+	        <thead>
+	            <tr class="success">
+	                <th colspan="2">
+	                    Komentarisanje
+	                </th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	            
+	            <tr>
+	                <td>Ocjena:</td>
+	                <td>
+	                    <select id="ocjena">
+	                        <option value="0" selected>Neocijenjeno</option>
+	                        <option value="1">Jedan</option>
+	                        <option value="2">Dva</option>
+	                        <option value="3">Tri</option>
+	                        <option value="4">Cetiri</option>
+	                        <option value="5">Pet</option>
+	                    </select>
+	                </td>
+	            </tr>
+	            <tr>
+	                <td>Komentar:</td>
+	                <td>
+	                    <textarea type="text" id="txtKom" placeholder="Unesi komentar..." />
+	                </td>
+	            </tr>
+	            
+	            <tr class="success">
+	                <td colspan="2" style = "text-align:center;">
+	                    <input id="btnKomentar" class="btn btn-primary pull-center" type="button" value="Ostavi komentar">                    
+	                </td>
+	            </tr>
+	        </tbody>
+	     </table>`
+	    );
+	 $("#btnKomentar").click(function () {
+	        var ocjena = $("#ocjena").val();
+	        var tekst = $("#txtKom").val();
+	        $.post({
+				url:'../rest/ostaviKom',
+				data : JSON.stringify({ocjena:ocjena,tekst:tekst,apartman:id}),
+				contentType: 'application/json',
+				success: function(){
+					location.href = "Gost.html";
+				},
+				error: function(message){
+					alert('Neuspjesno dodavanje komentara.');
+				}
+			
+			});
+	    });
+	
+}
 let ispisiSveRezervacije = function(data) {
 	let temp='';
 	   
 	
 		for (i in data){
 			temp+=`<tr><td>`+data[i].pocetniDatum+`</td><td>`+data[i].brojNocenja+`</td><td>`+data[i].ukupnaCijena+`</td><td>`+data[i].status+`</td>`;
+			if(data[i].status == 'kreirana' || data[i].status == 'prihvacena') {
 			temp+=`<td> <input id="btnOdustanak` + data[i].id + `" name = "odustani" class="btn btn-primary pull-center" type="button"
-	                           value="Odustanak" />`;
-			temp+=`</td></tr>`;
+	                           value="Odustanak" /></td>`; }
+			else {
+				temp+=`<td></td>`;
+			}
+			temp+=`</tr>`;
 		}
 		
 		$("#prikazPodataka2").html(`
@@ -186,3 +281,46 @@ let ispisiSveRezervacije = function(data) {
 	
 
 };
+
+let ispisiKomentare = function(data) {
+	let temp='';
+	
+		for (i in data){
+			let pom ='';
+			if(data[i].ocjena == "0") {
+				pom = "Neocijenjeno";
+			} else if (data[i].ocjena == "1") {
+				pom = "Jedan";
+			} else if( data[i].ocjena == "2") {
+				pom = "Dva";
+			} else if( data[i].ocjena == "3") {
+				pom = "Tri";
+			} else if( data[i].ocjena == "4") {
+				pom = "Cetiri";
+			} else {
+				pom = "Pet";
+			}
+			temp+=`<tr><td>`+data[i].gost+`</td><td>`+pom+`</td><td>`+data[i].tekst+`</td>`;
+			temp+=`</tr>`;
+		}
+		$("#prikazPodataka2").html(`<table class="table table-bordered center"  style="width: 60%;height: 500px;overflow: auto; margin: 0 auto;">
+        <thead>
+        <tr>
+          <th colspan="3" class = " success text-info" style="text-align: center;">KOMENTARI</th>
+        </tr>
+        <tr class="text-info success">
+          <th>Gost</th>
+          <th>Ocjena</th>
+          <th>Tekst</th>         
+        
+        </tr>
+      </thead>
+      <tbody id="komentariTabela">
+      </tbody>
+    </table>
+  
+			`);
+		$('#komentariTabela').html(temp);
+};
+
+

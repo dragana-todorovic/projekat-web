@@ -29,6 +29,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import beans.Apartman;
+import beans.Komentar;
 import beans.Korisnik;
 import beans.PomocnaKlasa;
 import beans.PretraziPoKorisnickom;
@@ -375,12 +376,14 @@ public class DomacinService {
         Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
     	for(Apartman a: k.getApartmanZaIzdavanje()){
        		if(a.getId() == ID) {
-       			a.obrisan = true;       			
+       			a.obrisan = true;
+       			a.getRezervacije().clear();
        			String contextPath = c.getRealPath("");
        			kd.sacuvajKorisnike(contextPath);
        			return Response.status(200).build();
        		}
        	}
+    	
        	return Response.status(400).build();
        }
     
@@ -520,4 +523,99 @@ public class DomacinService {
 		korisnikDAO.sacuvajKorisnike(contextPath);
 			   return  Response.status(200).build();
 		
-    }}
+    }
+    @POST
+   	@Path("/vratiKomentare")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response preuzmiKomentare(String id,@Context HttpServletRequest request){
+    	String pom = id.substring(17,id.length()-2);
+    	int ID = Integer.parseInt(pom);
+    	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    	List<Komentar> pomocnaLista = new ArrayList<Komentar>();
+    	for(Apartman a:k.getApartmanZaIzdavanje()) {
+    		System.out.println(k.getApartmanZaIzdavanje().size());
+    		if(a.getId() == ID) {
+    			pomocnaLista = a.getKomentar();
+    		}
+    	}
+    	return Response.ok(pomocnaLista).status(200).build();
+    		
+    }
+    
+    @POST
+   	@Path("/dozvoliKom")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response dozvoliKom(String id,@Context HttpServletRequest request){
+    	Boolean uspjesno = false;
+    	String pom = id.substring(18,id.length()-2);
+    	int ID = Integer.parseInt(pom);
+    	KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+    	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    	for(Apartman a:k.getApartmanZaIzdavanje()) {
+    		for(Komentar kom:a.getKomentar()) {
+    			if(kom.getId() == ID) {
+    				uspjesno = true;
+    				kom.setDozoli(true);
+    			}
+    			
+    		}
+    	}
+    	for(Korisnik kor:korisnikDAO.getKorisnici().values()) {
+    		if(kor.getUloga().equals(Uloga.gost)) {
+    			for(Apartman ap:kor.getIznajmljeniApartman()) {
+    				for(Komentar kom1:ap.getKomentar()) {
+    					if(kom1.getId() == ID) {
+    						kom1.setDozoli(true);
+    					}
+    				}
+    			}
+    		}
+    	}
+    	if(!uspjesno) {
+    		return Response.status(400).build();
+    	}
+    	String contextPath = c.getRealPath("");
+		korisnikDAO.sacuvajKorisnike(contextPath);
+    return Response.status(200).build();
+    }
+    
+    @POST
+   	@Path("/zabraniKom")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response ZabraniKom(String id,@Context HttpServletRequest request){
+    	Boolean uspjesno = false;
+    	String pom = id.substring(15,id.length()-2);
+    	int ID = Integer.parseInt(pom);
+    	KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+    	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    	for(Apartman a:k.getApartmanZaIzdavanje()) {
+    		for(Komentar kom:a.getKomentar()) {
+    			if(kom.getId() == ID) {
+    				uspjesno = true;
+    				kom.setDozoli(false);
+    			}
+    			
+    		}
+    	}
+    	for(Korisnik kor:korisnikDAO.getKorisnici().values()) {
+    		if(kor.getUloga().equals(Uloga.gost)) {
+    			for(Apartman ap:kor.getIznajmljeniApartman()) {
+    				for(Komentar kom1:ap.getKomentar()) {
+    					if(kom1.getId() == ID) {
+    						kom1.setDozoli(false);
+    					}
+    				}
+    			}
+    		}
+    	}
+    	if(!uspjesno) {
+    		return Response.status(400).build();
+    	}
+    	String contextPath = c.getRealPath("");
+		korisnikDAO.sacuvajKorisnike(contextPath);
+    return Response.status(200).build();
+    }
+}

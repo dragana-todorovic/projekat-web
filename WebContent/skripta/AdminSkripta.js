@@ -246,7 +246,7 @@ let ispisiSveApartmane = function(data,pom1) {
 	        temp += (`<td>${(lok.trim() != ``) ? lok : `-`}</td>`);
 	        lok = ``;
 	        temp += (`<td>`+data[i].domacin+`</td><td>`+data[i].status+`</td>`);
-
+	    temp+=`<td><input id="btnPrikaz` + data[i].id + `" name = "kom" class="btn btn-primary" type="button" value="Prikazi"/> </td> `;
 		temp+=`<td colspan="2" style = "text-align:center;">
          <input name="izmijeni" id="btnIzmijeni` + data[i].id + `" name = "izmijeni" class="btn btn-primary" type="button" value="Izmijeni apartman"></br>
 	                    <input id="btnObrisi` + data[i].id + `" name = "obrisi" class="btn btn-primary pull-center" type="button"
@@ -257,7 +257,7 @@ let ispisiSveApartmane = function(data,pom1) {
       <table class="table table-bordered">
         <thead>
           <tr>
-            <th colspan="10" class = " success text-info" style="text-align: center;">APARTMANI</th>
+            <th colspan="11" class = " success text-info" style="text-align: center;">APARTMANI</th>
           </tr>
           <tr class="text-info success">
             <th>Tip</th>
@@ -270,6 +270,8 @@ let ispisiSveApartmane = function(data,pom1) {
             <th>Lokacija</th>
             <th>Domacin</th>
             <th>Status</th>
+             <th>Komentari</th>
+             <th</th>
           
           </tr>
         </thead>
@@ -280,6 +282,23 @@ let ispisiSveApartmane = function(data,pom1) {
 			`);
     
 	$('#apartmaniTabela').html(temp);
+	
+	$("input:button[name=kom]").click(function () {
+		 $.post({
+				url:'../rest/vratiKomentare2',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(data){
+					ispisiKomentare(data);
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+	 });
+	
+	
 	$("input:button[name=obrisi]").click(function () {
 		 $.post({
 				url:'../rest/obrisiApartman1',
@@ -520,6 +539,49 @@ $('#btnIzmijeni').click(function() {
 		}
 			});
 			
-}
+};
 
-		
+let ispisiKomentare = function(data) {
+	let temp='';
+	
+		for (i in data){
+			let pom ='';
+			if(data[i].ocjena == "0") {
+				pom = "Neocijenjeno";
+			} else if (data[i].ocjena == "1") {
+				pom = "Jedan";
+			} else if( data[i].ocjena == "2") {
+				pom = "Dva";
+			} else if( data[i].ocjena == "3") {
+				pom = "Tri";
+			} else if( data[i].ocjena == "4") {
+				pom = "Cetiri";
+			} else {
+				pom = "Pet";
+			}
+			temp+=`<tr><td>`+data[i].gost+`</td><td>`+pom+`</td><td>`+data[i].tekst+`</td>`;
+			temp+=`</tr>`;
+		}
+		$("#prikazPodataka").html(`<table class="table table-bordered center"  style="width: 60%;height: 500px;overflow: auto; margin: 0 auto;">
+        <thead>
+        <tr>
+          <th colspan="3" class = " success text-info" style="text-align: center;">KOMENTARI</th>
+        </tr>
+        <tr class="text-info success">
+          <th>Gost</th>
+          <th>Ocjena</th>
+          <th>Tekst</th>         
+        
+        </tr>
+      </thead>
+      <tbody id="komentariTabela">
+      </tbody>
+    </table>
+  
+			`);
+		$('#komentariTabela').html(temp);
+};
+
+
+
+

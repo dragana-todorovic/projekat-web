@@ -1,20 +1,35 @@
 package beans;
 
 public class Komentar {
-	private Gost gost;
-	private Apartman apartman;
+	private String gost;
+	private String apartman;
 	private String tekst;
-	private Ocjena ocjena;
-	public Gost getGost() {
+	private String ocjena;
+	private Boolean dozvoli;
+	private int id;
+	public static int brojac = 0;
+	
+	public Komentar () {
+		dozvoli = false; //zabranjen
+		gost ="";
+		apartman="";
+		tekst="";
+		ocjena="";
+		setId(brojac);
+		brojac++;
+	}
+	
+	
+	public String getGost() {
 		return gost;
 	}
-	public void setGost(Gost gost) {
+	public void setGost(String gost) {
 		this.gost = gost;
 	}
-	public Apartman getApartman() {
+	public String getApartman() {
 		return apartman;
 	}
-	public void setApartman(Apartman apartman) {
+	public void setApartman(String apartman) {
 		this.apartman = apartman;
 	}
 	public String getTekst() {
@@ -23,11 +38,27 @@ public class Komentar {
 	public void setTekst(String tekst) {
 		this.tekst = tekst;
 	}
-	public Ocjena getOcjena() {
+	public String getOcjena() {
 		return ocjena;
 	}
-	public void setOcjena(Ocjena ocjena) {
+	public void setOcjena(String ocjena) {
 		this.ocjena = ocjena;
+	}
+	public Boolean getDozoli() {
+		return dozvoli;
+	}
+	public void setDozoli(Boolean dozoli) {
+		this.dozvoli = dozoli;
+	}
+
+
+	public int getId() {
+		return id;
+	}
+
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 
