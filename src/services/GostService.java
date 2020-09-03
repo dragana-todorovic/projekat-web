@@ -298,8 +298,10 @@ public class GostService {
    	   public Response preuzmiKomentare(String id,@Context HttpServletRequest request){
     	String pom = id.substring(17,id.length()-2);
     	int ID = Integer.parseInt(pom);
-    	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    	//Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    	KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
     	List<Komentar> pomocnaLista = new ArrayList<Komentar>();
+    	for(Korisnik k :korisnikDAO.getKorisnici().values()) {
     	for(Apartman a:k.getIznajmljeniApartman()) {
     		if(a.getId() == ID ) {
     			for(Komentar kom:a.getKomentar()) {
@@ -308,7 +310,7 @@ public class GostService {
     				}
     			}
     		}
-    	}
+    	}}
     	return Response.ok(pomocnaLista).status(200).build();
     		
     }

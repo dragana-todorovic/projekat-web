@@ -14,7 +14,7 @@ var pom = ``;
 			url:'../rest/vratiSveAktivne',
 			contentType: 'application/json',
 			success: function(data) {
-				ispisiSveAktivne(data,pom);
+				ispisiSveAktivneZaNeulogovanog(data,pom);
 			},
 			error: function() {
 			}
