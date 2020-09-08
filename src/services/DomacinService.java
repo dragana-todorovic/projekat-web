@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.json.JsonReadContext;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,6 +33,7 @@ import beans.Apartman;
 import beans.Komentar;
 import beans.Korisnik;
 import beans.PomocnaKlasa;
+import beans.PretragaPoDatumima;
 import beans.PretraziPoKorisnickom;
 import beans.Rezervacija;
 import beans.SadrzajApartmana;
@@ -85,6 +87,48 @@ public class DomacinService {
     		
     		
     }
+    
+    @POST
+   	@Path("/pretraziPoDatumima1")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response pretrazi(PretragaPoDatumima datum,@Context HttpServletRequest request){
+       	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+       		long brojDana = 0;
+   		   LocalDate pocetni;
+   		   LocalDate krajnji;
+   		   List<Apartman> pomocnaLista = new ArrayList<Apartman>();
+   		   List<LocalDate> pomocniDatumi = new ArrayList<LocalDate>();
+   		   
+   		   if(datum.getOd()!=null && datum.getDoo()!=null) {
+   			   pocetni = LocalDate.parse(datum.getOd(),DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+   			   krajnji = LocalDate.parse(datum.getDoo(),DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+   			   long izmedju = ChronoUnit.DAYS.between(pocetni, krajnji);
+   			   brojDana = izmedju;
+   			   for(int i = 0;i<brojDana;i++) {
+   				   pomocniDatumi.add(pocetni.plusDays(i));
+   			   }
+   					   for(Apartman a:k.getApartmanZaIzdavanje()) {
+   						   if(!a.obrisan && a.getStatus().equals(Status.aktivno)) {
+   							   List<LocalDate> datumi1 = new ArrayList<LocalDate>();
+   							   for(String d : a.getDatumZaIzdavanje()) {
+   								   datumi1.add(LocalDate.parse(d,DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+   							   }
+   							for(LocalDate ld:pomocniDatumi) {
+   								if(datumi1.contains(ld)) {
+   									if(!pomocnaLista.contains(a)) {
+   										pomocnaLista.add(a);
+   									}
+   								}
+   							}
+   						   }
+   						   
+   					   }
+   				   }
+   		   return Response.ok(pomocnaLista).status(200).build();
+   		   
+   		
+       } 
     
     @POST
    	@Path("/promijeniStatus")
@@ -505,7 +549,7 @@ public class DomacinService {
 					a.setVrijemeZaPrijavu(pomocna.getVrijemeZaPrijavu());
 					a.setStatus(pomocna.getStatus());
 					a.setRezervacije(new ArrayList<Rezervacija>());
-				}
+				
 		
 		
 				String[] datumi = pomocna.getDatumiZaIzdavanje().split(",");
@@ -516,7 +560,7 @@ public class DomacinService {
 					
 					
 				}
-				a.setDatumZaIzdavanje(pomocnaa);
+				a.setDatumZaIzdavanje(pomocnaa);}
 				
 		}
 		String contextPath = c.getRealPath("");

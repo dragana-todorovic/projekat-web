@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -36,6 +37,7 @@ import beans.Komentar;
 import beans.Korisnik;
 import beans.PodaciZaRezervaciju;
 import beans.PomocnaKlasa;
+import beans.PretragaPoDatumima;
 import beans.PretraziPoKorisnickom;
 import beans.Rezervacija;
 import beans.SadrzajApartmana;
@@ -91,6 +93,57 @@ public class GostService {
     		
     		
     }
+    
+    @POST
+	@Path("/pretraziPoDatumima2")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	   public Response pretrazi(PretragaPoDatumima datum,@Context HttpServletRequest request){
+    	KorisnikDAO kd=(KorisnikDAO) c.getAttribute("korisnikDAO");
+    		long brojDana = 0;
+		   LocalDate pocetni;
+		   LocalDate krajnji;
+		   List<Apartman> pomocnaLista = new ArrayList<Apartman>();
+		   List<LocalDate> pomocniDatumi = new ArrayList<LocalDate>();
+		   
+		   if(datum.getOd()!=null && datum.getDoo()!=null) {
+			   pocetni = LocalDate.parse(datum.getOd(),DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			   System.out.println(pocetni);
+			   krajnji = LocalDate.parse(datum.getDoo(),DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+			   System.out.println(krajnji);
+			   long izmedju = ChronoUnit.DAYS.between(pocetni, krajnji);
+			   brojDana = izmedju;
+			   for(int i = 0;i<brojDana;i++) {
+				   pomocniDatumi.add(pocetni.plusDays(i));
+			   }
+			   for(Korisnik k:kd.getKorisnici().values()) {
+				   if(k.getUloga().equals(Uloga.domacin)) {
+					   for(Apartman a:k.getApartmanZaIzdavanje()) {
+						   if(!a.obrisan && a.getStatus().equals(Status.aktivno)) {
+							   List<LocalDate> datumi1 = new ArrayList<LocalDate>();
+							   for(String d : a.getDatumZaIzdavanje()) {
+								   datumi1.add(LocalDate.parse(d,DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+							   }
+							for(LocalDate ld:pomocniDatumi) {
+								System.out.println(" *************" + ld);
+								if(datumi1.contains(ld)) {
+									System.out.println(" #################  usao u pretraguuu");
+									if(!pomocnaLista.contains(a)) {
+										pomocnaLista.add(a);
+									}
+								}
+							}
+						   }
+						   
+					   }
+				   }
+			   }
+			   
+		   }
+		   return Response.ok(pomocnaLista).status(200).build();
+		   
+		
+    } 
     
     @POST
    	@Path("/rezervisiApartman")
@@ -159,6 +212,9 @@ public class GostService {
     		
     				
     }
+    
+    
+    
     @GET
    	@Path("/vratiSveRezervacije")
    	@Produces(MediaType.APPLICATION_JSON)

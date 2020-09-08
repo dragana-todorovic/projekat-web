@@ -297,7 +297,7 @@ let ispisiSveApartmane = function(data,pom1) {
         for (p in data[i].sadrzajApartmana) {
             pom[p] = "Naziv:" + data[i].sadrzajApartmana[p].naziv + "\n";
         }
-		temp+=`<tr><td class="col1">`+data[i].tip+`</td><td>`+data[i].brojSoba+`</td><td>`+data[i].brojGostiju+`</td><td>`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
+		temp+=`<tr><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
 		temp += (`<td>${pom}</td>`);
 		 var lok = ``;
 	        if (data[i].lokacija.adresa.ulica != null) {
@@ -315,7 +315,7 @@ let ispisiSveApartmane = function(data,pom1) {
 	        if (data[i].lokacija.adresa.pozivniBrojMjesta != null) {
 	            lok += data[i].lokacija.adresa.pozivniBrojMjesta;
 	        }
-	        temp += (`<td>${(lok.trim() != ``) ? lok : `-`}</td>`);
+	        temp += (`<td class="lok">${(lok.trim() != ``) ? lok : `-`}</td>`);
 	        lok = ``;
 	        temp += (`<td>`+data[i].domacin+`</td><td class="col1">`+data[i].status+`</td>`);
 	    temp+=`<td><input id="btnPrikaz` + data[i].id + `" name = "kom" class="btn btn-primary" type="button" value="Prikazi"/> </td> `;
@@ -338,17 +338,50 @@ let ispisiSveApartmane = function(data,pom1) {
          <option value="neaktivno">neaktivno</option>
     </select>
     </div><br>
-
+     <br/>
+  <div id="upozorenje" class="hidden"></div>
+  <div><b>Pretrazi po datumu:&nbsp;&nbsp;</br>
+<b>od: <input style = "width:10%"  type="text" class="form-control date" id="date1"/> <b>do: <input style = "width:10%"  type="text" class="form-control date"  id="date2"/>&nbsp;&nbsp;<input type="button" style="height:33px"  id="pretrazi" class= "btn btn-primary pull-center" value="Pretrazi"/>
+    </div><br>
+			
       <table class="table table-bordered" id="table">
         <thead>
-          <tr>
-            <th colspan="11" class = " success text-info" style="text-align: center;">APARTMANI</th>
+         <tr>
+            <th colspan="12" class = " success text-info" style="text-align: center;">APARTMANI</th>
           </tr>
+	          <tr class="success">
+           <th></th>
+           <th style="text-align:center">
+               od:<input type="number" name="filter" id="odSoba" min="0" style="width:60px;"/></br>
+               do:<input type="number" name="filter" id="doSoba" min="0" style="width:60px;"/>
+           </th>
+            <th style="text-align:center">
+               <input type="number" name="filter" id="osobe" min="1" style="width:60px; placeholder="Unesite broj""/></br>  
+           </th>
+           <th style="text-align:center">
+               od:<input type="number" name="filter" id="odCijena" min="0" style="width:60px;"/></br>
+               do:<input type="number" name="filter" id="doCijena" min="0" style="width:60px;"/>
+           </th> 
+           <th></th>
+           <th></th>
+           
+          
+           <th></th>
+			 <th style="text-align:center">
+               <input type="text" name="filter" id="lokacija" min="0" style="width:150px; placeholder="Unesite lokaciju""/></br>  
+           </th>
+           
+           <th></th>
+           <th></th>
+           <th></th>
+           <th></th>
+          </tr>
+        
           <tr class="text-info success">
             <th>Tip</th>
-            <th>Broj soba</th>
-            <th>Broj gostiju</th>
-             <th class="success" style="text-align:center" name="sortiraj">Cijena po noci<span name="strelica" class="glyphicon glyphicon-arrow-down"/></th>
+            <th style = "width:10%">Broj soba</th>
+            <th >Broj gostiju</th>
+             <th style = "width:10%" class="success" style="text-align:center" name="sortiraj">Cijena po noci<span name="strelica" class="glyphicon glyphicon-arrow-down"/></th>
             <th>Vrijeme za prijavu</th>
             <th>Vrijeme za odjavu</th>
             <th>Lista sadrzaja</th>
@@ -356,8 +389,8 @@ let ispisiSveApartmane = function(data,pom1) {
             <th>Domacin</th>
             <th>Status</th>
              <th>Komentari</th>
-             <th</th>
-          
+             <th></th>
+                     
           </tr>
         </thead>
         <tbody id="apartmaniTabela">
@@ -367,6 +400,274 @@ let ispisiSveApartmane = function(data,pom1) {
 			`);
     
 	$('#apartmaniTabela').html(temp);
+	$('.date1').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+    $("#date1").datepicker({
+        format: 'dd/mm/yyyy'
+    });
+    
+	$('.date2').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+    $("#date2").datepicker({
+        format: 'dd/mm/yyyy'
+    });
+	//datum
+	 $("#pretrazi").click(function () {
+	        var od = $("#date1").val();
+	        var doo = $("#date2").val();
+	 if(od == "" || doo == "") {
+		 $("#upozorenje").removeClass('hidden');
+			$("#upozorenje").addClass('alert-danger');
+			$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Morate unijeti oba datuma.</td>`);
+			}
+		 
+	  else {
+		 $.post({
+				url:'../rest/pretraziPoDatumima',
+				data : JSON.stringify({od:od,doo:doo}),
+				contentType: 'application/json',
+				success: function(data){
+					ispisiSveApartmane(data,pom1);
+			},
+				error: function(message){}
+				
+			
+		 });
+	 }
+});
+	
+/*	 //lokacija
+	$("#lokacija").keyup(function () {
+        var nadji = ($('#lokacija').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(7)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#lokacija").keydown(function () {
+        var nadji = ($('#lokacija').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(7)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+	$("#osobe").keyup(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#osobe").keydown(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#osobe").mousedown(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#osobe").mouseup(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    //cijena
+    $("#odCijena").keyup(function () {
+    
+        if ($("#doCijena").val() != ``) {
+            if ($("#odCijena").val() - $("#doCijena").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+
+    });
+    $("#odCijena").mouseup(function () {
+        if ($("#doCijena").val() != ``) {
+            if ($("#odCijena").val() - $("#doCijena").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+    });
+    $("#doCijena").keyup(function () {
+
+        if ($("#odCijena").val() != ``) {
+            if ($("#doCijena").val() - $("#odCijena").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+
+    });
+    $("#doCijena").mouseup(function () {
+        if ($("#odCijena").val() != ``) {
+            if ($("#doCijena").val() - $("#odCijena").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+    });
+    //sobe
+    $("#odSoba").keyup(function () {
+	    
+        if ($("#doSoba").val() != ``) {
+            if ($("#odSoba").val() - $("#doSoba").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+
+    });
+    $("#odSoba").mouseup(function () {
+        if ($("#doSoba").val() != ``) {
+            if ($("#odSoba").val() - $("#doSoba").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+    });
+    $("#doSoba").keyup(function () {
+
+        if ($("#odSoba").val() != ``) {
+            if ($("#doSoba").val() - $("#odSoba").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+
+    });
+    $("#doSoba").mouseup(function () {
+        if ($("#odSoba").val() != ``) {
+            if ($("#doSoba").val() - $("#doSoba").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+    });*/
+    $("#prikazPodataka").on('change paste keyup','[name=filter]',function (event) {
+        var osobe=$("#osobe").val();
+        var lokacija=$("#lokacija").val();
+        var odc=$("#odCijena").val();
+        var doc=$("#doCijena").val();
+        var ods=$("#odSoba").val();
+        var dos=$("#doSoba").val();
+       // var k=$("#filterKategorija").val();
+        if ($("#osobe").val()==""){
+        	var osobe1=$("#table td.brojG").parent();
+        }else{
+        	var osobe1=$("#table td.brojG:contains('" + osobe + "')").parent()
+        }
+        if ($("#lokacija").val()==""){
+        	var adresa=$("#table td.brojG").parent();
+        }else{
+        	var adresa=$("#table td.lok:contains('" + lokacija + "')").parent()
+        }
+       if(odc==""){
+      		var cijenaOd=$("#table td.brojG").parent();
+    	}else {
+    		var cijenaOd=$("#table td.cijena").filter(function() { return $(this).text()-odc>=0}).parent();
+    	}
+    	if(doc==""){
+    		var cijenaDo=$("#table td.brojG").parent();
+    	}else {
+    		var cijenaDo=$("#table td.cijena").filter(function() {return $(this).text()-doc<=0}).parent();
+    	}
+    	if(ods==""){
+      		var sobaOd=$("#table td.brojG").parent();
+    	}else {
+    		var sobaOd=$("#table td.soba").filter(function() { return $(this).text()-ods>=0}).parent();
+    	}
+    	if(dos==""){
+    		var sobaDo=$("#table td.brojG").parent();
+    	}else {
+    		var sobaDo=$("#table td.soba").filter(function() {return $(this).text()-dos<=0}).parent();
+    	}
+        osobe1.filter(cijenaOd).filter(cijenaDo).filter(adresa).filter(sobaOd).filter(sobaDo).show();
+        $("#table td.brojG").parent().not(osobe1.filter(cijenaOd).filter(cijenaDo).filter(adresa).filter(sobaOd).filter(sobaDo)).hide();
+    });
 	$("#filterTip").change(function () { //filter po tipu ap
 	
         if ($(this).val() == "Bez naznake") {
@@ -716,5 +1017,36 @@ function getCellValue(row, index) {
     return $(row).children('td').eq(index).text()
 };
 
+function pretragaCijene() { 
+    var min = parseInt($('#odCijena').val(), 10);
+    var max = parseInt($('#doCijena').val(), 10);
+    $("#table tbody tr").each(function () {
+        var age = parseFloat($('td:eq(3)', this).text()) || 0;
+        if ((isNaN(min) && isNaN(max)) ||
+            (isNaN(min) && age <= max) ||
+            (min <= age && isNaN(max)) ||
+            (min <= age && age <= max)) {
+            $(this).show()
+        } else {
+            $(this).hide()
+        }
+    });
+};
+
+function pretragaSobe() { //za cijenu
+    var min = parseInt($('#odSoba').val(), 10);
+    var max = parseInt($('#doSoba').val(), 10);
+    $("#table tbody tr").each(function () {
+        var age = parseFloat($('td:eq(1)', this).text()) || 0;
+        if ((isNaN(min) && isNaN(max)) ||
+            (isNaN(min) && age <= max) ||
+            (min <= age && isNaN(max)) ||
+            (min <= age && age <= max)) {
+            $(this).show()
+        } else {
+            $(this).hide()
+        }
+    });
+};		
 
 

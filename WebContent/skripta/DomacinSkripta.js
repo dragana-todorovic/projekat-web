@@ -223,12 +223,40 @@ let ispisiApartmane = function(data,pom1) {
          <option value="soba">soba</option>
     </select>
     </div><br>
+			
 
-      <table class="table table-bordered" id="table">
-        <thead>
-          <tr>
-            <th colspan="9" class = " success text-info" style="text-align: center;">NEAKTIVNI APARTMANI</th>
+       <table class="table table-bordered" id = "table">
+	        <thead>
+	        
+	          <tr>
+	            <th colspan="11" class = " success text-info" style="text-align: center;">AKTIVNI APARTKAMI</th>
+	          </tr>
+	          <tr class="success">
+           <th></th>
+           <th style="text-align:center">
+               od:<input type="number" id="odSoba" min="0" style="width:60px;"/></br>
+               do:<input type="number" id="doSoba" min="0" style="width:60px;"/>
+           </th>
+            <th style="text-align:center">
+               <input type="number" id="osobe" min="1" style="width:60px; placeholder="Unesite broj""/></br>  
+           </th>
+           <th style="text-align:center">
+               od:<input type="number" id="odCijena" min="0" style="width:60px;"/></br>
+               do:<input type="number" id="doCijena" min="0" style="width:60px;"/>
+           </th> 
+           <th></th>
+           <th></th>
+           
+          
+           <th></th>
+			 <th style="text-align:center">
+               <input type="text" id="lokacija" min="0" style="width:150px; placeholder="Unesite lokaciju""/></br>  
+           </th>
+           
+           <th></th>
+           <th></th>
           </tr>
+
           <tr class="text-info success">
             <th>Tip</th>
             <th>Broj soba</th>
@@ -239,6 +267,7 @@ let ispisiApartmane = function(data,pom1) {
             <th>Lista sadrzaja</th>
             <th>Lokacija</th>
             <th>Komentari</th>
+            <th></th>
           
           </tr>
         </thead>
@@ -249,6 +278,207 @@ let ispisiApartmane = function(data,pom1) {
 			`);
     
 	$('#apartmaniTabela').html(temp);
+	$('.date1').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+    $("#date1").datepicker({
+        format: 'dd/mm/yyyy'
+    });
+    
+	$('.date2').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+    $("#date2").datepicker({
+        format: 'dd/mm/yyyy'
+    });
+	$("#lokacija").keyup(function () {
+        var nadji = ($('#lokacija').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(7)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#lokacija").keydown(function () {
+        var nadji = ($('#lokacija').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(7)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+	$("#osobe").keyup(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#osobe").keydown(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#osobe").mousedown(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#osobe").mouseup(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    //cijena
+    $("#odCijena").keyup(function () {
+    
+        if ($("#doCijena").val() != ``) {
+            if ($("#odCijena").val() - $("#doCijena").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+
+    });
+    $("#odCijena").mouseup(function () {
+        if ($("#doCijena").val() != ``) {
+            if ($("#odCijena").val() - $("#doCijena").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+    });
+    $("#doCijena").keyup(function () {
+
+        if ($("#odCijena").val() != ``) {
+            if ($("#doCijena").val() - $("#odCijena").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+
+    });
+    $("#doCijena").mouseup(function () {
+        if ($("#odCijena").val() != ``) {
+            if ($("#doCijena").val() - $("#odCijena").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+    });
+    //sobe
+    $("#odSoba").keyup(function () {
+	    
+        if ($("#doSoba").val() != ``) {
+            if ($("#odSoba").val() - $("#doSoba").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+
+    });
+    $("#odSoba").mouseup(function () {
+        if ($("#doSoba").val() != ``) {
+            if ($("#odSoba").val() - $("#doSoba").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+    });
+    $("#doSoba").keyup(function () {
+
+        if ($("#odSoba").val() != ``) {
+            if ($("#doSoba").val() - $("#odSoba").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+
+    });
+    $("#doSoba").mouseup(function () {
+        if ($("#odSoba").val() != ``) {
+            if ($("#doSoba").val() - $("#doSoba").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+    });
 	$("#filterTip").change(function () { //filter po tipu ap
 	
         if ($(this).val() == "Bez naznake") {
@@ -351,6 +581,452 @@ let ispisiApartmane = function(data,pom1) {
 			});
 
 };
+
+
+let ispisiAktivneApartmane = function(data,pom1) {
+	let temp='';
+   /* var t = ``;
+    for (ap2 in pom1) {
+        t += (`<input type="checkbox" id="${pom1[ap2].id}" name="sadrzaj" value="${pom1[ap2].naziv}">${pom1[ap2].naziv}</input></br>`);
+    }
+*/
+	for (i in data){
+		var pom = [];
+        for (p in data[i].sadrzajApartmana) {
+            pom[p] = "Naziv:" + data[i].sadrzajApartmana[p].naziv + "\n";
+        }
+		temp+=`<tr><td class="col1">`+data[i].tip+`</td><td>`+data[i].brojSoba+`</td><td>`+data[i].brojGostiju+`</td><td>`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
+		temp += (`<td>${pom}</td>`);
+		 var lok = ``;
+	        if (data[i].lokacija.adresa.ulica != null) {
+	            lok += data[i].lokacija.adresa.ulica;
+	            lok += ` `;
+	        }
+	        if (data[i].lokacija.adresa.ulica != null && data[i].lokacija.adresa.broj != null) {
+	            lok += data[i].lokacija.adresa.broj;
+	            lok += `<br> `;
+	        }
+	        if (data[i].lokacija.adresa.nasljenoMjesto != null) {
+	            lok += data[i].lokacija.adresa.nasljenoMjesto;
+	            lok += ` `;
+	        }
+	        if (data[i].lokacija.adresa.pozivniBrojMjesta != null) {
+	            lok += data[i].lokacija.adresa.pozivniBrojMjesta;
+	        }
+	        temp += (`<td>${(lok.trim() != ``) ? lok : `-`}</td>`);
+	        lok = ``;
+	    if(data[i].status=="aktivno"){
+	    temp+=`<td><input name="kom" style="text-align:center" id="btnPrikazi` + data[i].id + `" class="btn btn-primary" type="button" value="Prikazi"></td>`;
+	    }
+	    temp+=`<td colspan="2" style = "text-align:center;">
+         <input name="izmijeni" id="btnIzmijeni` + data[i].id + `" name = "izmijeni" class="btn btn-primary" type="button" value="Izmijeni apartman"></br>
+	                    <input id="btnObrisi` + data[i].id + `" name = "obrisi" class="btn btn-primary pull-center" type="button"
+	                           value="Obrisi apartman"/>`;
+		
+		if(data[i].status=="aktivno"){
+  		temp+=`</br> <input id="btnRez` + data[i].id + `" name = "rezervacija" class="btn btn-primary pull-center" type="button"
+	                           value="Rezervacije" /></td>`;
+}else{
+	temp+=`<td></td>`;
+}
+	              temp+=`</tr>`;
+	}
+	$("#prikazPodataka").html(`
+	</br>
+    <div> <b>Filtriraj po tipu:&nbsp;&nbsp;</b><select id="filterTip">
+         <option value="Bez naznake" selected>Bez naznake</option>
+         <option value="cijeliApartman">cijeliApartman</option>
+         <option value="soba">soba</option>
+    </select>
+    </div><br>
+     <div id="upozorenje" class="hidden"></div>
+  <div><b>Pretrazi po datumu:&nbsp;&nbsp;</br>
+<b>od: <input style = "width:10%"  type="text" class="form-control date" id="date1"/> <b>do: <input style = "width:10%"  type="text" class="form-control date"  id="date2"/>&nbsp;&nbsp;<input type="button" style="height:33px"  id="pretrazi" class= "btn btn-primary pull-center" value="Pretrazi"/>
+    </div><br>
+			
+
+       <table class="table table-bordered" id = "table">
+	        <thead>
+	        
+	          <tr>
+	            <th colspan="11" class = " success text-info" style="text-align: center;">AKTIVNI APARTKAMI</th>
+	          </tr>
+	          <tr class="success">
+           <th></th>
+           <th style="text-align:center">
+               od:<input type="number" id="odSoba" min="0" style="width:60px;"/></br>
+               do:<input type="number" id="doSoba" min="0" style="width:60px;"/>
+           </th>
+            <th style="text-align:center">
+               <input type="number" id="osobe" min="1" style="width:60px; placeholder="Unesite broj""/></br>  
+           </th>
+           <th style="text-align:center">
+               od:<input type="number" id="odCijena" min="0" style="width:60px;"/></br>
+               do:<input type="number" id="doCijena" min="0" style="width:60px;"/>
+           </th> 
+           <th></th>
+           <th></th>
+           
+          
+           <th></th>
+			 <th style="text-align:center">
+               <input type="text" id="lokacija" min="0" style="width:150px; placeholder="Unesite lokaciju""/></br>  
+           </th>
+           
+           <th></th>
+           <th></th>
+          </tr>
+
+          <tr class="text-info success">
+            <th>Tip</th>
+            <th>Broj soba</th>
+            <th>Broj gostiju</th>
+            <th class="success" style="text-align:center" name="sortiraj">Cijena po noci<span name="strelica" class="glyphicon glyphicon-arrow-down"/></th>
+            <th>Vrijeme za prijavu</th>
+            <th>Vrijeme za odjavu</th>
+            <th>Lista sadrzaja</th>
+            <th>Lokacija</th>
+            <th>Komentari</th>
+            <th></th>
+          
+          </tr>
+        </thead>
+        <tbody id="apartmaniTabela">
+        </tbody>
+      </table>
+    
+			`);
+    
+	$('#apartmaniTabela').html(temp);
+	$('.date1').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+    $("#date1").datepicker({
+        format: 'dd/mm/yyyy'
+    });
+    
+	$('.date2').datepicker({
+        format: 'dd/mm/yyyy'
+    });
+    $("#date2").datepicker({
+        format: 'dd/mm/yyyy'
+    });
+	//datum
+	 $("#pretrazi").click(function () {
+	        var od = $("#date1").val();
+	        var doo = $("#date2").val();
+	 if(od == "" || doo == "") {
+		 $("#upozorenje").removeClass('hidden');
+			$("#upozorenje").addClass('alert-danger');
+			$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Morate unijeti oba datuma.</td>`);
+			}
+		 
+	  else {
+		 $.post({
+				url:'../rest/pretraziPoDatumima1',
+				data : JSON.stringify({od:od,doo:doo}),
+				contentType: 'application/json',
+				success: function(data){
+					ispisiAktivneApartmane(data,pom1);
+			},
+				error: function(message){}
+				
+			
+		 });
+	 }
+});
+	$("#lokacija").keyup(function () {
+        var nadji = ($('#lokacija').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(7)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#lokacija").keydown(function () {
+        var nadji = ($('#lokacija').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(7)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+	$("#osobe").keyup(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#osobe").keydown(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#osobe").mousedown(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    $("#osobe").mouseup(function () {
+        var nadji = ($('#osobe').val()).toLowerCase();
+        $("#table tbody tr").each(function () {
+            var gost = ($('td:eq(2)', this).text()).toLowerCase();
+            if (gost.includes(nadji) || nadji == "") {
+                $(this).show()
+            } else {
+                $(this).hide()
+            }
+        });
+    });
+    //cijena
+    $("#odCijena").keyup(function () {
+    
+        if ($("#doCijena").val() != ``) {
+            if ($("#odCijena").val() - $("#doCijena").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+
+    });
+    $("#odCijena").mouseup(function () {
+        if ($("#doCijena").val() != ``) {
+            if ($("#odCijena").val() - $("#doCijena").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+    });
+    $("#doCijena").keyup(function () {
+
+        if ($("#odCijena").val() != ``) {
+            if ($("#doCijena").val() - $("#odCijena").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+
+    });
+    $("#doCijena").mouseup(function () {
+        if ($("#odCijena").val() != ``) {
+            if ($("#doCijena").val() - $("#odCijena").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaCijene($("#odCijena").val(), $("#doCijena").val());
+        }
+    });
+    //sobe
+    $("#odSoba").keyup(function () {
+	    
+        if ($("#doSoba").val() != ``) {
+            if ($("#odSoba").val() - $("#doSoba").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+
+    });
+    $("#odSoba").mouseup(function () {
+        if ($("#doSoba").val() != ``) {
+            if ($("#odSoba").val() - $("#doSoba").val() > 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+    });
+    $("#doSoba").keyup(function () {
+
+        if ($("#odSoba").val() != ``) {
+            if ($("#doSoba").val() - $("#odSoba").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+
+    });
+    $("#doSoba").mouseup(function () {
+        if ($("#odSoba").val() != ``) {
+            if ($("#doSoba").val() - $("#doSoba").val() < 0) {
+                $(this).removeAttr("class");
+                $(this).addClass("alert-danger");
+            } else {
+                $(this).removeAttr("class");
+                pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+            }
+        } else {
+            $(this).removeAttr("class");
+            pretragaSobe($("#odSoba").val(), $("#doSoba").val());
+        }
+    });
+	$("#filterTip").change(function () { //filter po tipu ap
+	
+        if ($(this).val() == "Bez naznake") {
+            $("#table td.col1").parent().show();
+        } else if ($(this).val() == "cijeliApartman") {
+            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+        }
+        else {
+            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+        }
+});
+
+	$("th[name=sortiraj]").click(function () {
+        if ($(this.getElementsByTagName("span")).attr(`class`) == "glyphicon glyphicon-arrow-down") {
+            $(this.getElementsByTagName("span")).removeClass("glyphicon glyphicon-arrow-down");
+            $(this.getElementsByTagName("span")).toggleClass("glyphicon glyphicon-arrow-up");
+        } else {
+            $(this.getElementsByTagName("span")).removeClass("glyphicon glyphicon-up-down");
+            $(this.getElementsByTagName("span")).toggleClass("glyphicon glyphicon-arrow-down");
+        }
+        var table = $(this).parents('table').eq(0)
+        var rows = table.find('tr:gt(1)').toArray().sort(comparer($(this).index()))
+        this.asc = !this.asc
+        if (!this.asc) { rows = rows.reverse() }
+        for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+    });
+	$("input:button[name=kom]").click(function () {
+		 $.post({
+				url:'../rest/vratiKomentare',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(data){
+					ispisiKomentare(data);
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+	 });
+	$("input:button[name=rezervacija]").click(function () {
+		 $.post({
+				url:'../rest/vratiRezervacije',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(data){
+					ispisiRezervacije(data);
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+	 });
+	$("input:button[name=obrisi]").click(function () {
+		 $.post({
+				url:'../rest/obrisiApartman',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(){
+					alert("Uspjesno ste obrisali apartman");
+					location.href = "Domacin.html";
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+	 });
+ $("input:button[name=izmijeni]").click(function () {
+		 $.post({
+				url:'../rest/preuzmiApartmanPoId',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(a){
+					 $.post({
+						url:'../rest/postojeciSadrzaj',
+						data : JSON.stringify({id:a.id}),
+						contentType: 'application/json',
+						success: function(data){
+								$.post({
+									url:'../rest/nepostojeciSadrzaj',
+									data : JSON.stringify({id:a.id}),
+									contentType: 'application/json',
+							success: function(dataa){
+										izmijeniApartman(a,data,dataa);
+										}
+										});
+										}
+										});
+										
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+			});
+
+};
+
+
 
 
 
@@ -777,5 +1453,35 @@ function getCellValue(row, index) {
     return $(row).children('td').eq(index).text()
 };
 
-		
+function pretragaCijene() { 
+    var min = parseInt($('#odCijena').val(), 10);
+    var max = parseInt($('#doCijena').val(), 10);
+    $("#table tbody tr").each(function () {
+        var age = parseFloat($('td:eq(3)', this).text()) || 0;
+        if ((isNaN(min) && isNaN(max)) ||
+            (isNaN(min) && age <= max) ||
+            (min <= age && isNaN(max)) ||
+            (min <= age && age <= max)) {
+            $(this).show()
+        } else {
+            $(this).hide()
+        }
+    });
+};
+
+function pretragaSobe() { //za cijenu
+    var min = parseInt($('#odSoba').val(), 10);
+    var max = parseInt($('#doSoba').val(), 10);
+    $("#table tbody tr").each(function () {
+        var age = parseFloat($('td:eq(1)', this).text()) || 0;
+        if ((isNaN(min) && isNaN(max)) ||
+            (isNaN(min) && age <= max) ||
+            (min <= age && isNaN(max)) ||
+            (min <= age && age <= max)) {
+            $(this).show()
+        } else {
+            $(this).hide()
+        }
+    });
+};		
 
