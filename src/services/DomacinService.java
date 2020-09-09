@@ -461,7 +461,9 @@ public class DomacinService {
         	if(a.getId() == ID) {
         		for (SadrzajApartmana s: a.getSadrzajApartmana()) {
         			if(!s.obrisan) {
+        				if(!pomocna.contains(s)) {
         				pomocna.add(s);
+        				}
         			}
         		}
         	}
@@ -484,18 +486,17 @@ public class DomacinService {
        		if(!s.obrisan) {
        			pomocna.add(s);
        	}}
+       	for(SadrzajApartmana sa:pomocna) {
+       	System.out.println("nepostojeci sadrzaj prije    " + sa.getNaziv());}
        	for(Apartman a:k.getApartmanZaIzdavanje()) {
         	if(a.getId() == ID) {
-        		Iterator<SadrzajApartmana> it = pomocna.iterator();
-               	int i =0;
-               	while(i<a.getSadrzajApartmana().size() && it.hasNext()) {
-               		it.next();
-               		it.remove();
-               		i++;
-               	}
-        		
+        		for(SadrzajApartmana sa: a.getSadrzajApartmana()) {
+        			pomocna.remove(sa);
+        		}
         	}
        	}
+       	for(SadrzajApartmana sa:pomocna) {
+           	System.out.println("nepostojeci sadrzaj poslije    " + sa.getNaziv());}
        
         return Response.ok(pomocna).status(200).build();
        
@@ -512,7 +513,6 @@ public class DomacinService {
 		{
 			pomocnaLista.add(Integer.parseInt(pom[i]));
 		}}
-		
 		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
 		SadrzajDAO sadrzajDAO = (SadrzajDAO) c.getAttribute("sadrzajDAO"); 
 		Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
@@ -530,10 +530,8 @@ public class DomacinService {
 						pomocniSadrzaj.add(s);
 					}
 				}}
-				for (SadrzajApartmana ps: pomocniSadrzaj) {
-					System.out.println("pomocni sadrzaj" + ps.getNaziv());
-				}
-				a.setSadrzajApartmana(pomocniSadrzaj);
+
+					a.setSadrzajApartmana(pomocniSadrzaj);
 					a.getLokacija().getAdresa().setBroj(pomocna.getBroj());
 					a.getLokacija().getAdresa().setUlica(pomocna.getUlica());
 					a.getLokacija().getAdresa().setNasljenoMjesto(pomocna.getNasljenoMjesto());
@@ -622,7 +620,7 @@ public class DomacinService {
     	}
     	String contextPath = c.getRealPath("");
 		korisnikDAO.sacuvajKorisnike(contextPath);
-    return Response.status(200).build();
+		return Response.status(200).build();
     }
     
     @POST

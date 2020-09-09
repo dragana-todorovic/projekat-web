@@ -362,11 +362,14 @@ public class GostService {
     		if(a.getId() == ID ) {
     			for(Komentar kom:a.getKomentar()) {
     				if(kom.getDozoli()) {
-    					pomocnaLista.add(kom);
+    					if(!pomocnaLista.contains(kom)) {
+    						pomocnaLista.add(kom);
+    					}
     				}
     			}
     		}
     	}}
+    	System.out.println("pomocna lista    1111 " +pomocnaLista.size());
     	return Response.ok(pomocnaLista).status(200).build();
     		
     }

@@ -280,7 +280,9 @@ public class AdministratorService {
     				if( !a.obrisan) {
     					for (SadrzajApartmana s: a.getSadrzajApartmana()) {
     	        			if(!s.obrisan) {
+    	        				if(!pomocniSadrzaj.contains(s)) {
     	        				pomocniSadrzaj.add(s);
+    	        				}
     	        				
     	        			}}
     					a.setSadrzajApartmana(pomocniSadrzaj);
@@ -351,12 +353,14 @@ public class AdministratorService {
         	if(a.getId() == ID) {
         		for (SadrzajApartmana s: a.getSadrzajApartmana()) {
         			if(!s.obrisan) {
+        				if(!pomocna.contains(s)) {
         				pomocna.add(s);
+        				}
         			}
         		}
         	}
         }}}
-
+        
         return Response.ok(pomocna).status(200).build();
        }
     @POST
@@ -372,23 +376,22 @@ public class AdministratorService {
     	SadrzajDAO sadrzajDAO = (SadrzajDAO) c.getAttribute("sadrzajDAO"); 
        	for(SadrzajApartmana s:sadrzajDAO.getSadrzaj().values()) {
        		if(!s.obrisan) {
+       			if(!pomocna.contains(s)) {
        			pomocna.add(s);
+       			}
        	}}
+
         KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
         for(Korisnik k: korisnikDAO.getKorisnici().values()) {
     		if(k != null) {
        	for(Apartman a:k.getApartmanZaIzdavanje()) {
         	if(a.getId() == ID) {
-        		Iterator<SadrzajApartmana> it = pomocna.iterator();
-               	int i =0;
-               	while(i<a.getSadrzajApartmana().size() && it.hasNext()) {
-               		it.next();
-               		it.remove();
-               		i++;
-               	}
-        		
+        		for(SadrzajApartmana sa: a.getSadrzajApartmana()) {
+        			pomocna.remove(sa);
+        		}
         	}
-       	}}}
+       	}}} 
+
        
         return Response.ok(pomocna).status(200).build();
        
@@ -425,10 +428,8 @@ public class AdministratorService {
 						pomocniSadrzaj.add(s);
 					}
 				}}
-				for (SadrzajApartmana ps: pomocniSadrzaj) {
-					System.out.println("pomocni sadrzaj" + ps.getNaziv());
-				}
-				a.setSadrzajApartmana(pomocniSadrzaj);
+
+					a.setSadrzajApartmana(pomocniSadrzaj);
 					a.getLokacija().getAdresa().setBroj(pomocna.getBroj());
 					a.getLokacija().getAdresa().setUlica(pomocna.getUlica());
 					a.getLokacija().getAdresa().setNasljenoMjesto(pomocna.getNasljenoMjesto());
