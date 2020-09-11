@@ -118,6 +118,60 @@ $("#prikazPodataka").html(`
 <button id="kreiranje" style="float:left;" class="btn btn-primary">Uzmi lokaciju sa mape</button>
         <div id="map" class="map" style="width:70%;padding:-400px 0px 0px 0px;float:right;"></div>`);
 pomocna();
+				$("#txtBrojSoba").keyup(function () {
+				if (!validateNumber($("#txtBrojSoba").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtBrojGostiju").keyup(function () {
+				if (!validateNumber($("#txtBrojGostiju").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+			$("#txtCijena").keyup(function () {
+				if (!validateNumber($("#txtCijena").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtUlica").keyup(function () {
+				if (!validateString($("#txtUlica").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtBroj").keyup(function () {
+				if ($("#txtBroj").val().trim()=="")
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtGrad").keyup(function () {
+				if (!validateString($("#txtGrad").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtPostanskiBroj").keyup(function () {
+				if ($("#txtPostanskiBroj").val().trim()=="")
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtSirina").keyup(function () {
+				if ($("#txtSirina").val().trim()=="")
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtDuzina").keyup(function () {
+				if ($("#txtDuzina").val().trim()=="")
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
 $('#fileSlika').change(function(){
 	readURL(this);
 });
@@ -157,7 +211,7 @@ $('.date').datepicker({
             multidate: true,
             format: 'dd/mm/yyyy'
         });
-		if(sadrzaj!=null && ulica.trim()!='' && broj.trim()!='' && grad.trim()!='' && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && brojSoba.trim() != '' && brojGostiju.trim() != '' && cijenaPoNoci.trim() != '' && datumZaIzdavanje.trim()!=''){
+		if(validateString(ulica) && broj.trim()!='' && validateString(grad) && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && validateNumber(brojSoba) &&validateNumber(brojGostiju) && validateNumber(cijenaPoNoci) && datumZaIzdavanje.trim()!=''){
 		$.post({
 		url:'../rest/dodajApartman',
 		data : JSON.stringify({id:data.id,slika:slika,ulica:ulica,broj:broj,nasljenoMjesto:grad,pozivniBrojMjesta:postanskiBroj,geografskaSirina:sirina,geografskaDuzina:duzina,tip:tip,brojSoba:brojSoba,brojGostiju:brojGostiju,domacin:korisnickoIme,cijenaPoNoci:cijenaPoNoci,vrijemeZaPrijavu:vrijemeZaPrijavu,vrijemeZaOdjavu:vrijemeZaOdjavu,sadrzajApartmana:sadrzaj,datumiZaIzdavanje:datumZaIzdavanje}),
@@ -174,10 +228,68 @@ $('.date').datepicker({
 	
 	});
 	}else{
-		$("#upozorenje").removeClass('hidden');
-		$("#upozorenje").addClass('alert-danger');
-		$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Sva polja moraju biti popunjena.</td>`);
-	}
+			 if (!validateNumber(brojSoba)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno broj soba.</td>`);
+						$("#txtBrojSoba").focus();
+					}
+			 else if (!validateNumber(brojGostiju)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Popunite ispravno broj gostiju</td>`);
+						$("#txtBrojGostiju").focus();
+					}
+			else if (!validateNumber(cijenaPoNoci)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno cijenu po noci.</td>`);
+						$("#txtCijena").focus();
+					}
+					else if (!validateString(ulica)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno ulicu.</td>`);
+						$("#txtUlica").focus();
+					}
+					else if (broj.trim()=="") {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno broj.</td>`);
+						$("#txtBroj").focus();
+					}
+					else if (!validateString(grad)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno grad.</td>`);
+						$("#txtGrad").focus();
+					}
+				else if (postanskiBroj.trim()=="") {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno postanski broj.</td>`);
+						$("#txtPostanskiBroj").focus();
+					}
+				else if (duzina.trim()=="") {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno geografsku duzinu.</td>`);
+						$("#txtDuzina").focus();
+					}
+					else if (sirina.trim()=="") {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno geografsku sirinu.</td>`);
+						$("#txtSirina").focus();
+					}
+					else if(datumZaIzdavanje.trim()=='') {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite datum.</td>`);
+						
+					}
+					
+					}
 	
 	});
 
@@ -935,6 +1047,60 @@ $("#prikazPodataka").html(`
 <button id="kreiranje" style="float:left;" class="btn btn-primary">Uzmi lokaciju sa mape</button>
         <div id="map" class="map" style="width:70%;padding:-400px 0px 0px 0px;float:right;"></div>`);
 pomocna();
+$("#txtBrojSoba").keyup(function () {
+				if (!validateNumber($("#txtBrojSoba").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtBrojGostiju").keyup(function () {
+				if (!validateNumber($("#txtBrojGostiju").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+			$("#txtCijena").keyup(function () {
+				if (!validateNumber($("#txtCijena").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtUlica").keyup(function () {
+				if (!validateString($("#txtUlica").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtBroj").keyup(function () {
+				if ($("#txtBroj").val().trim()=="")
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtGrad").keyup(function () {
+				if (!validateString($("#txtGrad").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtPostanskiBroj").keyup(function () {
+				if ($("#txtPostanskiBroj").val().trim()=="")
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtSirina").keyup(function () {
+				if ($("#txtSirina").val().trim()=="")
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtDuzina").keyup(function () {
+				if ($("#txtDuzina").val().trim()=="")
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
 $('#fileSlika').change(function(){
 	readURL(this);
 });
@@ -975,8 +1141,9 @@ $('#btnIzmijeni').click(function() {
             multidate: true,
             format: 'dd/mm/yyyy'
         });
-		if( ulica.trim()!='' && broj.trim()!='' && grad.trim()!='' && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && brojSoba.trim() != '' && brojGostiju.trim() != '' && cijenaPoNoci.trim() != '' && datumZaIzdavanje.trim()!=''){
-			$.post({
+	if(validateString(ulica) && broj.trim()!='' && validateString(grad) && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && validateNumber(brojSoba) &&validateNumber(brojGostiju) && validateNumber(cijenaPoNoci) && datumZaIzdavanje.trim()!=''){
+
+	$.post({
 			url:'../rest/izmijeniApartman',
 			data : JSON.stringify({id:data.id,slika:slika,ulica:ulica,broj:broj,nasljenoMjesto:grad,pozivniBrojMjesta:postanskiBroj,geografskaSirina:sirina,geografskaDuzina:duzina,tip:tip,brojSoba:brojSoba,brojGostiju:brojGostiju,domacin:data.domacin,cijenaPoNoci:cijenaPoNoci,vrijemeZaPrijavu:vrijemeZaPrijavu,vrijemeZaOdjavu:vrijemeZaOdjavu,sadrzajApartmana:sadrzaj,datumiZaIzdavanje:datumZaIzdavanje,status:status}),
 			contentType: 'application/json',
@@ -992,10 +1159,66 @@ $('#btnIzmijeni').click(function() {
 		
 		});
 		}else{
-			$("#upozorenje").removeClass('hidden');
-			$("#upozorenje").addClass('alert-danger');
-			$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Sva polja moraju biti popunjena.</td>`);
-		}
+			if (!validateNumber(brojSoba)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno broj soba.</td>`);
+						$("#txtBrojSoba").focus();
+					}
+			 else if (!validateNumber(brojGostiju)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Popunite ispravno broj gostiju</td>`);
+						$("#txtBrojGostiju").focus();
+					}
+			else if (!validateNumber(cijenaPoNoci)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno cijenu po noci.</td>`);
+						$("#txtCijena").focus();
+					}
+					else if (!validateString(ulica)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno ulicu.</td>`);
+						$("#txtUlica").focus();
+					}
+					else if (broj.trim()=="") {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno broj.</td>`);
+						$("#txtBroj").focus();
+					}
+					else if (!validateString(grad)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno grad.</td>`);
+						$("#txtGrad").focus();
+					}
+				else if (postanskiBroj.trim()=="") {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno postanski broj.</td>`);
+						$("#txtPostanskiBroj").focus();
+					}
+				else if (duzina.trim()=="") {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno geografsku duzinu.</td>`);
+						$("#txtDuzina").focus();
+					}
+					else if (sirina.trim()=="") {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite ispravno geografsku sirinu.</td>`);
+						$("#txtSirina").focus();
+					}
+					else if(datumZaIzdavanje.trim()=='') {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite datum.</td>`);
+						
+					}}
 			});
 			
 }

@@ -5,6 +5,13 @@ function validateString(nekiString) {
     else
         return false;
 };
+function validateNumber(nekiBroj) {
+    var re = /^[0-9]+$/;
+    if (re.test(nekiBroj))
+        return true;
+    else
+        return false;
+};
 
 function iscrtajKorisnike(data){
 	let temp='';
@@ -146,6 +153,24 @@ let registrujDomacina = function() {
             </tr>
         </tbody>
     </table>`);
+	$("#txtUsername").keyup(function () {
+				if (("#txtUsername").val()=="")
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtIme").keyup(function () {
+				if (!validateString($("#txtIme").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtPrezime").keyup(function () {
+				if (!validateString($("#txtPrezime").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
 	 $("#btnRegister").click(function () {
 		 var korisnickoIme = $("#txtUsername").val();
 			var lozinka = $("#txtPassword").val();
@@ -154,11 +179,12 @@ let registrujDomacina = function() {
 			var prezime = $("#txtPrezime").val();
 			var pol = $("input:radio[name=pol]:checked").val();
 			
-			if(korisnickoIme.trim() != '' && lozinka.trim() != '' && potvrdaLozinke.trim() != '' && ime.trim() != '' && prezime.trim() != ''){
+			if(korisnickoIme.trim() != '' && lozinka.trim() != '' && potvrdaLozinke.trim() != '' && validateString(ime) && validateString(prezime)){
 				if(lozinka != potvrdaLozinke) {
 					$("#greskaLozinka").removeClass('hidden');
-					$("#greskaLozinka").addClass('alert-danger');
+					$("#greskaLozinka").addClass('alert-danger');					
 					$("#upozorenje").addClass('hidden');
+					$("#txtPassword").focus();
 				} else {
 					$("#upozorenje").addClass('hidden');
 					$("#greskaLozinka").addClass('hidden');
@@ -178,12 +204,27 @@ let registrujDomacina = function() {
 					});
 				}
 			} else{
-				
-				$("#upozorenje").removeClass('hidden');
-				$("#upozorenje").addClass('alert-danger');
-				$("#greskaLozinka").addClass('hidden');
-				 $("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Sva polja moraju biti popunjena.</td>`);
-			}
+			 if (korisnickoIme.trim()=="") {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#greskaLozinka").addClass(`hidden`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Popunite korisnicko ime.</td>`);
+						$("#txtUsername").focus();
+					}
+			 else if (!validateString(ime)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#greskaLozinka").addClass(`hidden`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Ime moze sadrzati samo slova.</td>`);
+						$("#txtIme").focus();
+					}
+			else if (!validateString(prezime)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#greskaLozinka").addClass(`hidden`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Prezime moze sadrzati samo slova.</td>`);
+						$("#txtPrezime").focus();
+					}}
 	 });
 	
 	
@@ -231,7 +272,7 @@ let izmijeniPodatke = function (korisnik) {
         pol = `<input type="radio"  name="pol" value="0" checked="checked"> Muski
                <input type="radio"  name="pol" value="1"> Zenski`;
     }
-    $("#prikazPodataka").html(`<table class="table table-bordered">
+    $("#prikazPodataka2").html(`<table class="table table-bordered">
         <thead>
             <tr class="success">
                 <th colspan="2" class = "text-info" style= "text-align:center;">
@@ -277,12 +318,24 @@ let izmijeniPodatke = function (korisnik) {
             </tr>
         </tbody>
     </table>`);
+	$("#txtIme").keyup(function () {
+				if (!validateString($("#txtIme").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtPrezime").keyup(function () {
+				if (!validateString($("#txtPrezime").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
     $("#btnIzmijeniPodatke").click(function () {
 		var ime = $("#txtIme").val();
 		var prezime = $("#txtPrezime").val();
 		var pol = $("input:radio[name=pol]:checked").val();
 		
-		if(ime.trim() != '' && prezime.trim() != ''){
+		if(validateString(ime) && validateString(prezime)){
 			$("#upozorenje").addClass('hidden');
 			$.post({
 				url: '../rest/izmjenaPodataka',
@@ -297,12 +350,22 @@ let izmijeniPodatke = function (korisnik) {
 					$("#upozorenje").addClass('alert-danger');
 				}
 		});
-		} else {
-			$("#upozorenje").removeClass('hidden');
-			$("#upozorenje").addClass('alert-danger');
-			 $("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Sva polja moraju biti popunjena.</td>`);
-			
-		}
+		}  else{
+			  if (!validateString(ime)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#greskaLozinka").addClass(`hidden`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Ime moze sadrzati samo slova.</td>`);
+						$("#txtIme").focus();
+					}
+			else if (!validateString(prezime)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#greskaLozinka").addClass(`hidden`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Prezime moze sadrzati samo slova.</td>`);
+						$("#txtPrezime").focus();
+					}
+					}
 	});
     
 };
@@ -362,12 +425,26 @@ let izmijeniPodatke1 = function (korisnik) {
             </tr>
         </tbody>
     </table>`);
+$("#txtIme").keyup(function () {
+				if (!validateString($("#txtIme").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtPrezime").keyup(function () {
+				if (!validateString($("#txtPrezime").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
     $("#btnIzmijeniPodatke").click(function () {
 		var ime = $("#txtIme").val();
 		var prezime = $("#txtPrezime").val();
 		var pol = $("input:radio[name=pol]:checked").val();
 		
-		if(ime.trim() != '' && prezime.trim() != ''){
+		
+
+if(validateString(ime) && validateString(prezime)){
 			$("#upozorenje").addClass('hidden');
 			$.post({
 				url: '../rest/izmjenaPodataka',
@@ -382,12 +459,22 @@ let izmijeniPodatke1 = function (korisnik) {
 					$("#upozorenje").addClass('alert-danger');
 				}
 		});
-		} else {
-			$("#upozorenje").removeClass('hidden');
-			$("#upozorenje").addClass('alert-danger');
-			 $("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Sva polja moraju biti popunjena.</td>`);
-			
-		}
+		}else{
+			  if (!validateString(ime)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#greskaLozinka").addClass(`hidden`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Ime moze sadrzati samo slova.</td>`);
+						$("#txtIme").focus();
+					}
+			else if (!validateString(prezime)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#greskaLozinka").addClass(`hidden`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Prezime moze sadrzati samo slova.</td>`);
+						$("#txtPrezime").focus();
+					}
+					}
 	});
     
 };
@@ -447,12 +534,27 @@ let izmijeniPodatke2 = function (korisnik) {
             </tr>
         </tbody>
     </table>`);
+$("#txtIme").keyup(function () {
+				if (!validateString($("#txtIme").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+				$("#txtPrezime").keyup(function () {
+				if (!validateString($("#txtPrezime").val()))
+					$(this).addClass(`alert-danger`);
+				else
+					$(this).removeClass(`alert-danger`);
+			});
+			
     $("#btnIzmijeniPodatke").click(function () {
 		var ime = $("#txtIme").val();
 		var prezime = $("#txtPrezime").val();
 		var pol = $("input:radio[name=pol]:checked").val();
 		
-		if(ime.trim() != '' && prezime.trim() != ''){
+		
+
+		if(validateString(ime) && validateString(prezime)){
 			$("#upozorenje").addClass('hidden');
 			$.post({
 				url: '../rest/izmjenaPodataka',
@@ -467,12 +569,22 @@ let izmijeniPodatke2 = function (korisnik) {
 					$("#upozorenje").addClass('alert-danger');
 				}
 		});
-		} else {
-			$("#upozorenje").removeClass('hidden');
-			$("#upozorenje").addClass('alert-danger');
-			 $("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Sva polja moraju biti popunjena.</td>`);
-			
-		}
+		} else{
+			  if (!validateString(ime)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#greskaLozinka").addClass(`hidden`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Ime moze sadrzati samo slova.</td>`);
+						$("#txtIme").focus();
+					}
+			else if (!validateString(prezime)) {
+						$("#upozorenje").removeClass(`hidden`);
+						$("#upozorenje").addClass(`alert-danger`);
+						$("#greskaLozinka").addClass(`hidden`);
+						$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong>Prezime moze sadrzati samo slova.</td>`);
+						$("#txtPrezime").focus();
+					}
+					}
 	});
     
 };

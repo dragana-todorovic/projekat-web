@@ -96,19 +96,20 @@ public class KorisnikDAO {
 		try
 		{
 			File file = new File(contextPath + "/korisnici.json");
+			
 			System.out.println(contextPath);
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
 			objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true);
+			if(file.exists()) {
 			List<Korisnik> kori = objectMapper.readValue(file, objectMapper.getTypeFactory().constructCollectionType(List.class, Korisnik.class));
-			for(Korisnik k:kori)
-			System.out.println("load User: "+k.getKorisnickoIme());
+		
 			for(Korisnik u : kori)
 			{
 				korisnici.put(u.getKorisnickoIme(),u);
 			}
+			}
 			
-			System.out.println(korisnici);
 			
 		}
 		catch (Exception ex) {
