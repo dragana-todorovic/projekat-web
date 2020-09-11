@@ -3,7 +3,7 @@ let ispisiSveRezervacije = function(data) {
 	   
 	
 		for (i in data){
-			temp+=`<tr><td>`+data[i].gost+`</td><td>`+data[i].pocetniDatum+`</td><td>`+data[i].brojNocenja+`</td><td>`+data[i].ukupnaCijena+`</td><td class="col1">`+data[i].status+`</td>`;
+			temp+=`<tr><td>`+data[i].gost+`</td><td>`+data[i].pocetniDatum+`</td><td>`+data[i].brojNocenja+`</td><td>`+data[i].ukupnaCijena+`</td><td class="col1">`+data[i].status+`</td><td>`+data[i].poruka+`</td>`;
 			
 			temp+=`</tr>`;
 		}
@@ -22,10 +22,10 @@ let ispisiSveRezervacije = function(data) {
 	      <table class="table table-bordered" id="table">
 	        <thead>
 	          <tr>
-	            <th colspan="5" class = " success text-info" style="text-align: center;">REZERVACIJE</th>
+	            <th colspan="6" class = " success text-info" style="text-align: center;">REZERVACIJE</th>
 	          </tr>
 	<tr>
-			<th   colspan="5" class = " success text-info">Pretrazivanje po korisnickom imenu gosta:<input type="text" min="0" id="gost" style="width:10%"/></th>
+			<th   colspan="6" class = " success text-info">Pretrazivanje po korisnickom imenu gosta:<input type="text" min="0" id="gost" style="width:10%"/></th>
 			
 			</tr>
 			
@@ -35,7 +35,7 @@ let ispisiSveRezervacije = function(data) {
 	            <th>Broj nocenja</th>
 	            <th class="success" style="text-align:center" name="sortiraj">UkupnaCijena<span name="strelica" class="glyphicon glyphicon-arrow-down"/></th>
 	            <th>Status</th>	            
-	          
+	          <th>Poruka</th>	 
 	          </tr>
 	        </thead>
 	        <tbody id="rezervacijeTabela">
@@ -287,18 +287,18 @@ let dodajSadrzaj = function() {
 
 let ispisiSveApartmane = function(data,pom1) {
 	let temp='';
-   /* var t = ``;
+	var t = ``;
     for (ap2 in pom1) {
         t += (`<input type="checkbox" id="${pom1[ap2].id}" name="sadrzaj" value="${pom1[ap2].naziv}">${pom1[ap2].naziv}</input></br>`);
     }
-*/
+
 	for (i in data){
 		var pom = [];
         for (p in data[i].sadrzajApartmana) {
-            pom[p] = "Naziv:" + data[i].sadrzajApartmana[p].naziv + "\n";
+            pom[p] = data[i].sadrzajApartmana[p].naziv + "\n";
         }
 		temp+=`<tr><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
-		temp += (`<td>${pom}</td>`);
+		temp += (`<td class="sad">${pom}</td>`);
 		 var lok = ``;
 	        if (data[i].lokacija.adresa.ulica != null) {
 	            lok += data[i].lokacija.adresa.ulica;
@@ -317,9 +317,12 @@ let ispisiSveApartmane = function(data,pom1) {
 	        }
 	        temp += (`<td class="lok">${(lok.trim() != ``) ? lok : `-`}</td>`);
 	        lok = ``;
+	      
 	        temp += (`<td>`+data[i].domacin+`</td><td class="col1">`+data[i].status+`</td>`);
+	        temp+=`<td> <img id="output" height="150px" alt="slika" src="`+ data[i].slika+`"></td>`;
 	    temp+=`<td><input id="btnPrikaz` + data[i].id + `" name = "kom" class="btn btn-primary" type="button" value="Prikazi"/> </td> `;
-		temp+=`<td colspan="2" style = "text-align:center;">
+	    
+	    temp+=`<td colspan="2" style = "text-align:center;">
          <input name="izmijeni" id="btnIzmijeni` + data[i].id + `" name = "izmijeni" class="btn btn-primary" type="button" value="Izmijeni apartman"></br>
 	                    <input id="btnObrisi` + data[i].id + `" name = "obrisi" class="btn btn-primary pull-center" type="button"
 	                           value="Obrisi apartman" />
@@ -339,6 +342,10 @@ let ispisiSveApartmane = function(data,pom1) {
     </select>
     </div><br>
      <br/>
+     <div id="filterSadrzaj">
+    </br><b>Filtriraj po sadrzaju:&nbsp;&nbsp;</b><br/>
+        ${t}
+    </div><br>
   <div id="upozorenje" class="hidden"></div>
   <div><b>Pretrazi po datumu:&nbsp;&nbsp;</br>
 <b>od: <input style = "width:10%"  type="text" class="form-control date" id="date1"/> <b>do: <input style = "width:10%"  type="text" class="form-control date"  id="date2"/>&nbsp;&nbsp;<input type="button" style="height:33px"  id="pretrazi" class= "btn btn-primary pull-center" value="Pretrazi"/>
@@ -347,7 +354,7 @@ let ispisiSveApartmane = function(data,pom1) {
       <table class="table table-bordered" id="table">
         <thead>
          <tr>
-            <th colspan="12" class = " success text-info" style="text-align: center;">APARTMANI</th>
+            <th colspan="13" class = " success text-info" style="text-align: center;">APARTMANI</th>
           </tr>
 	          <tr class="success">
            <th></th>
@@ -362,19 +369,14 @@ let ispisiSveApartmane = function(data,pom1) {
                od:<input type="number" name="filter" id="odCijena" min="0" style="width:60px;"/></br>
                do:<input type="number" name="filter" id="doCijena" min="0" style="width:60px;"/>
            </th> 
-           <th></th>
-           <th></th>
+           <th colspan="3"></th>
            
-          
-           <th></th>
 			 <th style="text-align:center">
                <input type="text" name="filter" id="lokacija" min="0" style="width:150px; placeholder="Unesite lokaciju""/></br>  
            </th>
            
-           <th></th>
-           <th></th>
-           <th></th>
-           <th></th>
+           <th colspan="5"></th>
+         
           </tr>
         
           <tr class="text-info success">
@@ -388,7 +390,9 @@ let ispisiSveApartmane = function(data,pom1) {
             <th>Lokacija</th>
             <th>Domacin</th>
             <th>Status</th>
+            <th>Slika</th>
              <th>Komentari</th>
+             
              <th></th>
                      
           </tr>
@@ -400,6 +404,19 @@ let ispisiSveApartmane = function(data,pom1) {
 			`);
     
 	$('#apartmaniTabela').html(temp);
+	//filtriranje sadrzaja
+	
+	  $("#filterSadrzaj").click(function () {
+	        var imaCekiranih = false;
+	        $('input[name="sadrzaj"]:checked').each(function () {
+	            $("#table td.sad:not(:contains('" + $(this).val() + "'))").parent().hide();
+	            $("#table td.sad:contains('" + $(this).val() + "')").parent().show();
+	            imaCekiranih = true;
+	        });
+	        if (!imaCekiranih)
+	            $("#table td.sad:contains('" + $(this).val() + "')").parent().show();
+	    });
+	
 	$('.date1').datepicker({
         format: 'dd/mm/yyyy'
     });
@@ -710,6 +727,13 @@ $("#prikazPodataka").html(`
                   + status +
                 `</td>
             </tr>
+           <tr>
+          <td> <label>Slika: </label> </td>
+          <td> <img id="output" height="150px" alt="slika" src="`+ data.slika+`"></td>
+      </tr>
+       <tr>
+      	<td colspan="2" align="right"><input type="file"  onchange="readURL(this);"  id="fileSlika" accept=".jpg, .jpeg, .png" /></td>
+      </tr>
             <tr class="success">
                 <td colspan="2" style = "text-align:center;">
                     <input id="btnIzmijeni" class="btn btn-primary pull-center" type="button"
@@ -722,6 +746,9 @@ $("#prikazPodataka").html(`
 <button id="kreiranje" style="float:left;" class="btn btn-primary">Uzmi lokaciju sa mape</button>
         <div id="map" class="map" style="width:70%;padding:-400px 0px 0px 0px;float:right;"></div>`);
 pomocna();
+$('#fileSlika').change(function(){
+	readURL(this);
+});
 $('.date').datepicker({
         multidate: true,
         format: 'dd-mm-yyyy'
@@ -750,6 +777,11 @@ $('#btnIzmijeni').click(function() {
 		var grad = $("#txtGrad").val();
 		var duzina = $("#txtDuzina").val();
 		var sirina= $("#txtSirina").val();
+		var slika = $('#output').attr('src');
+		if(slika == 'undefined' || slika == null || slika==''){
+			alert('Ubacite sliku');
+			return;
+		}
 		$('.date').datepicker({
             multidate: true,
             format: 'dd/mm/yyyy'
@@ -757,7 +789,7 @@ $('#btnIzmijeni').click(function() {
 		if( ulica.trim()!='' && broj.trim()!='' && grad.trim()!='' && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && brojSoba.trim() != '' && brojGostiju.trim() != '' && cijenaPoNoci.trim() != '' && datumZaIzdavanje.trim()!=''){
 			$.post({
 			url:'../rest/izmijeniApartman1',
-			data : JSON.stringify({id:data.id,ulica:ulica,broj:broj,nasljenoMjesto:grad,pozivniBrojMjesta:postanskiBroj,geografskaSirina:sirina,geografskaDuzina:duzina,tip:tip,brojSoba:brojSoba,brojGostiju:brojGostiju,domacin:data.domacin,cijenaPoNoci:cijenaPoNoci,vrijemeZaPrijavu:vrijemeZaPrijavu,vrijemeZaOdjavu:vrijemeZaOdjavu,sadrzajApartmana:sadrzaj,datumiZaIzdavanje:datumZaIzdavanje,status:status}),
+			data : JSON.stringify({id:data.id,slika:slika,ulica:ulica,broj:broj,nasljenoMjesto:grad,pozivniBrojMjesta:postanskiBroj,geografskaSirina:sirina,geografskaDuzina:duzina,tip:tip,brojSoba:brojSoba,brojGostiju:brojGostiju,domacin:data.domacin,cijenaPoNoci:cijenaPoNoci,vrijemeZaPrijavu:vrijemeZaPrijavu,vrijemeZaOdjavu:vrijemeZaOdjavu,sadrzajApartmana:sadrzaj,datumiZaIzdavanje:datumZaIzdavanje,status:status}),
 			contentType: 'application/json',
 			success: function(){
 			alert("Uspjesno ste izmijenili apartman");
@@ -861,4 +893,14 @@ function pretragaSobe() { //za cijenu
     });
 };		
 
-
+function readURL(input) {
+	if(input.files && input.files[0]){
+		var reader = new FileReader();
+		var file = input.files[0];
+		
+		reader.onload = function(e){	
+			$('#output').attr('src', e.target.result);
+		}
+		reader.readAsDataURL(input.files[0]);
+	}
+}

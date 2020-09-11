@@ -4,11 +4,13 @@ public class PodaciZaRezervaciju {
 	private String datum;
 	private int broj;
 	private String id;
+	private String poruka;
 	
 	public PodaciZaRezervaciju() {
 		datum="";
 		broj = 0;
 		id = "";
+		poruka="";
 	}
 
 	public String getDatum() {
@@ -33,6 +35,14 @@ public class PodaciZaRezervaciju {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getPoruka() {
+		return poruka;
+	}
+
+	public void setPoruka(String poruka) {
+		this.poruka = poruka;
 	}
 
 	

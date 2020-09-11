@@ -198,6 +198,8 @@ public class GostService {
         					r.setApartman(ID);
         					r.setPocetniDatum(pocetniDatum);
         					r.setUkupnaCijena(ap.getCijenaPoNoci()*podaci.getBroj());
+        					r.setPoruka(podaci.getPoruka());
+        					System.out.println("porukaaaa   " +r.getPoruka());
         					a.getRezervacije().add(r);
         					
         				}

@@ -16,7 +16,7 @@ public class Apartman {
 	//dostupnost
 	private String domacin;
 	private List<Komentar> komentar;
-	//private Image slika ;
+	private String slika ;
 	private double cijenaPoNoci;
 	private String vrijemeZaPrijavu; //inicijalno na 2pm
 	private String vrijemeZaOdjavu; //inicijalno na 10AM
@@ -76,12 +76,12 @@ public class Apartman {
 	public void setKomentar(List<Komentar> komentar) {
 		this.komentar = komentar;
 	}
-	/*public Image getSlika() {
+	public String getSlika() {
 		return slika;
 	}
-	public void setSlika(Image slika) {
+	public void setSlika(String slika) {
 		this.slika = slika;
-	}*/
+	}
 	public double getCijenaPoNoci() {
 		return cijenaPoNoci;
 	}

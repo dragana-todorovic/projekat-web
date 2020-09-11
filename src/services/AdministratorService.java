@@ -445,6 +445,7 @@ public class AdministratorService {
 					a.setVrijemeZaPrijavu(pomocna.getVrijemeZaPrijavu());
 					a.setStatus(pomocna.getStatus());
 					a.setRezervacije(new ArrayList<Rezervacija>());
+					a.setSlika(pomocna.getSlika());
 				
 		
 		

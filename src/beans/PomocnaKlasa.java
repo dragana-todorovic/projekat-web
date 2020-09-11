@@ -14,6 +14,7 @@ public class PomocnaKlasa {
 	}
 	private String ulica;
 	private String broj;
+	private String slika;
 	private String nasljenoMjesto;
 	private String pozivniBrojMjesta;
 	private String geografskaSirina;
@@ -150,6 +151,12 @@ public class PomocnaKlasa {
 	public void setSadrzajApartmana(List<SadrzajApartmana> sadrzajApartmana) {
 		this.sadrzajApartmana = sadrzajApartmana;
 	}*/
+	public String getSlika() {
+		return slika;
+	}
+	public void setSlika(String slika) {
+		this.slika = slika;
+	}
 	
 	
 

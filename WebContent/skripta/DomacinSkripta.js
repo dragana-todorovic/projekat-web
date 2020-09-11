@@ -98,18 +98,29 @@ $("#prikazPodataka").html(`
 <td>Izaberite sadrzaj</td>
 <td>${temp}</td>
 </tr>
+<tr>
+          <td> Slika: </td>
+          <td> <img id="output" height="150px" alt="slika"></td>
+      </tr>
+       <tr>
+      	<td colspan="2" align="right"><input type="file" onchange="readURL(this);" id="fileSlika"  accept=".jpg, .jpeg, .png" /></td>
+      </tr>
             <tr class="success">
                 <td colspan="2" style = "text-align:center;">
                     <input id="btnDodaj" class="btn btn-primary pull-center" type="button"
                            value="Dodaj apartman" />
                 </td>
             </tr>
+            
         </tbody>
     </table>
 
 <button id="kreiranje" style="float:left;" class="btn btn-primary">Uzmi lokaciju sa mape</button>
         <div id="map" class="map" style="width:70%;padding:-400px 0px 0px 0px;float:right;"></div>`);
 pomocna();
+$('#fileSlika').change(function(){
+	readURL(this);
+});
 $('.date').datepicker({
         multidate: true,
         format: 'dd/mm/yyyy'
@@ -137,6 +148,11 @@ $('.date').datepicker({
 		var grad = $("#txtGrad").val();
 		var duzina = $("#txtDuzina").val();
 		var sirina= $("#txtSirina").val();
+		var slika = $('#output').attr('src');
+		if(slika == 'undefined' || slika == null || slika==''){
+			alert('Ubacite sliku');
+			return;
+		}
 		$('.date').datepicker({
             multidate: true,
             format: 'dd/mm/yyyy'
@@ -144,7 +160,7 @@ $('.date').datepicker({
 		if(sadrzaj!=null && ulica.trim()!='' && broj.trim()!='' && grad.trim()!='' && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && brojSoba.trim() != '' && brojGostiju.trim() != '' && cijenaPoNoci.trim() != '' && datumZaIzdavanje.trim()!=''){
 		$.post({
 		url:'../rest/dodajApartman',
-		data : JSON.stringify({id:data.id,ulica:ulica,broj:broj,nasljenoMjesto:grad,pozivniBrojMjesta:postanskiBroj,geografskaSirina:sirina,geografskaDuzina:duzina,tip:tip,brojSoba:brojSoba,brojGostiju:brojGostiju,domacin:korisnickoIme,cijenaPoNoci:cijenaPoNoci,vrijemeZaPrijavu:vrijemeZaPrijavu,vrijemeZaOdjavu:vrijemeZaOdjavu,sadrzajApartmana:sadrzaj,datumiZaIzdavanje:datumZaIzdavanje}),
+		data : JSON.stringify({id:data.id,slika:slika,ulica:ulica,broj:broj,nasljenoMjesto:grad,pozivniBrojMjesta:postanskiBroj,geografskaSirina:sirina,geografskaDuzina:duzina,tip:tip,brojSoba:brojSoba,brojGostiju:brojGostiju,domacin:korisnickoIme,cijenaPoNoci:cijenaPoNoci,vrijemeZaPrijavu:vrijemeZaPrijavu,vrijemeZaOdjavu:vrijemeZaOdjavu,sadrzajApartmana:sadrzaj,datumiZaIzdavanje:datumZaIzdavanje}),
 		contentType: 'application/json',
 		success: function(){
 			alert("Uspjesno ste dodali apartman");
@@ -169,18 +185,18 @@ $('.date').datepicker({
 
 let ispisiApartmane = function(data,pom1) {
 	let temp='';
-   /* var t = ``;
+    var t = ``;
     for (ap2 in pom1) {
         t += (`<input type="checkbox" id="${pom1[ap2].id}" name="sadrzaj" value="${pom1[ap2].naziv}">${pom1[ap2].naziv}</input></br>`);
     }
-*/
+
 	for (i in data){
 		var pom = [];
         for (p in data[i].sadrzajApartmana) {
-            pom[p] = "Naziv:" + data[i].sadrzajApartmana[p].naziv + "\n";
+            pom[p] = data[i].sadrzajApartmana[p].naziv;
         }
 		temp+=`<tr><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
-		temp += (`<td>${pom}</td>`);
+		temp += (`<td class="sad">${pom}</td>`);
 		 var lok = ``;
 	        if (data[i].lokacija.adresa.ulica != null) {
 	            lok += data[i].lokacija.adresa.ulica;
@@ -199,6 +215,8 @@ let ispisiApartmane = function(data,pom1) {
 	        }
 	        temp += (`<td class="lok">${(lok.trim() != ``) ? lok : `-`}</td>`);
 	        lok = ``;
+	        temp+=`<td> <img id="output" height="150px" alt="slika" src="`+ data[i].slika+`"></td>`;
+	        
 	    if(data[i].status=="aktivno"){
 	    temp+=`<td><input name="kom" style="text-align:center" id="btnPrikazi` + data[i].id + `" class="btn btn-primary" type="button" value="Prikazi"></td>`;
 	    }
@@ -223,6 +241,11 @@ let ispisiApartmane = function(data,pom1) {
          <option value="soba">soba</option>
     </select>
     </div><br>
+      <br/>
+     <div id="filterSadrzaj">
+    </br><b>Filtriraj po sadrzaju:&nbsp;&nbsp;</b><br/>
+        ${t}
+    </div><br>
 			
 
        <table class="table table-bordered" id = "table">
@@ -244,17 +267,13 @@ let ispisiApartmane = function(data,pom1) {
                od:<input type="number" name="filter" id="odCijena" min="0" style="width:60px;"/></br>
                do:<input type="number" name="filter" id="doCijena" min="0" style="width:60px;"/>
            </th> 
-           <th></th>
-           <th></th>
-           
-          
-           <th></th>
+           <th colspan="3"></th>
+        
 			 <th style="text-align:center">
                <input type="text" id="lokacija" name="filter" min="0" style="width:150px; placeholder="Unesite lokaciju""/></br>  
            </th>
            
-           <th></th>
-           
+           <th colspan="2"></th>
           </tr>
 
           <tr class="text-info success">
@@ -266,7 +285,9 @@ let ispisiApartmane = function(data,pom1) {
             <th>Vrijeme za odjavu</th>
             <th>Lista sadrzaja</th>
             <th>Lokacija</th>
-            <th>Komentari</th>
+            <th>Slika</th>
+            <th></th>
+            
            
           
           </tr>
@@ -278,6 +299,18 @@ let ispisiApartmane = function(data,pom1) {
 			`);
     
 	$('#apartmaniTabela').html(temp);
+
+	  $("#filterSadrzaj").click(function () {
+	        var imaCekiranih = false;
+	        $('input[name="sadrzaj"]:checked').each(function () {
+	            $("#table td.sad:not(:contains('" + $(this).val() + "'))").parent().hide();
+	            $("#table td.sad:contains('" + $(this).val() + "')").parent().show();
+	            imaCekiranih = true;
+	        });
+	        if (!imaCekiranih)
+	            $("#table td.sad:contains('" + $(this).val() + "')").parent().show();
+	    });
+	
 	$('.date1').datepicker({
         format: 'dd/mm/yyyy'
     });
@@ -439,18 +472,18 @@ let ispisiApartmane = function(data,pom1) {
 
 let ispisiAktivneApartmane = function(data,pom1) {
 	let temp='';
-   /* var t = ``;
+    var t = ``;
     for (ap2 in pom1) {
         t += (`<input type="checkbox" id="${pom1[ap2].id}" name="sadrzaj" value="${pom1[ap2].naziv}">${pom1[ap2].naziv}</input></br>`);
     }
-*/
+
 	for (i in data){
 		var pom = [];
         for (p in data[i].sadrzajApartmana) {
-            pom[p] = "Naziv:" + data[i].sadrzajApartmana[p].naziv + "\n";
+            pom[p] = data[i].sadrzajApartmana[p].naziv;
         }
 		temp+=`<tr><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
-		temp += (`<td>${pom}</td>`);
+		temp += (`<td class="sad">${pom}</td>`);
 		 var lok = ``;
 	        if (data[i].lokacija.adresa.ulica != null) {
 	            lok += data[i].lokacija.adresa.ulica;
@@ -469,6 +502,7 @@ let ispisiAktivneApartmane = function(data,pom1) {
 	        }
 	        temp += (`<td class="lok">${(lok.trim() != ``) ? lok : `-`}</td>`);
 	        lok = ``;
+	        temp+=`<td> <img id="output" height="150px" alt="slika" src="`+ data[i].slika+`"></td>`;
 	    if(data[i].status=="aktivno"){
 	    temp+=`<td><input name="kom" style="text-align:center" id="btnPrikazi` + data[i].id + `" class="btn btn-primary" type="button" value="Prikazi"></td>`;
 	    }
@@ -492,6 +526,11 @@ let ispisiAktivneApartmane = function(data,pom1) {
          <option value="cijeliApartman">cijeliApartman</option>
          <option value="soba">soba</option>
     </select>
+    </div><br>
+      <br/>
+     <div id="filterSadrzaj">
+    </br><b>Filtriraj po sadrzaju:&nbsp;&nbsp;</b><br/>
+        ${t}
     </div><br>
      <div id="upozorenje" class="hidden"></div>
   <div><b>Pretrazi po datumu:&nbsp;&nbsp;</br>
@@ -518,30 +557,29 @@ let ispisiAktivneApartmane = function(data,pom1) {
                od:<input type="number" name="filter" id="odCijena" min="0" style="width:60px;"/></br>
                do:<input type="number" name="filter" id="doCijena" min="0" style="width:60px;"/>
            </th> 
-           <th></th>
-           <th></th>
-           
+           <th colspan="3"></th>
           
-           <th></th>
 			 <th style="text-align:center">
                <input type="text" name="filter" id="lokacija" min="0" style="width:150px; placeholder="Unesite lokaciju""/></br>  
            </th>
            
-           <th></th>
-           <th></th>
+           <th colspan="3"></th>
+          
           </tr>
 
           <tr class="text-info success">
             <th>Tip</th>
-            <th>Broj soba</th>
+            <th style="width:10%">Broj soba</th>
             <th>Broj gostiju</th>
             <th class="success" style="text-align:center" name="sortiraj">Cijena po noci<span name="strelica" class="glyphicon glyphicon-arrow-down"/></th>
             <th>Vrijeme za prijavu</th>
             <th>Vrijeme za odjavu</th>
             <th>Lista sadrzaja</th>
             <th>Lokacija</th>
+            <th> Slika</th>
             <th>Komentari</th>
             <th></th>
+            
           
           </tr>
         </thead>
@@ -552,6 +590,18 @@ let ispisiAktivneApartmane = function(data,pom1) {
 			`);
     
 	$('#apartmaniTabela').html(temp);
+	 $("#filterSadrzaj").click(function () {
+	        var imaCekiranih = false;
+	        $('input[name="sadrzaj"]:checked').each(function () {
+	            $("#table td.sad:not(:contains('" + $(this).val() + "'))").parent().hide();
+	            $("#table td.sad:contains('" + $(this).val() + "')").parent().show();
+	            imaCekiranih = true;
+	        });
+	        if (!imaCekiranih)
+	            $("#table td.sad:contains('" + $(this).val() + "')").parent().show();
+	    });
+	
+	
 	$('.date1').datepicker({
         format: 'dd/mm/yyyy'
     });
@@ -865,6 +915,14 @@ $("#prikazPodataka").html(`
                   + status +
                 `</td>
             </tr>
+           <tr>
+          <td> <label>Slika: </label> </td>
+          <td> <img id="output" height="150px" alt="slika" src="`+ data.slika+`"></td>
+      </tr>
+       <tr>
+      	<td colspan="2" align="right"><input type="file"  onchange="readURL(this);"  id="fileSlika" accept=".jpg, .jpeg, .png" /></td>
+      </tr>
+      
             <tr class="success">
                 <td colspan="2" style = "text-align:center;">
                     <input id="btnIzmijeni" class="btn btn-primary pull-center" type="button"
@@ -877,6 +935,9 @@ $("#prikazPodataka").html(`
 <button id="kreiranje" style="float:left;" class="btn btn-primary">Uzmi lokaciju sa mape</button>
         <div id="map" class="map" style="width:70%;padding:-400px 0px 0px 0px;float:right;"></div>`);
 pomocna();
+$('#fileSlika').change(function(){
+	readURL(this);
+});
 $('.date').datepicker({
         multidate: true,
         format: 'dd/mm/yyyy'
@@ -905,6 +966,11 @@ $('#btnIzmijeni').click(function() {
 		var grad = $("#txtGrad").val();
 		var duzina = $("#txtDuzina").val();
 		var sirina= $("#txtSirina").val();
+		var slika = $('#output').attr('src');
+		if(slika == 'undefined' || slika == null || slika==''){
+			alert('Ubacite sliku');
+			return;
+		}
 		$('.date').datepicker({
             multidate: true,
             format: 'dd/mm/yyyy'
@@ -912,7 +978,7 @@ $('#btnIzmijeni').click(function() {
 		if( ulica.trim()!='' && broj.trim()!='' && grad.trim()!='' && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && brojSoba.trim() != '' && brojGostiju.trim() != '' && cijenaPoNoci.trim() != '' && datumZaIzdavanje.trim()!=''){
 			$.post({
 			url:'../rest/izmijeniApartman',
-			data : JSON.stringify({id:data.id,ulica:ulica,broj:broj,nasljenoMjesto:grad,pozivniBrojMjesta:postanskiBroj,geografskaSirina:sirina,geografskaDuzina:duzina,tip:tip,brojSoba:brojSoba,brojGostiju:brojGostiju,domacin:data.domacin,cijenaPoNoci:cijenaPoNoci,vrijemeZaPrijavu:vrijemeZaPrijavu,vrijemeZaOdjavu:vrijemeZaOdjavu,sadrzajApartmana:sadrzaj,datumiZaIzdavanje:datumZaIzdavanje,status:status}),
+			data : JSON.stringify({id:data.id,slika:slika,ulica:ulica,broj:broj,nasljenoMjesto:grad,pozivniBrojMjesta:postanskiBroj,geografskaSirina:sirina,geografskaDuzina:duzina,tip:tip,brojSoba:brojSoba,brojGostiju:brojGostiju,domacin:data.domacin,cijenaPoNoci:cijenaPoNoci,vrijemeZaPrijavu:vrijemeZaPrijavu,vrijemeZaOdjavu:vrijemeZaOdjavu,sadrzajApartmana:sadrzaj,datumiZaIzdavanje:datumZaIzdavanje,status:status}),
 			contentType: 'application/json',
 			success: function(){
 			alert("Uspjesno ste izmijenili apartman");
@@ -936,17 +1002,30 @@ $('#btnIzmijeni').click(function() {
 let ispisiRezervacije = function(data) {
 	let temp='';	
 		for (i in data){
-			temp+=`<tr><td>`+data[i].gost+`</td><td>`+data[i].pocetniDatum+`</td><td>`+data[i].brojNocenja+`</td><td>`+data[i].ukupnaCijena+`</td><td class="col1">`+data[i].status+`</td>`;
+			temp+=`<tr><td>`+data[i].gost+`</td><td>`+data[i].pocetniDatum+`</td><td>`+data[i].brojNocenja+`</td><td>`+data[i].ukupnaCijena+`</td><td class="col1">`+data[i].status+`</td><td>`+data[i].poruka+`</td>`;
 			temp+=`<td colspan="2" style = "text-align:center;">`;
-			if(data[i].status == 'kreirana') {
+				
+		if(data[i].status == 'kreirana') {
          temp+= `<input name="prihvati" id="btnPrihvati` + data[i].id + `" name = "prihvati" class="btn btn-primary" type="button" value="Prihvati">`;
          temp+=`</br><input id="btnOdbij` + data[i].id + `" name = "odbij" class="btn btn-primary pull-center" type="button"
          value="Odbij" /></td>`;	
+         
+		
 			}
-          if(data[i].status == 'kreirana' || data[i].status == 'prihvacena') {
-        	 		temp+=`</br><input id="btnOdbij` + data[i].id + `" name = "odbij" class="btn btn-primary pull-center" type="button"
+        /*  if(data[i].status == 'kreirana' || data[i].status == 'prihvacena') {
+        	 		temp+=`<input id="btnOdbij` + data[i].id + `" name = "odbij" class="btn btn-primary pull-center" type="button"
 	                           value="Odbij" /></td>`;
-         }
+        	 		
+        	 	   	
+         }*/
+          if(data[i].status == 'prihvacena') {
+           temp+=`<input id="btnOdbij` + data[i].id + `" name = "odbij" class="btn btn-primary pull-center" type="button"
+           value="Odbij" />`;
+           temp+=`</br><input id="btnZavrs` + data[i].id + `" name = "zavrsi" class="btn btn-primary pull-center" type="button"
+	         value="Zavrsi" /></td>`; 
+           
+  			}
+         
 
 	         temp+=`</tr>`;
 			
@@ -964,10 +1043,10 @@ let ispisiRezervacije = function(data) {
 	      <table class="table table-bordered" id="table">
 	        <thead>
 	          <tr>
-	            <th colspan="5" class = " success text-info" style="text-align: center;">REZERVACIJE</th>
+	            <th colspan="6" class = " success text-info" style="text-align: center;">REZERVACIJE</th>
 	          </tr>
 				<tr>
-			<th   colspan="5" class = " success text-info">Pretrazivanje po korisnickom imenu gosta:<input type="text" min="0" id="gost" style="width:10%"/></th>
+			<th   colspan="6" class = " success text-info">Pretrazivanje po korisnickom imenu gosta:<input type="text" min="0" id="gost" style="width:10%"/></th>
 			
 			</tr>
 	          <tr class="text-info success">
@@ -976,7 +1055,7 @@ let ispisiRezervacije = function(data) {
 	            <th>Broj nocenja</th>
 	             <th class="success" style="text-align:center" name="sortiraj">UkupnaCijena<span name="strelica" class="glyphicon glyphicon-arrow-down"/></th>
 	            <th>Status</th>	            
-	          
+	          <th>Poruka</th>	
 	          </tr>
 	        </thead>
 	        <tbody id="rezervacijeTabela">
@@ -1072,6 +1151,22 @@ let ispisiRezervacije = function(data) {
 			
 			});
 	 });
+		$("input:button[name=zavrsi]").click(function () {
+			 $.post({
+					url:'../rest/zavrsi',
+					data : JSON.stringify({id:this.id}),
+					contentType: 'application/json',
+					success: function(data){
+						alert("Uspjesno promijenjen status.")
+						location.href="Domacin.html";
+					},
+					error: function(message){
+						alert('Nije dozvoljeno da zavrsite rezervaciju');
+					}
+				
+				});
+		 });
+		
 	
 
 };
@@ -1098,7 +1193,7 @@ let ispisiKomentare = function(data) {
 			temp+= `<td><input name="prihvati" id="btnPrihvati` + data[i].id + `" name = "prihvati" class="btn btn-primary" type="button" value="Prihvati">`;
 	         temp+=`</br><input id="btnOdbij` + data[i].id + `" name = "odbij" class="btn btn-primary pull-center" type="button"
 	         value="Odbij" /></td>`;
-			temp+=`</tr>`;
+	     
 		}
 		$("#prikazPodataka").html(`<table class="table table-bordered center"  style="width: 60%;height: 500px;overflow: auto; margin: 0 auto;">
         <thead>
@@ -1191,5 +1286,17 @@ function pretragaSobe() { //za cijenu
             $(this).hide()
         }
     });
-};		
+};	
+
+function readURL(input) {
+	if(input.files && input.files[0]){
+		var reader = new FileReader();
+		var file = input.files[0];
+		
+		reader.onload = function(e){	
+			$('#output').attr('src', e.target.result);
+		}
+		reader.readAsDataURL(input.files[0]);
+	}
+}
 

@@ -263,6 +263,77 @@ public class DomacinService {
 		korisnikDAO.sacuvajKorisnike(contextPath);
 		return  Response.status(200).build();	
     }
+    
+    
+    @POST
+   	@Path("/zavrsi")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response zavrsi(String id,@Context HttpServletRequest request){
+    	String pom = id.substring(15,id.length()-2);
+		int ID = Integer.parseInt(pom);	
+		System.out.println("Iddddd" + ID);
+		Boolean uspjesno = false;
+		int idd = -1;
+		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
+    	Korisnik domacin = (Korisnik) request.getSession().getAttribute("korisnik");
+    	for(Apartman a:domacin.getApartmanZaIzdavanje()) {
+    		for(Rezervacija r:a.getRezervacije()) {
+    			if(r.getId() == ID  ) {
+    				if(r.getStatus().equals(StatusRezervacije.prihvacena)) {					
+    				String pocetniDatum = r.getPocetniDatum();
+    				LocalDate pocetniD = LocalDate.parse(pocetniDatum,DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    				int brojNocenja = r.getBrojNocenja();
+    				LocalDate pomocna = pocetniD.plusDays(brojNocenja);
+    				if(pomocna.isBefore(LocalDate.now())) {
+    					System.out.println("usaooo a nije trebao");
+    					r.setStatus(StatusRezervacije.zavrsena);
+    					uspjesno = true;
+    				}
+    				}
+    			}
+    		}
+    	}
+    	
+    	for(Korisnik kor:korisnikDAO.getKorisnici().values()) {
+    		if(kor.getUloga().equals(Uloga.gost)) {
+    		for(Apartman ap:kor.getIznajmljeniApartman()) {
+        		for(Rezervacija r:ap.getRezervacije()) {
+        			if(r.getId() == ID  ) {
+        				if(r.getStatus().equals(StatusRezervacije.prihvacena)) {					
+        				String pocetniDatum = r.getPocetniDatum();
+        				LocalDate pocetniD = LocalDate.parse(pocetniDatum,DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        				int brojNocenja = r.getBrojNocenja();
+        				LocalDate pomocna = pocetniD.plusDays(brojNocenja);
+        				if(pomocna.isBefore(LocalDate.now())) {
+        					r.setStatus(StatusRezervacije.zavrsena);
+        					uspjesno = true;
+        				}
+        				}
+        			}
+        		}
+        	}}
+    	}
+    	
+    	for(Korisnik kor:korisnikDAO.getKorisnici().values()) {
+    		if(kor.getUloga().equals(Uloga.gost)) {
+    			for(Rezervacija r:kor.getRezervacije()) {
+    				if(r.getId() == ID  ) {
+    					if(r.getStatus().equals(StatusRezervacije.prihvacena)) {	
+    				r.setStatus(StatusRezervacije.zavrsena);
+    				uspjesno = true;}}
+    			}
+    	}}
+    	if(!uspjesno) {
+    		System.out.println("blablabla");
+    		return Response.status(400).build();
+    	} else {		
+    	String contextPath = c.getRealPath("");
+		korisnikDAO.sacuvajKorisnike(contextPath);
+		return  Response.status(200).build();	
+    	}
+    }
+  
   
     @POST
 	@Path("/dodajApartman")
@@ -303,6 +374,7 @@ public class DomacinService {
 		a.setVrijemeZaPrijavu(pomocna.getVrijemeZaPrijavu());
 		a.setStatus(Status.neaktivno);
 		a.setRezervacije(new ArrayList<Rezervacija>());
+		a.setSlika(pomocna.getSlika());
 		
 		String[] datumi = pomocna.getDatumiZaIzdavanje().split(",");
 		List<String> pomocnaa = new ArrayList<String>();
@@ -547,6 +619,7 @@ public class DomacinService {
 					a.setVrijemeZaPrijavu(pomocna.getVrijemeZaPrijavu());
 					a.setStatus(pomocna.getStatus());
 					a.setRezervacije(new ArrayList<Rezervacija>());
+					a.setSlika(pomocna.getSlika());
 				
 		
 		
