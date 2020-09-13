@@ -224,9 +224,12 @@ public class GostService {
    	   public Response vratiRezervacije(@Context HttpServletRequest request){
     	Korisnik gost = (Korisnik) request.getSession().getAttribute("korisnik");
     	List<Rezervacija> rpomocna = new ArrayList<Rezervacija>();
+    	if(gost!=null) {
     	if(gost.getRezervacije().size()>0) {
     	rpomocna = gost.getRezervacije();}
     	return Response.ok(rpomocna).status(200).build();
+    	}
+    	return Response.status(400).build();
     		
     		
     }
@@ -240,13 +243,14 @@ public class GostService {
 		int ID = Integer.parseInt(pom);
 		System.out.println(ID);
     	Korisnik gost = (Korisnik) request.getSession().getAttribute("korisnik");
+    	if(gost!=null) {
     	for(Rezervacija r:gost.getRezervacije()) {
     		if(r.getApartman() == ID) {
     			if(r.getStatus() == StatusRezervacije.odbijena || r.getStatus() == StatusRezervacije.zavrsena){
     				return Response.status(200).build();
     			}
     		}
-    	}
+    	}}
     	return Response.status(400).build();
     }
     
@@ -261,13 +265,14 @@ public class GostService {
        	Korisnik gost = (Korisnik) request.getSession().getAttribute("korisnik");
        	kom.setGost(gost.getKorisnickoIme());
        	kom.setApartman(komentar);
+       	if(gost!=null) {
        	for(Apartman a:gost.getIznajmljeniApartman()) {
        		System.out.println("usao u for");
     		if(a.getId()==ID) {
            		System.out.println("usao u IF");
     			a.getKomentar().add(kom);
     		}
-       	}
+       	}}
        	for(Korisnik kor:korisnikDAO.getKorisnici().values()) {
        		for(Apartman a1:kor.getApartmanZaIzdavanje()) {
        			if(a1.getId() == ID) {
@@ -290,6 +295,7 @@ public class GostService {
 		Apartman apart = new Apartman();
 		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
     	Korisnik gost = (Korisnik) request.getSession().getAttribute("korisnik");
+    	if(gost!=null) {
     	for(Rezervacija r:gost.getRezervacije()) {
     		if(r.getId()==ID) {
     			if(r.getStatus().equals(StatusRezervacije.prihvacena) || r.getStatus().equals(StatusRezervacije.kreirana)) {
@@ -297,7 +303,7 @@ public class GostService {
     				uspjesno = true;
     			}
     		}
-    	}
+    	}}
     	if(!uspjesno) {
     		return Response.status(400).build();
     	}
@@ -356,7 +362,6 @@ public class GostService {
    	   public Response preuzmiKomentare(String id,@Context HttpServletRequest request){
     	String pom = id.substring(17,id.length()-2);
     	int ID = Integer.parseInt(pom);
-    	//Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
     	KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
     	List<Komentar> pomocnaLista = new ArrayList<Komentar>();
     	for(Korisnik k :korisnikDAO.getKorisnici().values()) {

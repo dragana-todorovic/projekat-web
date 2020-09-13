@@ -129,7 +129,7 @@ public class AdministratorService {
 				   pomocniDatumi.add(pocetni.plusDays(i));
 			   }
 			   for(Korisnik k:kd.getKorisnici().values()) {
-				   if(k.getUloga().equals(Uloga.domacin)) {
+				   if(k.getUloga().equals(Uloga.domacin) && k!=null) {
 					   for(Apartman a:k.getApartmanZaIzdavanje()) {
 						   if(!a.obrisan) {
 							   List<LocalDate> datumi1 = new ArrayList<LocalDate>();
@@ -164,6 +164,7 @@ public class AdministratorService {
 	@Consumes(MediaType.APPLICATION_JSON)
     public Response dodajSadrzaj(SadrzajApartmana s,@Context HttpServletRequest request) {
 		SadrzajDAO sadrzajDAO = (SadrzajDAO) c.getAttribute("sadrzajDAO"); 
+		if(sadrzajDAO!=null) {
     	for(SadrzajApartmana sad:sadrzajDAO.getSadrzaj().values()){
 			   if(sad.getNaziv().equals(s.getNaziv())){
 				   return Response.status(400).build();
@@ -173,6 +174,8 @@ public class AdministratorService {
 		   String contextPath = c.getRealPath("");
 		   sadrzajDAO.sacuvajSadrzaj(contextPath);
 		   return Response.status(200).build();
+		}
+		return Response.status(400).build();
 	     
 	   }
     @POST
@@ -184,6 +187,7 @@ public class AdministratorService {
        	int ID = Integer.parseInt(pom);
        	SadrzajDAO sadrzajDAO = (SadrzajDAO) c.getAttribute("sadrzajDAO"); 
         KorisnikDAO kd=(KorisnikDAO) c.getAttribute("korisnikDAO");
+        
     	for(SadrzajApartmana sad:sadrzajDAO.getSadrzaj().values()){
        		if(sad.getId() == ID) {
        			sad.obrisan = true;       			
@@ -476,12 +480,14 @@ public class AdministratorService {
     	KorisnikDAO kd = (KorisnikDAO) c.getAttribute("korisnikDAO");
     	List<Komentar> pomocnaLista = new ArrayList<Komentar>();
     	for(Korisnik k : kd.getKorisnici().values()) {
+    		if(k!=null) {
     		for(Apartman a:k.getApartmanZaIzdavanje()) {
 	    		if(a.getId() == ID) {
 	    			pomocnaLista = a.getKomentar();
 	    		}
-    	}}
+    	}}}
     	return Response.ok(pomocnaLista).status(200).build();
+    
     		
     }
 }

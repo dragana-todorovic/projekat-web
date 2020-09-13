@@ -26,7 +26,7 @@ $(document).ready(function(){
 	 });
 
 	 $("#prikaziPodatke").click(function () {
-         ispisiPodatke(korisnik);
+         ispisiPodatkeGost(korisnik);
 	 });
 	 
 	 $("#izmijeniPodatke").click(function () {

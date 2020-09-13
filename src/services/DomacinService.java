@@ -75,13 +75,14 @@ public class DomacinService {
 		int ID = Integer.parseInt(pom);		
 		List<Rezervacija>pomocna = new ArrayList<Rezervacija>();
     	Korisnik domacin = (Korisnik) request.getSession().getAttribute("korisnik");
+    	if(domacin!=null) {
     	for(Apartman a:domacin.getApartmanZaIzdavanje()) {
     		if(a.getId()== ID) {
     			
     			pomocna = a.getRezervacije();
     			return Response.ok(pomocna).status(200).build();
     		}
-    	}
+    	}}
 
     	return Response.status(400).build();
     		
@@ -108,6 +109,7 @@ public class DomacinService {
    			   for(int i = 0;i<brojDana;i++) {
    				   pomocniDatumi.add(pocetni.plusDays(i));
    			   }
+   			   if(k!=null) {
    					   for(Apartman a:k.getApartmanZaIzdavanje()) {
    						   if(!a.obrisan && a.getStatus().equals(Status.aktivno)) {
    							   List<LocalDate> datumi1 = new ArrayList<LocalDate>();
@@ -124,7 +126,7 @@ public class DomacinService {
    						   }
    						   
    					   }
-   				   }
+   				   }}
    		   return Response.ok(pomocnaLista).status(200).build();
    		   
    		
@@ -142,6 +144,7 @@ public class DomacinService {
 		Apartman apart = new Apartman();
 		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
     	Korisnik domacin = (Korisnik) request.getSession().getAttribute("korisnik");
+    	if(domacin != null ) {
     	for(Apartman a:domacin.getApartmanZaIzdavanje()) {
     		for(Rezervacija r:a.getRezervacije()) {
     			if(r.getId() == ID && r.getStatus().equals(StatusRezervacije.kreirana)) {
@@ -162,7 +165,7 @@ public class DomacinService {
     				}
     	
     			}
-    			  		
+    		}  		
     		}
     	}
     	if(!uspjesno) {
@@ -208,6 +211,7 @@ public class DomacinService {
 		Boolean uspjesno = false;
 		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
     	Korisnik domacin = (Korisnik) request.getSession().getAttribute("korisnik");
+    	if(domacin!=null) {
     	for(Apartman a:domacin.getApartmanZaIzdavanje()) {
     		for(Rezervacija r:a.getRezervacije()) {
     			if(r.getId() == ID  ) {
@@ -226,7 +230,7 @@ public class DomacinService {
     				}
     			}	
     		}
-    	} 	
+    	} }	
     	for(Korisnik k:korisnikDAO.getKorisnici().values()) {
     		if(k.getUloga().equals(Uloga.gost)){
     			for(Rezervacija rez:k.getRezervacije()) {
@@ -277,6 +281,7 @@ public class DomacinService {
 		int idd = -1;
 		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
     	Korisnik domacin = (Korisnik) request.getSession().getAttribute("korisnik");
+    	if(domacin!=null) {
     	for(Apartman a:domacin.getApartmanZaIzdavanje()) {
     		for(Rezervacija r:a.getRezervacije()) {
     			if(r.getId() == ID  ) {
@@ -293,7 +298,7 @@ public class DomacinService {
     				}
     			}
     		}
-    	}
+    	}}
     	
     	for(Korisnik kor:korisnikDAO.getKorisnici().values()) {
     		if(kor.getUloga().equals(Uloga.gost)) {
@@ -490,6 +495,7 @@ public class DomacinService {
        	int ID = Integer.parseInt(pom); 
         KorisnikDAO kd=(KorisnikDAO) c.getAttribute("korisnikDAO");
         Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+        if(k!=null) {
     	for(Apartman a: k.getApartmanZaIzdavanje()){
        		if(a.getId() == ID) {
        			a.obrisan = true;
@@ -498,7 +504,7 @@ public class DomacinService {
        			kd.sacuvajKorisnike(contextPath);
        			return Response.status(200).build();
        		}
-       	}
+       	}}
     	
        	return Response.status(400).build();
        }
@@ -512,11 +518,12 @@ public class DomacinService {
        	int ID = Integer.parseInt(pom);
        	KorisnikDAO kd = (KorisnikDAO) c.getAttribute("korisnikDAO"); 
         Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+        if(k!=null) {
        	for(Apartman a: k.getApartmanZaIzdavanje()){
        		if(a.getId() == ID) {
     			return Response.ok(a).status(200).build();
     		}
-    	}
+    	}}
     	return Response.status(400).build();
     }
     @POST
@@ -529,6 +536,7 @@ public class DomacinService {
     	
     	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
         List<SadrzajApartmana>pomocna = new ArrayList<SadrzajApartmana>();
+        if(k!=null) {
         for(Apartman a:k.getApartmanZaIzdavanje()) {
         	if(a.getId() == ID) {
         		for (SadrzajApartmana s: a.getSadrzajApartmana()) {
@@ -540,7 +548,7 @@ public class DomacinService {
         		}
         	}
         }
-
+        }
         return Response.ok(pomocna).status(200).build();
        }
     @POST
@@ -560,13 +568,14 @@ public class DomacinService {
        	}}
        	for(SadrzajApartmana sa:pomocna) {
        	System.out.println("nepostojeci sadrzaj prije    " + sa.getNaziv());}
+       	if(k!=null) {
        	for(Apartman a:k.getApartmanZaIzdavanje()) {
         	if(a.getId() == ID) {
         		for(SadrzajApartmana sa: a.getSadrzajApartmana()) {
         			pomocna.remove(sa);
         		}
         	}
-       	}
+       	}}
        	for(SadrzajApartmana sa:pomocna) {
            	System.out.println("nepostojeci sadrzaj poslije    " + sa.getNaziv());}
        
@@ -589,6 +598,7 @@ public class DomacinService {
 		SadrzajDAO sadrzajDAO = (SadrzajDAO) c.getAttribute("sadrzajDAO"); 
 		Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
 		List<SadrzajApartmana> pomocniSadrzaj = new ArrayList<SadrzajApartmana>();
+		if(k!=null) {
 		for(Apartman a: k.getApartmanZaIzdavanje()) {
 			if(a.getId() == pomocna.getId()) {
 				if(pomocnaLista.size() == 0 && a.getSadrzajApartmana().size()!=0) {
@@ -633,7 +643,7 @@ public class DomacinService {
 				}
 				a.setDatumZaIzdavanje(pomocnaa);}
 				
-		}
+		}}
 		String contextPath = c.getRealPath("");
 		korisnikDAO.sacuvajKorisnike(contextPath);
 			   return  Response.status(200).build();
@@ -648,12 +658,13 @@ public class DomacinService {
     	int ID = Integer.parseInt(pom);
     	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
     	List<Komentar> pomocnaLista = new ArrayList<Komentar>();
+    	if(k!=null) {
     	for(Apartman a:k.getApartmanZaIzdavanje()) {
     		System.out.println(k.getApartmanZaIzdavanje().size());
     		if(a.getId() == ID) {
     			pomocnaLista = a.getKomentar();
     		}
-    	}
+    	}}
     	return Response.ok(pomocnaLista).status(200).build();
     		
     }
@@ -668,6 +679,7 @@ public class DomacinService {
     	int ID = Integer.parseInt(pom);
     	KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
     	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    	if(k!=null) {
     	for(Apartman a:k.getApartmanZaIzdavanje()) {
     		for(Komentar kom:a.getKomentar()) {
     			if(kom.getId() == ID) {
@@ -676,7 +688,7 @@ public class DomacinService {
     			}
     			
     		}
-    	}
+    	}}
     	for(Korisnik kor:korisnikDAO.getKorisnici().values()) {
     		if(kor.getUloga().equals(Uloga.gost)) {
     			for(Apartman ap:kor.getIznajmljeniApartman()) {
@@ -706,6 +718,7 @@ public class DomacinService {
     	int ID = Integer.parseInt(pom);
     	KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
     	Korisnik k = (Korisnik) request.getSession().getAttribute("korisnik");
+    	if(k!=null) {
     	for(Apartman a:k.getApartmanZaIzdavanje()) {
     		for(Komentar kom:a.getKomentar()) {
     			if(kom.getId() == ID) {
@@ -714,7 +727,7 @@ public class DomacinService {
     			}
     			
     		}
-    	}
+    	}}
     	for(Korisnik kor:korisnikDAO.getKorisnici().values()) {
     		if(kor.getUloga().equals(Uloga.gost)) {
     			for(Apartman ap:kor.getIznajmljeniApartman()) {

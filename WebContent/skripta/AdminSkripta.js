@@ -318,7 +318,7 @@ let ispisiSveApartmane = function(data,pom1) {
 	        temp += (`<td class="lok">${(lok.trim() != ``) ? lok : `-`}</td>`);
 	        lok = ``;
 	      
-	        temp += (`<td>`+data[i].domacin+`</td><td class="col1">`+data[i].status+`</td>`);
+	        temp += (`<td>`+data[i].domacin+`</td><td class="col">`+data[i].status+`</td>`);
 	        temp+=`<td> <img id="output" height="150px" alt="slika" src="`+ data[i].slika+`"></td>`;
 	    temp+=`<td><input id="btnPrikaz` + data[i].id + `" name = "kom" class="btn btn-primary" type="button" value="Prikazi"/> </td> `;
 	    
@@ -510,17 +510,17 @@ let ispisiSveApartmane = function(data,pom1) {
             $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
         }
 });
-$("#filterStatus").change(function () { //filter po tipu ap
-	
+$("#filterStatus").change(function () { 
+
         if ($(this).val() == "Bez naznake") {
-            $("#table td.col1").parent().show();
+            $("#table td.col").parent().show();
         } else if ($(this).val() == "aktivno") {
-            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
-            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+            $("#table td.col:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col:contains('" + $(this).val() + "')").parent().show();
         }
         else {
-            $("#table td.col1:not(:contains('" + $(this).val() + "'))").parent().hide();
-            $("#table td.col1:contains('" + $(this).val() + "')").parent().show();
+            $("#table td.col:not(:contains('" + $(this).val() + "'))").parent().hide();
+            $("#table td.col:contains('" + $(this).val() + "')").parent().show();
         }
 });
 	$("th[name=sortiraj]").click(function () {
