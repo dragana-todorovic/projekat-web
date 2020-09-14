@@ -100,10 +100,11 @@ public class KorisniciService {
     	String userName = vrijednost.getKorisnickoIme();
     	String password = vrijednost.getLozinka();
     	for(Korisnik k:korisnikDAO.getKorisnici().values()){
-			   if(k.getKorisnickoIme().equals(userName) && (k.getLozinka().equals(password))){
+    		if(!k.getBlokiran()) {
+			   if(k.getKorisnickoIme().equals(userName) && (k.getLozinka().equals(password) )){
 				   request.getSession().setAttribute("korisnik", k);
 				   return Response.status(200).build();
-			   } 
+			   } }
 		   }
 		   return Response.status(400).build();	
     }

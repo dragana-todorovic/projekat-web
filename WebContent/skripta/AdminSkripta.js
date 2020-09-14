@@ -335,9 +335,9 @@ let ispisiSveApartmane = function(data,pom1) {
          <option value="soba">soba</option>
     </select>
     </div><br>
-<div> <b>Filtriraj po statusu:&nbsp;&nbsp;</b><select id="filterStatus">
+<div> <b>Filtriraj po statusu:&nbsp;&nbsp;</b><select id="filterStatus" name="filterStatus">
          <option value="Bez naznake" selected>Bez naznake</option>
-         <option value="aktivno">aktivno</option>
+         <option value="aktivan">aktivno</option>
          <option value="neaktivno">neaktivno</option>
     </select>
     </div><br>
@@ -514,7 +514,7 @@ $("#filterStatus").change(function () {
 
         if ($(this).val() == "Bez naznake") {
             $("#table td.col").parent().show();
-        } else if ($(this).val() == "aktivno") {
+        } else if ($(this).val() == "neaktivno") {
             $("#table td.col:not(:contains('" + $(this).val() + "'))").parent().hide();
             $("#table td.col:contains('" + $(this).val() + "')").parent().show();
         }
@@ -523,6 +523,7 @@ $("#filterStatus").change(function () {
             $("#table td.col:contains('" + $(this).val() + "')").parent().show();
         }
 });
+
 	$("th[name=sortiraj]").click(function () {
         if ($(this.getElementsByTagName("span")).attr(`class`) == "glyphicon glyphicon-arrow-down") {
             $(this.getElementsByTagName("span")).removeClass("glyphicon glyphicon-arrow-down");

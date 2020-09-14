@@ -119,7 +119,7 @@ public class GostService {
 			   for(Korisnik k:kd.getKorisnici().values()) {
 				   if(k.getUloga().equals(Uloga.domacin)) {
 					   for(Apartman a:k.getApartmanZaIzdavanje()) {
-						   if(!a.obrisan && a.getStatus().equals(Status.aktivno)) {
+						   if(!a.obrisan && a.getStatus().equals(Status.aktivan)) {
 							   List<LocalDate> datumi1 = new ArrayList<LocalDate>();
 							   for(String d : a.getDatumZaIzdavanje()) {
 								   datumi1.add(LocalDate.parse(d,DateTimeFormatter.ofPattern("dd/MM/yyyy")));

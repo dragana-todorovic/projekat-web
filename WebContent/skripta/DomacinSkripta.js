@@ -329,7 +329,7 @@ let ispisiApartmane = function(data,pom1) {
 	        lok = ``;
 	        temp+=`<td> <img id="output" height="150px" alt="slika" src="`+ data[i].slika+`"></td>`;
 	        
-	    if(data[i].status=="aktivno"){
+	    if(data[i].status=="aktivan"){
 	    temp+=`<td><input name="kom" style="text-align:center" id="btnPrikazi` + data[i].id + `" class="btn btn-primary" type="button" value="Prikazi"></td>`;
 	    }
 	    temp+=`<td colspan="2" style = "text-align:center;">
@@ -337,7 +337,7 @@ let ispisiApartmane = function(data,pom1) {
 	                    <input id="btnObrisi` + data[i].id + `" name = "obrisi" class="btn btn-primary pull-center" type="button"
 	                           value="Obrisi apartman"/>`;
 		
-		if(data[i].status=="aktivno"){
+		if(data[i].status=="aktivan"){
   		temp+=`</br> <input id="btnRez` + data[i].id + `" name = "rezervacija" class="btn btn-primary pull-center" type="button"
 	                           value="Rezervacije" /></td>`;
 }else{
@@ -615,7 +615,7 @@ let ispisiAktivneApartmane = function(data,pom1) {
 	        temp += (`<td class="lok">${(lok.trim() != ``) ? lok : `-`}</td>`);
 	        lok = ``;
 	        temp+=`<td> <img id="output" height="150px" alt="slika" src="`+ data[i].slika+`"></td>`;
-	    if(data[i].status=="aktivno"){
+	    if(data[i].status=="aktivan"){
 	    temp+=`<td><input name="kom" style="text-align:center" id="btnPrikazi` + data[i].id + `" class="btn btn-primary" type="button" value="Prikazi"></td>`;
 	    }
 	    temp+=`<td colspan="2" style = "text-align:center;">
@@ -623,7 +623,7 @@ let ispisiAktivneApartmane = function(data,pom1) {
 	                    <input id="btnObrisi` + data[i].id + `" name = "obrisi" class="btn btn-primary pull-center" type="button"
 	                           value="Obrisi apartman"/>`;
 		
-		if(data[i].status=="aktivno"){
+		if(data[i].status=="aktivan"){
   		temp+=`</br> <input id="btnRez` + data[i].id + `" name = "rezervacija" class="btn btn-primary pull-center" type="button"
 	                           value="Rezervacije" /></td>`;
 }else{
@@ -920,12 +920,14 @@ let izmijeniApartman = function(data,data1,data2) {
                <input type="radio"  name="tip" value="1"> Soba`;
     }
 	var status = ``;
-    if (data.status == "neaktivno") {
-        status = `<input type="radio"  name="status" value="0"> Aktivno
-               <input type="radio"  name="status" value="1" checked="checked"> Neaktivno`;
-    } else {
-        status = `<input type="radio"  name="status" value="0" checked="checked"> Aktivno 
+    if (data.status == "aktivan") {
+	status = `<input type="radio"  name="status" value="0" checked="checked"> Aktivno 
                <input type="radio"  name="status" value="1"> Neaktivno`;
+       
+    } else {
+	 status = `<input type="radio"  name="status" value="0"> Aktivno
+               <input type="radio"  name="status" value="1" checked="checked"> Neaktivno`;
+        
     }
 $("#prikazPodataka").html(`
 <table class="table table-bordered" style="width:30%;height:500px;float:left;">

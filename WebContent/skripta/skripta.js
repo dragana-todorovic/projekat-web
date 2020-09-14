@@ -16,9 +16,39 @@ function validateNumber(nekiBroj) {
 function iscrtajKorisnike(data){
 	let temp='';
 	for (i in data){
-		temp+=`<tr><td>`+data[i].korisnickoIme+`</td><td>`+data[i].ime+`</td><td>`+data[i].prezime+`</td><td>`+data[i].pol+`</td><td>`+data[i].uloga+`</td></tr>`;
+		temp+=`<tr><td>`+data[i].korisnickoIme+`</td><td>`+data[i].ime+`</td><td>`+data[i].prezime+`</td><td>`+data[i].pol+`</td><td>`+data[i].uloga+`</td>`;
+		temp+=`<td>`
+		if(data[i].uloga !="administartor"){
+		if(data[i].blokiran==false){	
+		temp +=`<input id="btnBlokiraj` + data[i].korisnickoIme + `" name = "blokiraj" class="btn btn-danger pull-center" type="button"
+	                           value="Blokiraj" />`;}
+		else{
+			temp +=`<input id="btnBlokiraj` + data[i].korisnickoIme + `" name = "blokiraj" class="btn btn-success pull-center" type="button"
+	                           value="Odblokiraj" />`;
+			
+		}}
+		temp+=`</td>`;
+		temp+=`</tr>`;
+		
 	}
+	
+	
 	$('#korisniciTabela').html(temp);
+	$("input:button[name=blokiraj]").click(function () {
+		 $.post({
+				url:'../rest/blokiraj',
+				data : JSON.stringify({id:this.id}),
+				contentType: 'application/json',
+				success: function(kor){
+					iscrtajKorisnike(kor);
+					
+				},
+				error: function(message){
+					alert('Neuspjesno');
+				}
+			
+			});
+	 });
 	$("#korIme").keyup(function () {
         var nadji = ($('#korIme').val()).toLowerCase();
         $("#table tbody tr").each(function () {

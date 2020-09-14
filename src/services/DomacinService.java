@@ -111,7 +111,7 @@ public class DomacinService {
    			   }
    			   if(k!=null) {
    					   for(Apartman a:k.getApartmanZaIzdavanje()) {
-   						   if(!a.obrisan && a.getStatus().equals(Status.aktivno)) {
+   						   if(!a.obrisan && a.getStatus().equals(Status.aktivan)) {
    							   List<LocalDate> datumi1 = new ArrayList<LocalDate>();
    							   for(String d : a.getDatumZaIzdavanje()) {
    								   datumi1.add(LocalDate.parse(d,DateTimeFormatter.ofPattern("dd/MM/yyyy")));
@@ -441,7 +441,7 @@ public class DomacinService {
     		List<SadrzajApartmana> pomocniSadrzaj = new ArrayList<SadrzajApartmana>();
     		if(k != null && k.getApartmanZaIzdavanje() != null) {
     			for(Apartman a:k.getApartmanZaIzdavanje()) {
-    				if(a.getStatus().equals(Status.aktivno) && !a.obrisan) {
+    				if(a.getStatus().equals(Status.aktivan) && !a.obrisan) {
     					for (SadrzajApartmana s: a.getSadrzajApartmana()) {
     	        			if(!s.obrisan) {
     	        				pomocniSadrzaj.add(s);
@@ -468,7 +468,7 @@ public class DomacinService {
     		for(Korisnik k: korisnikDAO.getKorisnici().values()) {
     		if(k != null) {
     			for(Apartman a:k.getApartmanZaIzdavanje()) {
-    				if(a.getStatus().equals(Status.aktivno) && !a.obrisan) {
+    				if(a.getStatus().equals(Status.aktivan) && !a.obrisan) {
     					for (SadrzajApartmana s: a.getSadrzajApartmana()) {
     	        			if(!s.obrisan) {
     	        				pomocniSadrzaj.add(s);
@@ -628,6 +628,7 @@ public class DomacinService {
 					a.setVrijemeZaOdjavu(pomocna.getVrijemeZaOdjavu());
 					a.setVrijemeZaPrijavu(pomocna.getVrijemeZaPrijavu());
 					a.setStatus(pomocna.getStatus());
+					System.out.println("status   " + a.getStatus());
 					a.setRezervacije(new ArrayList<Rezervacija>());
 					a.setSlika(pomocna.getSlika());
 				

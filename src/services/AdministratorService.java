@@ -105,6 +105,24 @@ public class AdministratorService {
 		   }
 		
     } 
+    @POST
+   	@Path("/blokiraj")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response blokiraj(String id,@Context HttpServletRequest request){
+   		   String pom = id.substring(18,id.length()-2);
+   		   KorisnikDAO kd=(KorisnikDAO) c.getAttribute("korisnikDAO");
+   		   for(Korisnik k:kd.getKorisnici().values()) {
+   			   if(k.getKorisnickoIme().equals(pom)) {
+   				   k.setBlokiran(!k.getBlokiran());
+   				return Response.ok(kd.getKorisnici().values()).status(200).build();
+   			   }
+   		   }
+   		   return Response.status(400).build();
+   			   
+   		   
+   		
+       } 
     
     @POST
 	@Path("/pretraziPoDatumima")

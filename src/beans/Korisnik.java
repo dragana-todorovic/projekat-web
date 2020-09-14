@@ -12,20 +12,22 @@ public class Korisnik {
 	private Pol pol;
 	private Uloga uloga;
 	private List<Apartman> apartmanZaIzdavanje;
+	private Boolean blokiran = false;
 	public Korisnik() {
 		apartmanZaIzdavanje = new ArrayList<Apartman>();
 		iznajmljeniApartman = new ArrayList<Apartman>();
 		rezervacije = new ArrayList<Rezervacija>();
+		blokiran = false;
 	}
-	public Korisnik(String korisnickoIme, String lozinka, String ime, String prezime, Pol pol,Uloga uloga) {
-		super();
-		this.korisnickoIme = korisnickoIme;
-		this.lozinka = lozinka;
-		this.ime = ime;
-		this.prezime = prezime;
-		this.pol = pol;
-		this.uloga = uloga;
+
+	public Boolean getBlokiran() {
+		return blokiran;
 	}
+
+	public void setBlokiran(Boolean blokiran) {
+		this.blokiran = blokiran;
+	}
+
 	public String getKorisnickoIme() {
 		return korisnickoIme;
 	}
