@@ -12,7 +12,7 @@ public class Apartman {
 	private int brojSoba;
 	private int brojGostiju;
 	private Lokacija lokacija;
-	private List<String> datumiZaIzdavanje;
+	private List<String> datumZaIzdavanje;
 	//dostupnost
 	private String domacin;
 	private List<Komentar> komentar;
@@ -26,7 +26,7 @@ public class Apartman {
 		komentar = new ArrayList<Komentar>();
 		lokacija = new Lokacija();
 		sadrzajApartmana = new ArrayList<SadrzajApartmana>();
-		datumiZaIzdavanje = new ArrayList<String>();
+		datumZaIzdavanje = new ArrayList<String>();
 		domacin = "";
 		obrisan = false;
 		id = brojac;
@@ -59,10 +59,10 @@ public class Apartman {
 		this.lokacija = lokacija;
 	}
 	public List<String> getDatumZaIzdavanje() {
-		return datumiZaIzdavanje;
+		return datumZaIzdavanje;
 	}
 	public void setDatumZaIzdavanje(List<String> datumZaIzdavanje) {
-		this.datumiZaIzdavanje = datumZaIzdavanje;
+		this.datumZaIzdavanje = datumZaIzdavanje;
 	}
 	public String getDomacin() {
 		return domacin;

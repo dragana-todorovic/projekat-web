@@ -1,0 +1,12 @@
+[ {
+  "korisnickoIme" : "admin",
+  "lozinka" : "admin",
+  "ime" : "admin",
+  "prezime" : "admin",
+  "pol" : "zenski",
+  "uloga" : "administartor",
+  "apartmanZaIzdavanje" : [ ],
+  "blokiran" : false,
+  "iznajmljeniApartman" : [ ],
+  "rezervacije" : [ ]
+} ]

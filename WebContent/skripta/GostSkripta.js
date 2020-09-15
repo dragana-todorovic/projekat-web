@@ -13,7 +13,11 @@ let ispisiSveAktivne = function(data,pom1) {
 	        for (p in data[i].sadrzajApartmana) {
 	            pom[p] = data[i].sadrzajApartmana[p].naziv;
 	        }
-			temp+=`<tr><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
+		var datumi =[];
+		for(d in data[i].datumZaIzdavanje){
+			datumi[d] = data[i].datumZaIzdavanje[d];
+		}
+		temp+=`<tr><td >${datumi} </td><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
 			temp += (`<td class="sad">${pom}</td>`);
 			 var lok = ``;
 		        if (data[i].lokacija.adresa.ulica != null) {
@@ -64,7 +68,7 @@ let ispisiSveAktivne = function(data,pom1) {
 	        <thead>
 	        
 	          <tr>
-	            <th colspan="12" class = " success text-info" style="text-align: center;">AKTIVNI APARTKAMI</th>
+	            <th colspan="13" class = " success text-info" style="text-align: center;">AKTIVNI APARTKAMI</th>
 	          </tr>
 	          <tr class="success">
             <th></th>
@@ -85,10 +89,11 @@ let ispisiSveAktivne = function(data,pom1) {
                 <input type="text" name="filter" id="lokacija" min="0" style="width:60px; placeholder="Unesite lokaciju""/></br>  
             </th>
             
-            <th colspan="4"></th>
+            <th colspan="5"></th>
             
            </tr>
 	          <tr class="text-info success">
+				<th>Datumi</th>
 	            <th>Tip</th>
 	            <th>Broj soba</th>
 	            <th>Broj gostiju</th>
@@ -350,7 +355,11 @@ let ispisiSveAktivneZaNeulogovanog = function(data,pom1) {
 	        for (p in data[i].sadrzajApartmana) {
 	            pom[p] = data[i].sadrzajApartmana[p].naziv;
 	        }
-			temp+=`<tr><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
+		var datumi =[];
+		for(d in data[i].datumZaIzdavanje){
+			datumi[d] = data[i].datumZaIzdavanje[d];
+		}
+		temp+=`<tr><td >${datumi} </td><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
 			temp += (`<td class="sad">${pom}</td>`);
 			 var lok = ``;
 		        if (data[i].lokacija.adresa.ulica != null) {
@@ -399,7 +408,7 @@ let ispisiSveAktivneZaNeulogovanog = function(data,pom1) {
 	        <thead>
 	        
 	          <tr>
-	            <th colspan="11" class = " success text-info" style="text-align: center;">AKTIVNI APARTKAMI</th>
+	            <th colspan="12" class = " success text-info" style="text-align: center;">AKTIVNI APARTKAMI</th>
 	          </tr>
 	          <tr class="success">
            <th></th>
@@ -423,11 +432,11 @@ let ispisiSveAktivneZaNeulogovanog = function(data,pom1) {
                <input type="text" name="filter" id="lokacija" min="0" style="width:150px; placeholder="Unesite lokaciju""/></br>  
            </th>
            
-           <th></th>
-           <th></th>
-           <th></th>
+           <th colspan="4"></th>
+          
           </tr>
 	          <tr class="text-info success">
+				<th>Datumi</th>
 	            <th>Tip</th>
 	            <th>Broj soba</th>
 	            <th>Broj gostiju</th>

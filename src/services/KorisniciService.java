@@ -103,7 +103,7 @@ public class KorisniciService {
     		if(!k.getBlokiran()) {
 			   if(k.getKorisnickoIme().equals(userName) && (k.getLozinka().equals(password) )){
 				   request.getSession().setAttribute("korisnik", k);
-				   return Response.status(200).build();
+				   return Response.ok(k).build();
 			   } }
 		   }
 		   return Response.status(400).build();	

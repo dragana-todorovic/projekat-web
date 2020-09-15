@@ -10,24 +10,14 @@ url: 'rest/logovanje',
 data: pom,
 contentType: 'application/json',
 success: function(data) {
-$.get({
-url:'rest/trenutniKorisnik',
-contentType: 'application/json',
-success: function(data){
-if(data){
 if(data.uloga == 'gost'){
 	window.location.href = "html/Gost.html";}
-else if(data.uloga == 'administartor'){
+ if(data.uloga == 'administartor'){
 	window.location.href = "html/Admin.html";
 }
-else if(data.uloga == 'domacin'){
+ if(data.uloga == 'domacin'){
 	window.location.href = "html/Domacin.html";
-}else {
-location.href = "LogIn.html";
 }
-}
-}
-})
 
 },
 error: function(message) {

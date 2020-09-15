@@ -1,3 +1,5 @@
+
+
 $(document).ready(function(){
 
 	$('#logoutLink').click(function() {
@@ -28,7 +30,17 @@ $(document).ready(function(){
 		contentType: 'application/json',
 		success: function(data){
 			korisnik = data;
-			$("#korisnik").html(data.korisnickoIme + `<span class="caret"></span>`);
+			if(data){
+if(data.uloga == 'gost'){
+	window.location.href = "Gost.html";}
+else if(data.uloga == 'administartor'){
+	window.location.href = "Admin.html";
+}
+else {
+$("#korisnik").html(data.korisnickoIme + `<span class="caret"></span>`);
+}
+}
+			
 		}
 	});
 	$("#pocetna").click(function () {

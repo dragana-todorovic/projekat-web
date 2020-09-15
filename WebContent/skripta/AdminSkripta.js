@@ -352,7 +352,11 @@ let ispisiSveApartmane = function(data,pom1) {
         for (p in data[i].sadrzajApartmana) {
             pom[p] = data[i].sadrzajApartmana[p].naziv + "\n";
         }
-		temp+=`<tr><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
+		var datumi =[];
+		for(d in data[i].datumZaIzdavanje){
+			datumi[d] = data[i].datumZaIzdavanje[d];
+		}
+		temp+=`<tr><td >${datumi} </td><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
 		temp += (`<td class="sad">${pom}</td>`);
 		 var lok = ``;
 	        if (data[i].lokacija.adresa.ulica != null) {
@@ -409,7 +413,7 @@ let ispisiSveApartmane = function(data,pom1) {
       <table class="table table-bordered" id="table">
         <thead>
          <tr>
-            <th colspan="13" class = " success text-info" style="text-align: center;">APARTMANI</th>
+            <th colspan="14" class = " success text-info" style="text-align: center;">APARTMANI</th>
           </tr>
 	          <tr class="success">
            <th></th>
@@ -430,12 +434,13 @@ let ispisiSveApartmane = function(data,pom1) {
                <input type="text" name="filter" id="lokacija" min="0" style="width:150px; placeholder="Unesite lokaciju""/></br>  
            </th>
            
-           <th colspan="5"></th>
+           <th colspan="6"></th>
          
           </tr>
         
           <tr class="text-info success">
-            <th>Tip</th>
+			<th>Datum</th>
+            <th>Tip</th>	
             <th style = "width:10%">Broj soba</th>
             <th >Broj gostiju</th>
              <th style = "width:10%" class="success" style="text-align:center" name="sortiraj">Cijena po noci<span name="strelica" class="glyphicon glyphicon-arrow-down"/></th>
