@@ -6,6 +6,7 @@ import com.sun.org.glassfish.gmbal.ParameterNames;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -37,6 +38,7 @@ import beans.Komentar;
 import beans.Korisnik;
 import beans.PodaciZaRezervaciju;
 import beans.PomocnaKlasa;
+import beans.Praznik;
 import beans.PretragaPoDatumima;
 import beans.PretraziPoKorisnickom;
 import beans.Rezervacija;
@@ -45,6 +47,7 @@ import beans.Status;
 import beans.StatusRezervacije;
 import beans.Uloga;
 import dao.KorisnikDAO;
+import dao.PrazniciDAO;
 import dao.SadrzajDAO;
 import javafx.util.converter.LocalDateStringConverter;
 
@@ -68,6 +71,11 @@ public class GostService {
     	if(c.getAttribute("sadrzajDAO")==null) {
     		
     		c.setAttribute("sadrzajDAO", new SadrzajDAO(contextPath));
+    		
+    	}
+if(c.getAttribute("prazniciDAO")==null) {
+    		
+    		c.setAttribute("prazniciDAO", new PrazniciDAO(contextPath));
     		
     	}
     }
@@ -154,6 +162,7 @@ public class GostService {
     		int ID = Integer.parseInt(pom);
     		Rezervacija r = new Rezervacija();
     		Apartman a = new Apartman();
+    		PrazniciDAO prazniciDAO = (PrazniciDAO) c.getAttribute("prazniciDAO");
     		Korisnik gost = (Korisnik) request.getSession().getAttribute("korisnik");
     		KorisnikDAO korisnikDAO = (KorisnikDAO) c.getAttribute("korisnikDAO");
     		for(Korisnik k : korisnikDAO.getKorisnici().values()) {
@@ -199,7 +208,22 @@ public class GostService {
         					r.setPocetniDatum(pocetniDatum);
         					r.setUkupnaCijena(ap.getCijenaPoNoci()*podaci.getBroj());
         					r.setPoruka(podaci.getPoruka());
-        					System.out.println("porukaaaa   " +r.getPoruka());
+        					if(pomocna.size() == 3) {
+        						DayOfWeek petak = pomocna.get(0).getDayOfWeek();
+        						DayOfWeek subota = pomocna.get(1).getDayOfWeek();
+        						DayOfWeek nedjelja = pomocna.get(2).getDayOfWeek();
+        						if(petak.equals(DayOfWeek.FRIDAY) && subota.equals(DayOfWeek.SATURDAY) && nedjelja.equals(DayOfWeek.SUNDAY)) {
+        							r.setUkupnaCijena(r.getUkupnaCijena()-(r.getUkupnaCijena()*0.1));
+        						}
+        					}
+        					for(Praznik p : prazniciDAO.getPraznici().values()) {
+        						for(LocalDate da: pomocna) {
+        							LocalDate pomocniDatum = LocalDate.parse(p.getPraznik(),DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        							if(da.equals(pomocniDatum)) {
+        								r.setUkupnaCijena(r.getUkupnaCijena() + r.getUkupnaCijena()*0.05);
+        							}
+        						}
+        					}
         					a.getRezervacije().add(r);
         					
         				}

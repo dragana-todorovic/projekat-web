@@ -27,22 +27,23 @@ $(document).ready(function(){
 	
 	
 	$("#registrujDomacina").click(function () {
-		$("#pretraga").addClass('hidden');
 		registrujDomacina();
 	 });
 	
 	 $("#prikaziPodatke").click(function () {
-		 $("#pretraga").addClass('hidden');
          ispisiPodatke(korisnik);
 	 });
 	 
+	 $("#praznici").click(function () {
+		 ispisiPraznike();
+	 });
+	 
 	 $("#izmijeniPodatke").click(function () {
-		 $("#pretraga").addClass('hidden');
 		 izmijeniPodatke1(korisnik);
 	 });
 	 
 	 $("#promijeniSifru").click(function () {
-		 $("#pretraga").addClass('hidden');
+		
 		 izmijeniSifru1(korisnik);
 	 });
 	 

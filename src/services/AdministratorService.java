@@ -31,6 +31,8 @@ import beans.Apartman;
 import beans.Komentar;
 import beans.Korisnik;
 import beans.PomocnaKlasa;
+import beans.Praznici;
+import beans.Praznik;
 import beans.PretragaPoDatumima;
 import beans.PretraziPoKorisnickom;
 import beans.Rezervacija;
@@ -38,6 +40,7 @@ import beans.SadrzajApartmana;
 import beans.Status;
 import beans.Uloga;
 import dao.KorisnikDAO;
+import dao.PrazniciDAO;
 import dao.SadrzajDAO;
 
 @Path("")
@@ -60,6 +63,11 @@ public class AdministratorService {
     	if(c.getAttribute("sadrzajDAO")==null) {
     		
     		c.setAttribute("sadrzajDAO", new SadrzajDAO(contextPath));
+    		
+    	}
+    	if(c.getAttribute("prazniciDAO")==null) {
+    		
+    		c.setAttribute("prazniciDAO", new PrazniciDAO(contextPath));
     		
     	}
     }
@@ -105,6 +113,43 @@ public class AdministratorService {
 		   }
 		
     } 
+    
+    @POST
+   	@Path("/dodajDatume")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response dodajDatume(String datumi ,@Context HttpServletRequest request){
+    		
+    		PrazniciDAO prazniciDAO = (PrazniciDAO) c.getAttribute("prazniciDAO");
+   		   String pom = datumi.substring(11,datumi.length()-2);
+   		   
+   		   if(!pom.equals("")) {
+   		   String[] datumi1= pom.split(",");
+   		   for(int i = 0;i<datumi1.length;i++) {
+   			   Praznik praznik = new Praznik();
+   			   LocalDate ld = LocalDate.parse(datumi1[i],DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+   			   DateTimeFormatter formatter =  DateTimeFormatter.ofPattern("dd/MM/yyyy");
+   			   String form = ld.format(formatter);
+	   					
+	   					for(Praznik pr : prazniciDAO.getPraznici().values()) {
+	   						if(pr.getPraznik().equals(form)) {
+	   							return Response.status(400).build();
+	   						}
+	   					}
+	   					praznik.setPraznik(form);
+						prazniciDAO.getPraznici().put(praznik.getId(), praznik);
+	   	   			   
+   			   }
+   			   
+   		   String contextPath = c.getRealPath("");
+		   prazniciDAO.sacuvajPraznike(contextPath);
+		   return Response.status(200).build();
+   		   
+} else  {
+	return Response.status(400).build();
+}}
+   		
+       
     @POST
    	@Path("/blokiraj")
    	@Produces(MediaType.APPLICATION_JSON)

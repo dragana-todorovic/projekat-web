@@ -1,3 +1,58 @@
+let ispisiPraznike = function() {
+	$("#prikazPodataka").html(`<br>
+	<div style="width: 50%;height: 500px;overflow: auto; margin: 0 auto;">
+	<table class="table table-bordered">
+	        <thead>
+	            <tr class="success">
+	                <th colspan="2" class="text-info" style = "text-align:center;">
+	                    ODREDJIVANJE PRAZNICINIH DATUMA              
+	                </th>
+	            </tr>
+	        </thead>
+	        <tbody>
+	          <tr><td style="width: 35%;">Izaberite datume:</td>
+	<td class="container">
+		<input type="text" class="form-control date" placeholder="Izabreite datume.." id="date">
+
+	            </td>
+	            </tr>
+	<tr class="success"><td colspan="2" style = "text-align:center;"><input type="button" class="btn btn-primary" id="odaberi" value="Odaberi"/></td></tr>
+	        </tbody>
+	    </table></div>`);
+	$("#odaberi").click(function () { 
+		var datumi = $('#date').val();
+			$.post({
+				url:'../rest/dodajDatume',
+				data : JSON.stringify({datumi:datumi}),
+				contentType: 'application/json',
+				success: function(){
+					alert("Uspjesno ste odabrali praznike");
+					location.href = "Admin.html";
+				},
+				error: function(message){
+					if(datumi == "") {
+					alert('Morate odabrati datume');
+					} else {
+						alert('Vec postoje ti praznici');
+						}
+				}
+				
+			
+			});
+		
+	});
+	
+
+	    $("#date").datepicker({
+	        multidate: true,
+	        format: 'dd/mm/yyyy'
+	    });
+	    
+	    
+	    
+
+}
+
 let ispisiSveRezervacije = function(data) {
 	let temp='';
 	   
