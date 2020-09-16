@@ -9,4 +9,28 @@
   "blokiran" : false,
   "iznajmljeniApartman" : [ ],
   "rezervacije" : [ ]
+},
+ {
+  "korisnickoIme" : "domacin",
+  "lozinka" : "domacin",
+  "ime" : "domacin",
+  "prezime" : "domacin",
+  "pol" : "zenski",
+  "uloga" : "domacin",
+  "apartmanZaIzdavanje" : [ ],
+  "blokiran" : false,
+  "iznajmljeniApartman" : [ ],
+  "rezervacije" : [ ]
+},
+ {
+  "korisnickoIme" : "gost",
+  "lozinka" : "gost",
+  "ime" : "gost",
+  "prezime" : "gost",
+  "pol" : "zenski",
+  "uloga" : "gost",
+  "apartmanZaIzdavanje" : [ ],
+  "blokiran" : false,
+  "iznajmljeniApartman" : [ ],
+  "rezervacije" : [ ]
 } ]

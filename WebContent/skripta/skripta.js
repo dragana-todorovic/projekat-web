@@ -906,10 +906,17 @@ function reverseGeocode(coords) {
             //alert(response);
             return response.json();
         }).then(function (json) {
+        	$("#txtUlica").val(json["address"]["road"]);
+        	$("#txtBroj").val(json["address"]["house_number"]);
+        	$("#txtGrad").val(json["address"]["city"]);
+        	$("#txtPostanskiBroj").val(json["address"]["postcode"]);
+        	$("#txtSirina").val(json["lon"]);
+        	$("#txtDuzina").val(json["lat"]);
             console.log(json);
             jsonObjekat = json;
         });
 };
+
 let pomocna = function () {
     var map = new ol.Map({
         target: 'map',
@@ -923,15 +930,14 @@ let pomocna = function () {
             zoom: 15
         })
     });
-    //var jsonObjekat;
     map.on('click', function (evt) {
         var coord = ol.proj.toLonLat(evt.coordinate);
-        alert(coord);
         reverseGeocode(coord);
         var iconFeatures = [];
         var lon = coord[0];
         var lat = coord[1];
-        var icon = "marker.png";
+        
+        var icon = "";
         var iconGeometry = new ol.geom.Point(ol.proj.transform([lon, lat], 'EPSG:4326', 'EPSG:3857'));
         var iconFeature = new ol.Feature({
             geometry: iconGeometry
@@ -954,7 +960,7 @@ let pomocna = function () {
             style: iconStyle
         });
         map.addLayer(vectorLayer);
-        //addMarker(coord[0], coord[1], "marker.png");
+  
     });
 
 };

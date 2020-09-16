@@ -804,7 +804,7 @@ $("#prikazPodataka").html(`
         </tbody>
     </table>
 
-<button id="kreiranje" style="float:left;" class="btn btn-primary">Uzmi lokaciju sa mape</button>
+
         <div id="map" class="map" style="width:70%;padding:-400px 0px 0px 0px;float:right;"></div>`);
 pomocna();
 $('#fileSlika').change(function(){

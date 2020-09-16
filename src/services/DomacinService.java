@@ -12,6 +12,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import java.lang.Object;
+
+
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -28,9 +31,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import com.google.code.geocoder.*;
 
 import beans.Apartman;
 import beans.Komentar;
+import beans.Koordinate;
 import beans.Korisnik;
 import beans.PomocnaKlasa;
 import beans.PretragaPoDatumima;
@@ -42,6 +47,7 @@ import beans.StatusRezervacije;
 import beans.Uloga;
 import dao.KorisnikDAO;
 import dao.SadrzajDAO;
+
 
 @Path("")
 public class DomacinService {
@@ -88,6 +94,21 @@ public class DomacinService {
     		
     		
     }
+    
+    @POST
+   	@Path("/uzmiSaMape")
+   	@Produces(MediaType.APPLICATION_JSON)
+   	@Consumes(MediaType.APPLICATION_JSON)
+   	   public Response uzmiSaMape(Koordinate koordinate,@Context HttpServletRequest request){
+    	System.out.println("Koordinate: " + koordinate.getLat() + "   " + koordinate.getLon());
+    	
+    	return Response.status(200).build();
+    	
+    	
+    		
+    		
+    }
+    
     
     @POST
    	@Path("/pretraziPoDatumima1")
