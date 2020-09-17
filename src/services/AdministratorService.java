@@ -160,6 +160,8 @@ public class AdministratorService {
    		   for(Korisnik k:kd.getKorisnici().values()) {
    			   if(k.getKorisnickoIme().equals(pom)) {
    				   k.setBlokiran(!k.getBlokiran());
+   				String contextPath = c.getRealPath("");
+   			   kd.sacuvajKorisnike(contextPath);
    				return Response.ok(kd.getKorisnici().values()).status(200).build();
    			   }
    		   }
@@ -318,11 +320,7 @@ public class AdministratorService {
    	@Consumes(MediaType.APPLICATION_JSON)
        public Response izmijeniPodatke(SadrzajApartmana sa,@Context HttpServletRequest request) {
        	SadrzajDAO sadrzajDAO = (SadrzajDAO) c.getAttribute("sadrzajDAO"); 
-       	for(SadrzajApartmana s:sadrzajDAO.getSadrzaj().values()) {
-       		if(s.getNaziv().equals(sa.getNaziv())) {
-       			return Response.status(400).build();
-       		}
-       	}
+      
    		   for(SadrzajApartmana s:sadrzajDAO.getSadrzaj().values()){
    			   if(s.getId()==sa.getId()){
    				   String contextPath = c.getRealPath("");

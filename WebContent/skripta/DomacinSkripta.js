@@ -176,11 +176,13 @@ $('#fileSlika').change(function(){
 });
 $('.date').datepicker({
         multidate: true,
-        format: 'dd/mm/yyyy'
+        format: 'dd/mm/yyyy',
+		startDate: '+1d'
     });
     $("#date").datepicker({
         multidate: true,
-        format: 'dd/mm/yyyy'
+        format: 'dd/mm/yyyy',
+		startDate: '+1d'
     });
 
 	$("#btnDodaj").click(function(){
@@ -208,7 +210,8 @@ $('.date').datepicker({
 		}
 		$('.date').datepicker({
             multidate: true,
-            format: 'dd/mm/yyyy'
+            format: 'dd/mm/yyyy',
+			startDate: '+1d'
         });
 		if(validateString(ulica) && broj.trim()!='' && validateString(grad) && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && validateNumber(brojSoba) &&validateNumber(brojGostiju) && validateNumber(cijenaPoNoci) && datumZaIzdavanje.trim()!=''){
 		$.post({
@@ -304,11 +307,11 @@ let ispisiApartmane = function(data,pom1) {
 	for (i in data){
 		var pom = [];
         for (p in data[i].sadrzajApartmana) {
-            pom[p] = data[i].sadrzajApartmana[p].naziv;
+            pom[p] = data[i].sadrzajApartmana[p].naziv + "\n";
         }
 		var datumi =[];
 		for(d in data[i].datumZaIzdavanje){
-			datumi[d] = data[i].datumZaIzdavanje[d];
+			datumi[d] = data[i].datumZaIzdavanje[d] + "\n";
 		}
 		temp+=`<tr><td >${datumi} </td><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
 		temp += (`<td class="sad">${pom}</td>`);
@@ -367,10 +370,10 @@ let ispisiApartmane = function(data,pom1) {
 	        <thead>
 	        
 	          <tr>
-	            <th colspan="11" class = " success text-info" style="text-align: center;">NEAKTIVNI APARTKAMI</th>
+	            <th colspan="11" class = " success text-info" style="text-align: center;">NEAKTIVNI APARTMANI</th>
 	          </tr>
 	          <tr class="success">
-           <th></th>
+           <th colspan="2"></th>
            <th style="text-align:center">
                od:<input type="number" name="filter" id="odSoba" min="0" style="width:60px;"/></br>
                do:<input type="number" name="filter" id="doSoba" min="0" style="width:60px;"/>
@@ -596,11 +599,11 @@ let ispisiAktivneApartmane = function(data,pom1) {
 	for (i in data){
 		var pom = [];
         for (p in data[i].sadrzajApartmana) {
-            pom[p] = data[i].sadrzajApartmana[p].naziv;
+            pom[p] = data[i].sadrzajApartmana[p].naziv + "\n";
         }
 var datumi =[];
 		for(d in data[i].datumZaIzdavanje){
-			datumi[d] = data[i].datumZaIzdavanje[d];
+			datumi[d] = data[i].datumZaIzdavanje[d] + "\n";
 		}
 		temp+=`<tr><td >${datumi} </td><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
 		temp += (`<td class="sad">${pom}</td>`);
@@ -662,10 +665,10 @@ var datumi =[];
 	        <thead>
 	        
 	          <tr>
-	            <th colspan="12" class = " success text-info" style="text-align: center;">AKTIVNI APARTKAMI</th>
+	            <th colspan="12" class = " success text-info" style="text-align: center;">AKTIVNI APARTMANI</th>
 	          </tr>
 	          <tr class="success">
-           <th></th>
+           <th colspan="2"></th>
            <th style="text-align:center">
                od:<input type="number" name="filter" id="odSoba" min="0" style="width:60px;"/></br>
                do:<input type="number" name="filter" id="doSoba" min="0" style="width:60px;"/>
@@ -1117,11 +1120,13 @@ $('#fileSlika').change(function(){
 });
 $('.date').datepicker({
         multidate: true,
-        format: 'dd/mm/yyyy'
+        format: 'dd/mm/yyyy',
+		startDate: '+1d'
     });
     $("#date").datepicker({
         multidate: true,
-        format: 'dd/mm/yyyy'
+        format: 'dd/mm/yyyy',
+		startDate: '+1d'
     });
 $('#btnIzmijeni').click(function() {
 
@@ -1150,7 +1155,8 @@ $('#btnIzmijeni').click(function() {
 		}
 		$('.date').datepicker({
             multidate: true,
-            format: 'dd/mm/yyyy'
+            format: 'dd/mm/yyyy',
+			startDate: '+1d'
         });
 	if(validateString(ulica) && broj.trim()!='' && validateString(grad) && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && validateNumber(brojSoba) &&validateNumber(brojGostiju) && validateNumber(cijenaPoNoci) && datumZaIzdavanje.trim()!=''){
 

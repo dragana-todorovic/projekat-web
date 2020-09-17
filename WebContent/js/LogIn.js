@@ -21,6 +21,7 @@ if(data.uloga == 'gost'){
 
 },
 error: function(message) {
+
 $("#upozorenje").removeClass('hidden');
 $("#upozorenje").addClass('alert-danger');
 $("#upozorenje").html('<td colspan="2"><strong>Greska!</strong> Korisnik sa datim korisnickim imenom i lozinkom ne postoji.</td>');

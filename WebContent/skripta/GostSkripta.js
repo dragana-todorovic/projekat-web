@@ -11,11 +11,11 @@ let ispisiSveAktivne = function(data,pom1) {
 			
 			var pom = [];
 	        for (p in data[i].sadrzajApartmana) {
-	            pom[p] = data[i].sadrzajApartmana[p].naziv;
+	            pom[p] = data[i].sadrzajApartmana[p].naziv + "\n";
 	        }
 		var datumi =[];
 		for(d in data[i].datumZaIzdavanje){
-			datumi[d] = data[i].datumZaIzdavanje[d];
+			datumi[d] = data[i].datumZaIzdavanje[d] + "\n";
 		}
 		temp+=`<tr><td >${datumi} </td><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
 			temp += (`<td class="sad">${pom}</td>`);
@@ -68,10 +68,10 @@ let ispisiSveAktivne = function(data,pom1) {
 	        <thead>
 	        
 	          <tr>
-	            <th colspan="13" class = " success text-info" style="text-align: center;">AKTIVNI APARTKAMI</th>
+	            <th colspan="13" class = " success text-info" style="text-align: center;">AKTIVNI APARTMANI</th>
 	          </tr>
 	          <tr class="success">
-            <th></th>
+            <th colspan="2"></th>
             <th style="text-align:center">
                 od:<input type="number" name="filter" id="odSoba" min="0" style="width:60px;"/></br>
                 do:<input type="number" name="filter" id="doSoba" min="0" style="width:60px;"/>
@@ -353,11 +353,11 @@ let ispisiSveAktivneZaNeulogovanog = function(data,pom1) {
 		for (i in data){
 			var pom = [];
 	        for (p in data[i].sadrzajApartmana) {
-	            pom[p] = data[i].sadrzajApartmana[p].naziv;
+	            pom[p] = data[i].sadrzajApartmana[p].naziv + "\n";
 	        }
 		var datumi =[];
 		for(d in data[i].datumZaIzdavanje){
-			datumi[d] = data[i].datumZaIzdavanje[d];
+			datumi[d] = data[i].datumZaIzdavanje[d] + "\n";
 		}
 		temp+=`<tr><td >${datumi} </td><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
 			temp += (`<td class="sad">${pom}</td>`);
@@ -408,10 +408,10 @@ let ispisiSveAktivneZaNeulogovanog = function(data,pom1) {
 	        <thead>
 	        
 	          <tr>
-	            <th colspan="12" class = " success text-info" style="text-align: center;">AKTIVNI APARTKAMI</th>
+	            <th colspan="12" class = " success text-info" style="text-align: center;">APARTMANI</th>
 	          </tr>
 	          <tr class="success">
-           <th></th>
+           <th colspan="2"></th>
            <th style="text-align:center">
                od:<input type="number"  name="filter" id="odSoba" min="0" style="width:60px;"/></br>
                do:<input type="number"  name="filter" id="doSoba" min="0" style="width:60px;"/>
@@ -643,6 +643,8 @@ let ostaviKomentar = function(id) {
 				data : JSON.stringify({ocjena:ocjena,tekst:tekst,apartman:id}),
 				contentType: 'application/json',
 				success: function(){
+					
+						alert("Uspjesno ste ostavili komentar.")
 					location.href = "Gost.html";
 				},
 				error: function(message){
@@ -669,7 +671,7 @@ let ispisiSveRezervacije = function(data) {
 			temp+=`</tr>`;
 		}
 		
-		$("#prikazPodataka2").html(`
+		$("#prikazPodataka2").html(`<br>
 	      <table class="table table-bordered" id="table">
 	        <thead>
 	          <tr>

@@ -291,10 +291,10 @@ if(c.getAttribute("prazniciDAO")==null) {
        	kom.setApartman(komentar);
        	if(gost!=null) {
        	for(Apartman a:gost.getIznajmljeniApartman()) {
-       		System.out.println("usao u for");
     		if(a.getId()==ID) {
-           		System.out.println("usao u IF");
+    			if(!a.getKomentar().contains(kom)) {
     			a.getKomentar().add(kom);
+    			}
     		}
        	}}
        	for(Korisnik kor:korisnikDAO.getKorisnici().values()) {

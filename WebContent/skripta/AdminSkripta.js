@@ -19,6 +19,16 @@ let ispisiPraznike = function() {
 	<tr class="success"><td colspan="2" style = "text-align:center;"><input type="button" class="btn btn-primary" id="odaberi" value="Odaberi"/></td></tr>
 	        </tbody>
 	    </table></div>`);
+$('.date').datepicker({
+        multidate: true,
+        format: 'dd/mm/yyyy',
+		startDate: '+1d'
+    });
+    $("#date").datepicker({
+        multidate: true,
+        format: 'dd/mm/yyyy',
+		startDate: '+1d'
+    });
 	$("#odaberi").click(function () { 
 		var datumi = $('#date').val();
 			$.post({
@@ -45,7 +55,8 @@ let ispisiPraznike = function() {
 
 	    $("#date").datepicker({
 	        multidate: true,
-	        format: 'dd/mm/yyyy'
+	        format: 'dd/mm/yyyy',
+			startDate: '+1d'
 	    });
 	    
 	    
@@ -166,7 +177,7 @@ let preuzmiSadrzaj = function(a) {
 	
 	let temp='';
 	for (i in a){
-		temp+=`<tr><td>`+a[i].id+`</td><td>`+a[i].naziv+`</td>`;
+		temp+=`<tr><td>`+a[i].naziv+`</td>`;
 		temp+=`<td style="width: 20%" style = "text-align:center;">
         <input name="izmijeni" id="btnIzmijeni` + a[i].id + `" name = "izmijeni" class="btn btn-primary" type="button" value="Izmijeni sadrzaj"></br>
 	                    <input id="btnObrisi` + a[i].id + `" name = "obrisi" class="btn btn-primary pull-center" type="button"
@@ -174,7 +185,7 @@ let preuzmiSadrzaj = function(a) {
 	                	
 	                </td></tr>`;
 	}
-	$("#prikazPodataka").html(`
+	$("#prikazPodataka").html(`<br>
 			<div style="width: 80%;height: 500px;overflow: auto; margin: 0 auto;">
 			 <input id="btnDodaj" class="btn btn-primary pull-center" type="button"
                            value="Dodaj sadrzaj" />
@@ -182,11 +193,10 @@ let preuzmiSadrzaj = function(a) {
         <thead>
           <tr>
 			
-            <th colspan="2" class = " success text-info" style="text-align: center;">SADRZAJ</th>
+            <th colspan="1" class = " success text-info" style="text-align: center;">SADRZAJ</th>
           </tr>
           <tr class="text-info success">
-            <th>Id</th>
-            <th>Naziv</th>
+            <th style="text-align: center;">Naziv</th>
           
           </tr>
         </thead>
@@ -278,6 +288,12 @@ let izmijeniSadrzaj = function(data) {
 				}
 			
 			});
+		}else{
+			$("#upozorenje").removeClass('hidden');
+							$("#upozorenje").addClass('alert-danger');
+							$("#upozorenje").html(`<td colspan="2"><strong>Greska!</strong> Popunite polje.</td>`);
+			
+			
 		}
 		});
 		
@@ -354,7 +370,7 @@ let ispisiSveApartmane = function(data,pom1) {
         }
 		var datumi =[];
 		for(d in data[i].datumZaIzdavanje){
-			datumi[d] = data[i].datumZaIzdavanje[d];
+			datumi[d] = data[i].datumZaIzdavanje[d] + "\n";
 		}
 		temp+=`<tr><td >${datumi} </td><td class="col1">`+data[i].tip+`</td><td class="soba">`+data[i].brojSoba+`</td><td class="brojG">`+data[i].brojGostiju+`</td><td class="cijena">`+data[i].cijenaPoNoci+`</td><td>`+data[i].vrijemeZaPrijavu+`</td><td>`+data[i].vrijemeZaOdjavu+`</td>`;
 		temp += (`<td class="sad">${pom}</td>`);
@@ -416,7 +432,7 @@ let ispisiSveApartmane = function(data,pom1) {
             <th colspan="14" class = " success text-info" style="text-align: center;">APARTMANI</th>
           </tr>
 	          <tr class="success">
-           <th></th>
+           <th colspan="2"></th>
            <th style="text-align:center">
                od:<input type="number" name="filter" id="odSoba" min="0" style="width:60px;"/></br>
                do:<input type="number" name="filter" id="doSoba" min="0" style="width:60px;"/>
@@ -812,13 +828,14 @@ $('#fileSlika').change(function(){
 });
 $('.date').datepicker({
         multidate: true,
-        format: 'dd-mm-yyyy'
+        format: 'dd/mm/yyyy',
+		startDate: '+1d'
     });
     $("#date").datepicker({
         multidate: true,
-        format: 'dd-mm-yyyy'
+        format: 'dd/mm/yyyy',
+		startDate: '+1d'
     });
-   
 $('#btnIzmijeni').click(function() {
 		var sadrzaj = ``;
         $('input[name="sadrzaj"]:checked').each(function () {
@@ -845,7 +862,8 @@ $('#btnIzmijeni').click(function() {
 		}
 		$('.date').datepicker({
             multidate: true,
-            format: 'dd/mm/yyyy'
+            format: 'dd/mm/yyyy',
+			startDate: '+1d'
         });
 		if( ulica.trim()!='' && broj.trim()!='' && grad.trim()!='' && postanskiBroj.trim()!='' && duzina.trim()!='' && sirina.trim()!='' && brojSoba.trim() != '' && brojGostiju.trim() != '' && cijenaPoNoci.trim() != '' && datumZaIzdavanje.trim()!=''){
 			$.post({

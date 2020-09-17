@@ -106,6 +106,7 @@ public class KorisniciService {
 				   return Response.ok(k).build();
 			   } }
 		   }
+    	System.out.println("blokiran");
 		   return Response.status(400).build();	
     }
     @GET
